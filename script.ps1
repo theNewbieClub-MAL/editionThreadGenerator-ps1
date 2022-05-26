@@ -1916,7 +1916,21 @@ Write-Host $i18n.Prompt_ToCopy -ForegroundColor Yellow
 Write-Host "=============" -ForegroundColor Yellow
 
 Write-Host @"
+[size=120]　[size=230][color=$($Thread_color)]💬 [b]GFX and Deliverer Staff Request[/b][/color][/size][/size][quote][center]
+[size=120][color=$($Thread_color)][i]For GFX staff who hasn't send the format yet, please DM me, and insert template to message using [[i][/i]code] tag.[/i][/color][/size]
 
+[spoiler=requests]
+[code][quote][b]Staff Nickname: [/b] 
+[b]Delivery: [/b] 
+[i]—Cards by—[/i]
+$($Staff1_nickname): $( if ($Edition_staffCount -ge 2) { "`n$($Staff2_nickname): " } else {""} ) $( if ($Edition_staffCount -ge 3) { "`n$($Staff3_nickname): " } else {""} )$( if ($Edition_staffCount -ge 4) { "`n$($Staff4_nickname): " } else {""} )$( if ($Edition_staffCount -ge 5) { "`n$($Staff5_nickname): " } else {""} )
+--
+[b]Comments: [/b] 
+[b]Edition Suggestion: [/b] 
+[/quote][/code]
+
+[/spoiler]
+[/center][/quote]
 "@
 
 Write-Host "=============" -ForegroundColor Yellow
