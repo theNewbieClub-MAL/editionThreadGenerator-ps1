@@ -4,3 +4,7 @@ tab_width = 4
 indent_style = space
 charset = utf-8
 insert_final_newline = true
+
+# Fix false negative response due to emoji
+[**.{ps1,psd1,psm1}]
+charset = utf-8-bom
