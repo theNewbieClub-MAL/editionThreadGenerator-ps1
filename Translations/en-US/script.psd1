@@ -1,4 +1,4 @@
-#culture=en-US
+﻿#culture=en-US
 ConvertFrom-StringData @'
     InitLocale_General_echo     = 🌐 System automatically set the language for the script to
     InitLocale_General_prompt   = Do you want to change the language to else?
