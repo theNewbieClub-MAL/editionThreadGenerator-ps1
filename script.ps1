@@ -4,7 +4,7 @@
 # Script Metadata
 # ===============
 
-$version = "0.0.2"
+$version = "0.0.3"
 
 # MAL Usernames, without @
 $gfxAdmin = "nattadasu"
@@ -1905,7 +1905,7 @@ Write-Host $result
 $result > ./Generated.bbcode
 
 Write-Host "=============" -ForegroundColor Yellow
-Write-Host $i18n.Attention_GeneratedFile_Created -ForegroundColor Blue
+Write-Host $i18n.Attention_GeneratedFile_Created_1, "`"$((Get-Location).Path)/Generated.bbcode`",", $i18n.Attention_GeneratedFile_Created_2 -ForegroundColor Blue -Separator " "
 Read-Host -Prompt $i18n.Prompt_Move_Section
 
 # Post GFX Reqeust Field

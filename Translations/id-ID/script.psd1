@@ -49,7 +49,8 @@ ConvertFrom-StringData @'
     Generate_BBCode_Success     = ✅ Berhasil membuat teks post utama
     Generate_GFXRequest_Success = ✅ Berhasil membuat post Pusat Permintaan GFX/Pengiriman
 
-    Attention_File_Created      = 💁 Kami juga sudah menyimpan berkas yang digenerasi otomatis ke `"./Generated.bbcode`", mohon diperiksa.
+    Attention_File_Created_1    = 💁 Kami juga sudah menyimpan berkas yang digenerasi otomatis ke
+    Attention_File_Created_2    = mohon diperiksa.
 
     Selected_Banner_Title       = ✅ Berhasil mengambil penamaan judul resmi dari MAL untuk banner, yakni:
     Selected_Card_Title         = ✅ Berhasil mengambil penamaan judul resmi dari MAL untuk kartu, yakni:

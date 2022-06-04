@@ -49,7 +49,8 @@ ConvertFrom-StringData @'
     Generate_BBCode_Success     = ✅ Berjaya membuat teks pos utama
     Generate_GFXRequest_Success = ✅ Berjaya membuat pos Pusat Permintaan GFX/Penghantaran
 
-    Attention_File_Created      = 💁 Kami juga telah menyimpan fail yang dihasilkan secara automatik kepada "./Generated.bbcode", sila periksa.
+    Attention_File_Created_1    = 💁 Kami juga telah menyimpan fail yang dihasilkan secara automatik kepada
+    Attention_File_Created_2    = sila periksa.
 
     Selected_Banner_Title       = ✅ Berjaya mengambil penamaan gelaran rasmi dari MAL ke spanduk, iaitu:
     Selected_Card_Title         = ✅ Berjaya mengambil penamaan gelaran rasmi dari MAL ke kad, iaitu:

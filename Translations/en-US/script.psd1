@@ -49,7 +49,8 @@ ConvertFrom-StringData @'
     Generate_BBCode_Success     = ✅ Successfuly generated main post
     Generate_GFXRequest_Success = ✅ Successfuly generated GFX/Deliverer Request Corner post
 
-    Attention_File_Created      = 💁 We also saved the generated file on `"./Generated.bbcode`", please to check it.
+    Attention_File_Created_1    = 💁 We also saved the generated file on
+    Attention_File_Created_2    = please to check it.
 
     Selected_Banner_Title       = ✅ Successfuly fetched proper title for banner from MAL as:
     Selected_Card_Title         = ✅ Successfuly fetched proper title for card from MAL as:
