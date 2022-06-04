@@ -11,22 +11,22 @@ Tested on:
 
 Hello! :wave:
 
-Welcome to The Newbie Club's Edition Thread Generator: Powershell version repository. This repo serves as automation script for generating [card release][cardFaq] threads for [The Newbie Club][tnc] on MyAnimeList. Anyone can use this script to generate threads for their own.
+Welcome to The Newbie Club's Edition Thread Generator: Powershell version repository. This repo serves as an automation script for generating [card release][cardFaq] threads for [The Newbie Club][tnc] on MyAnimeList. Anyone can use this script to generate threads for their own.
 
-This project aims to write as native as possible during text generation: no external modules required to be installed, no need to run as admin for some steps, etc. The only external program we use is [Git][git] to clone the repo to your end machine.
+This project aims to write as native as possible during text generation: no external modules are required to be installed, no need to run as admin for some steps, etc. The only external program we use is [Git][git] to clone the repo to your end machine.
 
-Also the script should be cross-compatible with Windows Powershell 5 and UNIX-like system by encoding the file to UTF8-BOM and EOL to `LF`.
+Also, the script should be cross-compatible with Windows Powershell 5 and any UNIX-like (preferably Linux) system by encoding the file to UTF8-BOM and EOL to `LF`.
 
 ## Requirements and Prerequisites
 
 1. Before you start, you need to make sure that:
    * Currently using Windows 10 or Windows Server 2016 or newer; supported Linux distributions: Debian, Ubuntu, CentOS, Fedora, Arch, OpenSUSE, and others; macOS 10.12 or newer.
    * PowerShell Core 7 or higher (recommended); Windows PowerShell 5.1 or higher
-     * We recommend to select **LTS** or **Stable** for PowerShell Core.
+     * We recommend choosing **LTS** or **Stable** for PowerShell Core.
    * **Exclusive for PowerShell on Windows**: Windows Terminal to render non-ASCII symbols correctly (recommended).
    * Git, or any 3rd party Git client, installed and configured.
-   * Proper internet access, ~~and IP was not blocked by MAL because it's sucks~~.
-2. You can install the related softwares by clicking the link below:
+   * Proper internet access ~~and IP was not blocked by MAL because it's sucks~~.
+2. You can install the related software by clicking the link below:
    * PowerShell: https://github.com/PowerShell/PowerShell
    * Windows Terminal: https://www.microsoft.com/en-us/p/windows-terminal/9n0dx20hk701
    * Git: https://git-scm.com/
@@ -34,7 +34,7 @@ Also the script should be cross-compatible with Windows Powershell 5 and UNIX-li
 ## Setup
 
 1. (Fork this repo and) clone the repo to your machine.
-   * We prefer to clone with Git rather download the repo as a ZIP package.
+   * We prefer to clone with Git instead of downloading the repo as a ZIP package.
    * To clone on Terminal, do:
 
     ```bash
@@ -46,7 +46,7 @@ Also the script should be cross-compatible with Windows Powershell 5 and UNIX-li
    * On Windows:
      * Press <kbd>Win</kbd>, and type PowerShell, or
      * Press <kbd>Win</kbd>, type Windows Terminal, and press <kbd>Enter</kbd>.
-   * On UNIX-like system, open your favorite terminal and type `pwsh` or `powershell`.
+   * On a UNIX-like system, open your favorite Terminal and type `pwsh` or `powershell`.
 3. Move your current working directory on PowerShell to the cloned repo.
    * On Windows, type `cd %USERPROFILE%\editionThreadGenerator-ps1` and press <kbd>Enter</kbd>.
    * On UNIX-like system, type `cd ~/editionThreadGenerator-ps1` and press <kbd>Enter</kbd>.
@@ -69,20 +69,20 @@ Set-ExecutionPolicy Bypass -Scope Process
 ## Usage
 
 1. Follows the steps from [#Setup](#setup).
-2. [Select language] you prefer for prompt interface.
+2. [Select language](#languages-list) you prefer for the prompt interface.
 3. Answer all questions.
-4. Copy the result to clipboard.
+4. Copy the result to the clipboard.
 5. Done.
 
 ## Languages List
 
-We offers the following languages for prompt interface:
+We offer the following languages for the prompt interface:
 
 * English (US) `en-US`, default
 * Indonesian (Indonesia) `id-ID`, by nattadasu
 * Melayu (Malaysia) `ms-MY`, by nattadasu
 
-If you interested in translating this script, please follow steps on [#Contributing](#contributing).
+If you are interested in translating this script, please follow the steps on [#Contributing](#contributing).
 
 ## Contributing
 
@@ -98,34 +98,32 @@ If you interested in translating this script, please follow steps on [#Contribut
 
 1. Open `Translations/` folder.
 2. Duplicate `en-US/` folder and rename the duplicated folder to your language [culture code defined by Microsoft][cultureCode].
-   * You can create your own language folder by following RFC 4646 specification:\
-     `languageCode2`-`regionCode2`.
+   * You can create your language folder by following RFC 4646 specifications: `languageCode2`-`regionCode2`.\
       For example:
       * `id-ID` for Indonesian (Indonesia).
-   * If the language you covered have two-letter code not available, a three-letter code derived from ISO 639-2 is used.
+   * If the language you covered has a two-letter code not available, a three-letter code derived from ISO 639-2 is used.\
       For example:
       * `ace-ID` for Acehnese (Indonesia).
-   * If the language has script variant (ISO 15924), use pattern:\
-      `languageCode2`-`scriptTag`-`regionCode2`.
+   * If the language has a script variant (ISO 15924), use `languageCode2`-`scriptTag`-`regionCode2` pattern.\
       For example:
       * `uz-Cryl-UZ` for Uzbek (Cyrillic, Uzbekistan).
-   * Neutral culture is accepted, however we discourage this method as it might cause confusion for the system to auto select culture.
+   * Neutral culture is accepted. However, we discourage this method as it might confuse the system to auto-select culture.
    * The only exception of this name formatting only applies to:
      * `zh-Hant` for Traditional Chinese.
      * `zh-Hans` for Simplified Chinese.
-3. Modify all the strings value in each `.psd1` files.
+3. Modify all the string values in every `.psd1` file inside the new folder.
    * Due to `.psd1` safety restriction, the dynamic variables can not be assigned inside.
-   * All of strings that have dynamic result follow this format:
+   * All strings that have dynamic results follow this format:
 
      ```ps1
      $i18n.(Strings) $result
      ```
 
-   * We recommend you to always check the grammar **on the script process**.
+   * We recommend you always check the grammar **in the script process**.
 
 ### Main script
 
-*There is no strict guidelines, just keep avoid messing with variables, that's all*
+*There are no strict guidelines; try to avoid messing with variables. That's all*
 
 ### Commit and Pull Request
 
