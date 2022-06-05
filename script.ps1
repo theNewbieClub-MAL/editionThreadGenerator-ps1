@@ -4,7 +4,7 @@
 # Script Metadata
 # ===============
 
-$version = "0.0.3"
+$version = "0.0.4"
 
 # MAL Usernames, without @
 $gfxAdmin = "nattadasu"
@@ -91,8 +91,8 @@ if (-not($Edition_count)) { $Edition_count = "100" }
 # Date input
 $Edition_startInput = Read-Host -Prompt "$($i18n.Question_Edition_Start) $(Get-Date -Format yyyy-MM-dd)"
 $Edition_endInput = Read-Host -Prompt "$($i18n.Question_Edition_End) $(Get-Date -Format yyyy-MM-dd)"
-$Edition_start = Get-Date $Edition_startInput -Format "MMMM dd, yyyy"
-$Edition_end = Get-Date $Edition_endInput -Format "MMMM dd, yyyy"
+$Edition_start = Get-Date $Edition_startInput -Format "MMMM d, yyyy"
+$Edition_end = Get-Date $Edition_endInput -Format "MMMM d, yyyy"
 
 $Edition_staffCount = Read-Host -Prompt $i18n.Question_Edition_Staff
 if (-not($Edition_staffCount)) { $Edition_staffCount = "1" } elseif ( $Edition_staffCount -gt 5) {
@@ -213,6 +213,7 @@ if ( $Edition_isSingle -eq "n" ) {
     if ($Staff1_cards1_malId -eq "0") {
         Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
         $Staff1_cards1_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
+        $Staff1_cards1_titleResult = $Staff1_cards1_titleQuery
     } else {
         $Staff1_cards1_titleResult = if ($Locale_set -eq "romaji") {
             Get-MALTitle -MALId $Staff1_cards1_malId -English $false
@@ -242,6 +243,7 @@ if ( 2 -le $Staff1_totalCards ) {
         if ($Staff1_cards2_malId -eq "0") {
             Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
             $Staff1_cards2_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
+        $Staff1_cards2_titleResult = $Staff1_cards2_titleQuery
         } else {
             $Staff1_cards2_titleResult = if ($Locale_set -eq "romaji") {
                 Get-MALTitle -MALId $Staff1_cards2_malId -English $false
@@ -272,6 +274,7 @@ if ( 3 -le $Staff1_totalCards ) {
         if ($Staff1_cards3_malId -eq "0") {
             Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
             $Staff1_cards3_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
+        $Staff1_cards3_titleResult = $Staff1_cards3_titleQuery
         } else {
             $Staff1_cards3_titleResult = if ($Locale_set -eq "romaji") {
                 Get-MALTitle -MALId $Staff1_cards3_malId -English $false
@@ -302,6 +305,7 @@ if ( 4 -le $Staff1_totalCards ) {
         if ($Staff1_cards4_malId -eq "0") {
             Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
             $Staff1_cards4_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
+        $Staff1_cards4_titleResult = $Staff1_cards4_titleQuery
         } else {
             $Staff1_cards4_titleResult = if ($Locale_set -eq "romaji") {
                 Get-MALTitle -MALId $Staff1_cards4_malId -English $false
@@ -332,6 +336,7 @@ if ( 5 -le $Staff1_totalCards ) {
         if ($Staff1_cards5_malId -eq "0") {
             Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
             $Staff1_cards5_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
+        $Staff1_cards5_titleResult = $Staff1_cards5_titleQuery
         } else {
             $Staff1_cards5_titleResult = if ($Locale_set -eq "romaji") {
                 Get-MALTitle -MALId $Staff1_cards5_malId -English $false
@@ -362,6 +367,7 @@ if ( 6 -le $Staff1_totalCards ) {
         if ($Staff1_cards6_malId -eq "0") {
             Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
             $Staff1_cards6_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
+        $Staff1_cards6_titleResult = $Staff1_cards6_titleQuery
         } else {
             $Staff1_cards6_titleResult = if ($Locale_set -eq "romaji") {
                 Get-MALTitle -MALId $Staff1_cards6_malId -English $false
@@ -392,6 +398,7 @@ if ( 7 -le $Staff1_totalCards ) {
         if ($Staff1_cards7_malId -eq "0") {
             Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
             $Staff1_cards7_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
+        $Staff1_cards7_titleResult = $Staff1_cards7_titleQuery
         } else {
             $Staff1_cards7_titleResult = if ($Locale_set -eq "romaji") {
                 Get-MALTitle -MALId $Staff1_cards7_malId -English $false
@@ -422,6 +429,7 @@ if ( 8 -le $Staff1_totalCards ) {
         if ($Staff1_cards8_malId -eq "0") {
             Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
             $Staff1_cards8_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
+        $Staff1_cards8_titleResult = $Staff1_cards8_titleQuery
         } else {
             $Staff1_cards8_titleResult = if ($Locale_set -eq "romaji") {
                 Get-MALTitle -MALId $Staff1_cards8_malId -English $false
@@ -452,6 +460,7 @@ if ( 9 -le $Staff1_totalCards ) {
         if ($Staff1_cards9_malId -eq "0") {
             Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
             $Staff1_cards9_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
+        $Staff1_cards9_titleResult = $Staff1_cards9_titleQuery
         } else {
             $Staff1_cards9_titleResult = if ($Locale_set -eq "romaji") {
                 Get-MALTitle -MALId $Staff1_cards9_malId -English $false
@@ -508,6 +517,7 @@ if (2 -le $Edition_staffCount){
         if ($Staff2_cards1_malId -eq "0") {
             Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
             $Staff2_cards1_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
+                $Staff2_cards1_titleResult = $Staff2_cards1_titleQuery
         } else {
             $Staff2_cards1_titleResult = if ($Locale_set -eq "romaji") {
                 Get-MALTitle -MALId $Staff2_cards1_malId -English $false
@@ -537,6 +547,7 @@ if (2 -le $Edition_staffCount){
             if ($Staff2_cards2_malId -eq "0") {
                 Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
                 $Staff2_cards2_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
+                $Staff2_cards2_titleResult = $Staff2_cards2_titleQuery
             } else {
                 $Staff2_cards2_titleResult = if ($Locale_set -eq "romaji") {
                     Get-MALTitle -MALId $Staff2_cards2_malId -English $false
@@ -567,6 +578,7 @@ if (2 -le $Edition_staffCount){
             if ($Staff2_cards3_malId -eq "0") {
                 Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
                 $Staff2_cards3_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
+                $Staff2_cards3_titleResult = $Staff2_cards3_titleQuery
             } else {
                 $Staff2_cards3_titleResult = if ($Locale_set -eq "romaji") {
                     Get-MALTitle -MALId $Staff2_cards3_malId -English $false
@@ -597,6 +609,7 @@ if (2 -le $Edition_staffCount){
             if ($Staff2_cards4_malId -eq "0") {
                 Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
                 $Staff2_cards4_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
+                $Staff2_cards4_titleResult = $Staff2_cards4_titleQuery
             } else {
                 $Staff2_cards4_titleResult = if ($Locale_set -eq "romaji") {
                     Get-MALTitle -MALId $Staff2_cards4_malId -English $false
@@ -627,6 +640,7 @@ if (2 -le $Edition_staffCount){
             if ($Staff2_cards5_malId -eq "0") {
                 Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
                 $Staff2_cards5_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
+                $Staff2_cards5_titleResult = $Staff2_cards5_titleQuery
             } else {
                 $Staff2_cards5_titleResult = if ($Locale_set -eq "romaji") {
                     Get-MALTitle -MALId $Staff2_cards5_malId -English $false
@@ -657,6 +671,7 @@ if (2 -le $Edition_staffCount){
             if ($Staff2_cards6_malId -eq "0") {
                 Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
                 $Staff2_cards6_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
+                $Staff2_cards6_titleResult = $Staff2_cards6_titleQuery
             } else {
                 $Staff2_cards6_titleResult = if ($Locale_set -eq "romaji") {
                     Get-MALTitle -MALId $Staff2_cards6_malId -English $false
@@ -687,6 +702,7 @@ if (2 -le $Edition_staffCount){
             if ($Staff2_cards7_malId -eq "0") {
                 Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
                 $Staff2_cards7_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
+                $Staff2_cards7_titleResult = $Staff2_cards7_titleQuery
             } else {
                 $Staff2_cards7_titleResult = if ($Locale_set -eq "romaji") {
                     Get-MALTitle -MALId $Staff2_cards7_malId -English $false
@@ -717,6 +733,7 @@ if (2 -le $Edition_staffCount){
             if ($Staff2_cards8_malId -eq "0") {
                 Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
                 $Staff2_cards8_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
+                $Staff2_cards8_titleResult = $Staff2_cards8_titleQuery
             } else {
                 $Staff2_cards8_titleResult = if ($Locale_set -eq "romaji") {
                     Get-MALTitle -MALId $Staff2_cards8_malId -English $false
@@ -747,6 +764,7 @@ if (2 -le $Edition_staffCount){
             if ($Staff2_cards9_malId -eq "0") {
                 Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
                 $Staff2_cards9_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
+                $Staff2_cards9_titleResult = $Staff2_cards9_titleQuery
             } else {
                 $Staff2_cards9_titleResult = if ($Locale_set -eq "romaji") {
                     Get-MALTitle -MALId $Staff2_cards9_malId -English $false
@@ -804,6 +822,7 @@ if (3 -le $Edition_staffCount){
         if ($Staff3_cards1_malId -eq "0") {
             Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
             $Staff3_cards1_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
+                $Staff3_cards1_titleResult = $Staff3_cards1_titleQuery
         } else {
             $Staff3_cards1_titleResult = if ($Locale_set -eq "romaji") {
                 Get-MALTitle -MALId $Staff3_cards1_malId -English $false
@@ -833,6 +852,7 @@ if (3 -le $Edition_staffCount){
             if ($Staff3_cards2_malId -eq "0") {
                 Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
                 $Staff3_cards2_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
+                $Staff3_cards2_titleResult = $Staff3_cards2_titleQuery
             } else {
                 $Staff3_cards2_titleResult = if ($Locale_set -eq "romaji") {
                     Get-MALTitle -MALId $Staff3_cards2_malId -English $false
@@ -863,6 +883,7 @@ if (3 -le $Edition_staffCount){
             if ($Staff3_cards3_malId -eq "0") {
                 Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
                 $Staff3_cards3_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
+                $Staff3_cards3_titleResult = $Staff3_cards3_titleQuery
             } else {
                 $Staff3_cards3_titleResult = if ($Locale_set -eq "romaji") {
                     Get-MALTitle -MALId $Staff3_cards3_malId -English $false
@@ -893,6 +914,7 @@ if (3 -le $Edition_staffCount){
             if ($Staff3_cards4_malId -eq "0") {
                 Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
                 $Staff3_cards4_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
+                $Staff3_cards4_titleResult = $Staff3_cards4_titleQuery
             } else {
                 $Staff3_cards4_titleResult = if ($Locale_set -eq "romaji") {
                     Get-MALTitle -MALId $Staff3_cards4_malId -English $false
@@ -923,6 +945,7 @@ if (3 -le $Edition_staffCount){
             if ($Staff3_cards5_malId -eq "0") {
                 Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
                 $Staff3_cards5_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
+                $Staff3_cards5_titleResult = $Staff3_cards5_titleQuery
             } else {
                 $Staff3_cards5_titleResult = if ($Locale_set -eq "romaji") {
                     Get-MALTitle -MALId $Staff3_cards5_malId -English $false
@@ -953,6 +976,7 @@ if (3 -le $Edition_staffCount){
             if ($Staff3_cards6_malId -eq "0") {
                 Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
                 $Staff3_cards6_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
+                $Staff3_cards6_titleResult = $Staff3_cards6_titleQuery
             } else {
                 $Staff3_cards6_titleResult = if ($Locale_set -eq "romaji") {
                     Get-MALTitle -MALId $Staff3_cards6_malId -English $false
@@ -983,6 +1007,7 @@ if (3 -le $Edition_staffCount){
             if ($Staff3_cards7_malId -eq "0") {
                 Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
                 $Staff3_cards7_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
+                $Staff3_cards7_titleResult = $Staff3_cards7_titleQuery
             } else {
                 $Staff3_cards7_titleResult = if ($Locale_set -eq "romaji") {
                     Get-MALTitle -MALId $Staff3_cards7_malId -English $false
@@ -1013,6 +1038,7 @@ if (3 -le $Edition_staffCount){
             if ($Staff3_cards8_malId -eq "0") {
                 Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
                 $Staff3_cards8_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
+                $Staff3_cards8_titleResult = $Staff3_cards8_titleQuery
             } else {
                 $Staff3_cards8_titleResult = if ($Locale_set -eq "romaji") {
                     Get-MALTitle -MALId $Staff3_cards8_malId -English $false
@@ -1043,6 +1069,7 @@ if (3 -le $Edition_staffCount){
             if ($Staff3_cards9_malId -eq "0") {
                 Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
                 $Staff3_cards9_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
+                $Staff3_cards9_titleResult = $Staff3_cards9_titleQuery
             } else {
                 $Staff3_cards9_titleResult = if ($Locale_set -eq "romaji") {
                     Get-MALTitle -MALId $Staff3_cards9_malId -English $false
@@ -1100,6 +1127,7 @@ if (4 -le $Edition_staffCount){
         if ($Staff4_cards1_malId -eq "0") {
             Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
             $Staff4_cards1_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
+                $Staff4_cards1_titleResult = $Staff4_cards1_titleQuery
         } else {
             $Staff4_cards1_titleResult = if ($Locale_set -eq "romaji") {
                 Get-MALTitle -MALId $Staff4_cards1_malId -English $false
@@ -1129,6 +1157,7 @@ if (4 -le $Edition_staffCount){
             if ($Staff4_cards2_malId -eq "0") {
                 Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
                 $Staff4_cards2_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
+                $Staff4_cards2_titleResult = $Staff4_cards2_titleQuery
             } else {
                 $Staff4_cards2_titleResult = if ($Locale_set -eq "romaji") {
                     Get-MALTitle -MALId $Staff4_cards2_malId -English $false
@@ -1159,6 +1188,7 @@ if (4 -le $Edition_staffCount){
             if ($Staff4_cards3_malId -eq "0") {
                 Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
                 $Staff4_cards3_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
+                $Staff4_cards3_titleResult = $Staff4_cards3_titleQuery
             } else {
                 $Staff4_cards3_titleResult = if ($Locale_set -eq "romaji") {
                     Get-MALTitle -MALId $Staff4_cards3_malId -English $false
@@ -1189,6 +1219,7 @@ if (4 -le $Edition_staffCount){
             if ($Staff4_cards4_malId -eq "0") {
                 Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
                 $Staff4_cards4_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
+                $Staff4_cards4_titleResult = $Staff4_cards4_titleQuery
             } else {
                 $Staff4_cards4_titleResult = if ($Locale_set -eq "romaji") {
                     Get-MALTitle -MALId $Staff4_cards4_malId -English $false
@@ -1219,6 +1250,7 @@ if (4 -le $Edition_staffCount){
             if ($Staff4_cards5_malId -eq "0") {
                 Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
                 $Staff4_cards5_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
+                $Staff4_cards5_titleResult = $Staff4_cards5_titleQuery
             } else {
                 $Staff4_cards5_titleResult = if ($Locale_set -eq "romaji") {
                     Get-MALTitle -MALId $Staff4_cards5_malId -English $false
@@ -1249,6 +1281,7 @@ if (4 -le $Edition_staffCount){
             if ($Staff4_cards6_malId -eq "0") {
                 Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
                 $Staff4_cards6_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
+                $Staff4_cards6_titleResult = $Staff4_cards6_titleQuery
             } else {
                 $Staff4_cards6_titleResult = if ($Locale_set -eq "romaji") {
                     Get-MALTitle -MALId $Staff4_cards6_malId -English $false
@@ -1279,6 +1312,7 @@ if (4 -le $Edition_staffCount){
             if ($Staff4_cards7_malId -eq "0") {
                 Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
                 $Staff4_cards7_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
+                $Staff4_cards7_titleResult = $Staff4_cards7_titleQuery
             } else {
                 $Staff4_cards7_titleResult = if ($Locale_set -eq "romaji") {
                     Get-MALTitle -MALId $Staff4_cards7_malId -English $false
@@ -1309,6 +1343,7 @@ if (4 -le $Edition_staffCount){
             if ($Staff4_cards8_malId -eq "0") {
                 Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
                 $Staff4_cards8_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
+                $Staff4_cards8_titleResult = $Staff4_cards8_titleQuery
             } else {
                 $Staff4_cards8_titleResult = if ($Locale_set -eq "romaji") {
                     Get-MALTitle -MALId $Staff4_cards8_malId -English $false
@@ -1339,6 +1374,7 @@ if (4 -le $Edition_staffCount){
             if ($Staff4_cards9_malId -eq "0") {
                 Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
                 $Staff4_cards9_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
+                $Staff4_cards9_titleResult = $Staff4_cards9_titleQuery
             } else {
                 $Staff4_cards9_titleResult = if ($Locale_set -eq "romaji") {
                     Get-MALTitle -MALId $Staff4_cards9_malId -English $false
@@ -1396,6 +1432,7 @@ if (5 -le $Edition_staffCount){
         if ($Staff5_cards1_malId -eq "0") {
             Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
             $Staff5_cards1_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
+                $Staff5_cards1_titleResult = $Staff5_cards1_titleQuery
         } else {
             $Staff5_cards1_titleResult = if ($Locale_set -eq "romaji") {
                 Get-MALTitle -MALId $Staff5_cards1_malId -English $false
@@ -1425,6 +1462,7 @@ if (5 -le $Edition_staffCount){
             if ($Staff5_cards2_malId -eq "0") {
                 Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
                 $Staff5_cards2_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
+                $Staff5_cards2_titleResult = $Staff5_cards2_titleQuery
             } else {
                 $Staff5_cards2_titleResult = if ($Locale_set -eq "romaji") {
                     Get-MALTitle -MALId $Staff5_cards2_malId -English $false
@@ -1455,6 +1493,7 @@ if (5 -le $Edition_staffCount){
             if ($Staff5_cards3_malId -eq "0") {
                 Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
                 $Staff5_cards3_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
+                $Staff5_cards3_titleResult = $Staff5_cards3_titleQuery
             } else {
                 $Staff5_cards3_titleResult = if ($Locale_set -eq "romaji") {
                     Get-MALTitle -MALId $Staff5_cards3_malId -English $false
@@ -1485,6 +1524,7 @@ if (5 -le $Edition_staffCount){
             if ($Staff5_cards4_malId -eq "0") {
                 Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
                 $Staff5_cards4_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
+                $Staff5_cards4_titleResult = $Staff5_cards4_titleQuery
             } else {
                 $Staff5_cards4_titleResult = if ($Locale_set -eq "romaji") {
                     Get-MALTitle -MALId $Staff5_cards4_malId -English $false
@@ -1515,6 +1555,7 @@ if (5 -le $Edition_staffCount){
             if ($Staff5_cards5_malId -eq "0") {
                 Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
                 $Staff5_cards5_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
+                $Staff5_cards5_titleResult = $Staff5_cards5_titleQuery
             } else {
                 $Staff5_cards5_titleResult = if ($Locale_set -eq "romaji") {
                     Get-MALTitle -MALId $Staff5_cards5_malId -English $false
@@ -1545,6 +1586,7 @@ if (5 -le $Edition_staffCount){
             if ($Staff5_cards6_malId -eq "0") {
                 Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
                 $Staff5_cards6_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
+                $Staff5_cards6_titleResult = $Staff5_cards6_titleQuery
             } else {
                 $Staff5_cards6_titleResult = if ($Locale_set -eq "romaji") {
                     Get-MALTitle -MALId $Staff5_cards6_malId -English $false
@@ -1575,6 +1617,7 @@ if (5 -le $Edition_staffCount){
             if ($Staff5_cards7_malId -eq "0") {
                 Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
                 $Staff5_cards7_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
+                $Staff5_cards7_titleResult = $Staff5_cards7_titleQuery
             } else {
                 $Staff5_cards7_titleResult = if ($Locale_set -eq "romaji") {
                     Get-MALTitle -MALId $Staff5_cards7_malId -English $false
@@ -1605,6 +1648,7 @@ if (5 -le $Edition_staffCount){
             if ($Staff5_cards8_malId -eq "0") {
                 Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
                 $Staff5_cards8_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
+                $Staff5_cards8_titleResult = $Staff5_cards8_titleQuery
             } else {
                 $Staff5_cards8_titleResult = if ($Locale_set -eq "romaji") {
                     Get-MALTitle -MALId $Staff5_cards8_malId -English $false
@@ -1635,6 +1679,7 @@ if (5 -le $Edition_staffCount){
             if ($Staff5_cards9_malId -eq "0") {
                 Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
                 $Staff5_cards9_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
+                $Staff5_cards9_titleResult = $Staff5_cards9_titleQuery
             } else {
                 $Staff5_cards9_titleResult = if ($Locale_set -eq "romaji") {
                     Get-MALTitle -MALId $Staff5_cards9_malId -English $false
@@ -1682,13 +1727,14 @@ $(if ($DarkMode_warn -eq "n") {"`n`n"} else {@"
 [color=white][size=105][b]If you can read this message, please consider to temporarily disable dark mode. Thanks!
 Ignore if you're using 3rd party app with auto recolor text support.[/b][/size][/color]
 "@})
-[quote][b]Opened on[/b]: [color=black]$($Edition_start)[/color] | [b]Close on[/b]: [color=black]$($Edition_end)[/color]][/quote][/center][size=120]
+[quote][b]Opened on[/b]: [color=black]$($Edition_start)[/color] | [b]Close on[/b]: [color=black]$($Edition_end)[/color][/quote][/center][size=120]
 　[size=230]💬 [b]Introduction[/b][/size]
-[quote][list][color=black][center][img]$($Intro_gif)[/img]
+[quote][list][color=black][center][img]$($Intro_gif)[/img]$(if ($null -eq $Intro_textFormat) {} else {@"
 
-[i]$($Intro_textFormat)[/i][/center][/color][/list][/quote]
+[i]$($Intro_textFormat)[/i]
+"@})[/center][/color][/list][/quote]
 　[size=230]🏛️ [b]Rules[/b][/size]
-[quote]
+`[quote`]
 [center][size=90]⚠️ [b]Make sure to follow all rules stated below before continue![/b] ⚠️[/size][/center][list=1][*][color=black]Request your cards by [u]commenting on this forum thread[/u] and using a list number instead of naming the card.[/color]
 [*][color=black]Do not request cards if you have no intention of saving them AND/OR request for someone else.[/color]
 [*][color=black]Please [b]follow the format and respect the limits given by each card maker[/b], or the request will be deleted.[/color]
@@ -1714,8 +1760,8 @@ $($Staff1_nickname): $( if ($Edition_staffCount -ge 2) { "`n$($Staff2_nickname):
 ——
 [b]Comments: [/b]
 [b]Edition Suggestion: [/b]
-[/size]
-[/code]
+`[/size`]
+`[/code`]
 [/color][/size][/quote]
 　[size=230]🔍 [b]Example/Result[/b][/size]
 [quote][color=black][size=75]
@@ -1733,6 +1779,8 @@ $($Staff1_nickname): $( if ($Edition_staffCount -ge 2) { "`n$($Staff2_nickname):
 
 
 
+
+
 [/size][size=80][right][color=#1d439b]Report[/color] - [color=#1d439b]Quote[/color][/right][/size]
 [/color][/quote]
 　[size=230]💳 [b]Cards[/b][/size]
@@ -1743,26 +1791,26 @@ $( if ($Staff1_limitType -eq "role") {@"
 [b]Staff:[/b] $($Staff1_limitStaff)/$($Staff1_totalCards) $(if ($Staff1_limitStaff -eq $Staff1_totalCards) {"(ALL)"})
 "@} else {"[b]Any[/b]: $($Staff1_limitAny)/$($Staff1_totalCards) $(if ($Staff1_limitAny -eq $Staff1_totalCards) {"(ALL)"})"} )
 
-[spoiler=cards]
-|| 1 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff1_cards1_malId -eq 0) {$Staff1_cards1_customUrl} else {"https://myanimelist.net/anime/$($Staff1_cards1_malId)"})]$($Staff1_cards1_titleResult)[/url]"})$(if($Staff1_cards2_imageUri) {" ~~~~~~ || 2 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff1_cards2_malId -eq 0) {$Staff1_cards2_customUrl} else {"https://myanimelist.net/anime/$($Staff1_cards2_malId)"})]$($Staff1_cards2_titleResult)[/url]"})"})
+`[spoiler=cards`]
+|| 1 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff1_cards1_malId -eq 0) {$Staff1_cards1_customUrl} else {"https://myanimelist.net/anime/$($Staff1_cards1_malId)"})]$($Staff1_cards1_titleResult)[/url]"})$(if($Staff1_cards2_imageUri) {"|| ~~~~~~ || 2 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff1_cards2_malId -eq 0) {$Staff1_cards2_customUrl} else {"https://myanimelist.net/anime/$($Staff1_cards2_malId)"})]$($Staff1_cards2_titleResult)[/url] ||"})"})
 [img]$($Staff1_cards1_imageUri)[/img]$(if($Staff1_cards2_imageUri) {" [img]$($Staff1_cards2_imageUri)[/img]"})$(if($Staff1_cards3_imageUri) {@"
 
-|| 3 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff1_cards3_malId -eq 0) {$Staff1_cards3_customUrl} else {"https://myanimelist.net/anime/$($Staff1_cards3_malId)"})]$($Staff1_cards3_titleResult)[/url]"})$(if($Staff1_cards4_imageUri) {" ~~~~~~ || 4 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff1_cards4_malId -eq 0) {$Staff1_cards4_customUrl} else {"https://myanimelist.net/anime/$($Staff1_cards4_malId)"})]$($Staff1_cards4_titleResult)[/url]"})"})
+|| 3 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff1_cards3_malId -eq 0) {$Staff1_cards3_customUrl} else {"https://myanimelist.net/anime/$($Staff1_cards3_malId)"})]$($Staff1_cards3_titleResult)[/url]"})$(if($Staff1_cards4_imageUri) {"|| ~~~~~~ || 4 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff1_cards4_malId -eq 0) {$Staff1_cards4_customUrl} else {"https://myanimelist.net/anime/$($Staff1_cards4_malId)"})]$($Staff1_cards4_titleResult)[/url] ||"})"})
 [img]$($Staff1_cards3_imageUri)[/img]$(if($Staff1_cards4_imageUri) {" [img]$($Staff1_cards4_imageUri)[/img]"})
 "@})$(if($Staff1_cards5_imageUri) {@"
 
-|| 5 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff1_cards5_malId -eq 0) {$Staff1_cards5_customUrl} else {"https://myanimelist.net/anime/$($Staff1_cards5_malId)"})]$($Staff1_cards5_titleResult)[/url]"})$(if($Staff1_cards6_imageUri) {" ~~~~~~ || 6 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff1_cards6_malId -eq 0) {$Staff1_cards6_customUrl} else {"https://myanimelist.net/anime/$($Staff1_cards6_malId)"})]$($Staff1_cards6_titleResult)[/url]"})"})
+|| 5 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff1_cards5_malId -eq 0) {$Staff1_cards5_customUrl} else {"https://myanimelist.net/anime/$($Staff1_cards5_malId)"})]$($Staff1_cards5_titleResult)[/url]"})$(if($Staff1_cards6_imageUri) {"|| ~~~~~~ || 6 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff1_cards6_malId -eq 0) {$Staff1_cards6_customUrl} else {"https://myanimelist.net/anime/$($Staff1_cards6_malId)"})]$($Staff1_cards6_titleResult)[/url] ||"})"})
 [img]$($Staff1_cards5_imageUri)[/img]$(if($Staff1_cards6_imageUri) {" [img]$($Staff1_cards6_imageUri)[/img]"})
 "@})$(if($Staff1_cards7_imageUri) {@"
 
-|| 7 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff1_cards7_malId -eq 0) {$Staff1_cards7_customUrl} else {"https://myanimelist.net/anime/$($Staff1_cards7_malId)"})]$($Staff1_cards7_titleResult)[/url]"})$(if($Staff1_cards8_imageUri) {" ~~~~~~ || 8 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff1_cards8_malId -eq 0) {$Staff1_cards8_customUrl} else {"https://myanimelist.net/anime/$($Staff1_cards8_malId)"})]$($Staff1_cards8_titleResult)[/url]"})"})
+|| 7 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff1_cards7_malId -eq 0) {$Staff1_cards7_customUrl} else {"https://myanimelist.net/anime/$($Staff1_cards7_malId)"})]$($Staff1_cards7_titleResult)[/url]"})$(if($Staff1_cards8_imageUri) {"|| ~~~~~~ || 8 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff1_cards8_malId -eq 0) {$Staff1_cards8_customUrl} else {"https://myanimelist.net/anime/$($Staff1_cards8_malId)"})]$($Staff1_cards8_titleResult)[/url] ||"})"})
 [img]$($Staff1_cards7_imageUri)[/img]$(if($Staff1_cards8_imageUri) {" [img]$($Staff1_cards8_imageUri)[/img]"})
 "@})$(if($Staff1_cards9_imageUri) {@"
 
-|| 9 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff1_cards9_malId -eq 0) {$Staff1_cards9_customUrl} else {"https://myanimelist.net/anime/$($Staff1_cards9_malId)"})]$($Staff1_cards9_titleResult)[/url]"})
+|| 9 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff1_cards9_malId -eq 0) {$Staff1_cards9_customUrl} else {"https://myanimelist.net/anime/$($Staff1_cards9_malId)"})]$($Staff1_cards9_titleResult)[/url] ||"})
 [img]$($Staff1_cards9_imageUri)[/img]
 "@})
-[/spoiler]
+`[/spoiler`]
 [/quote]$(if($Staff2_username) {@"
 
 [size=150][b]$($Staff2_nickname)[/b][/size]
@@ -1771,26 +1819,26 @@ $( if ($Staff2_limitType -eq "role") {@"
 [b]Staff:[/b] $($Staff2_limitStaff)/$($Staff2_totalCards) $(if ($Staff2_limitStaff -eq $Staff2_totalCards) {"(ALL)"})
 "@} else {"[b]Any[/b]: $($Staff2_limitAny)/$($Staff2_totalCards) $(if ($Staff2_limitAny -eq $Staff2_totalCards) {"(ALL)"})"} )
 
-[spoiler=cards]
-|| 1 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff2_cards1_malId -eq 0) {$Staff2_cards1_customUrl} else {"https://myanimelist.net/anime/$($Staff2_cards1_malId)"})]$($Staff2_cards1_titleResult)[/url]"})$(if($Staff2_cards2_imageUri) {" ~~~~~~ || 2 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff2_cards2_malId -eq 0) {$Staff2_cards2_customUrl} else {"https://myanimelist.net/anime/$($Staff2_cards2_malId)"})]$($Staff2_cards2_titleResult)[/url]"})"})
+`[spoiler=cards`]
+|| 1 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff2_cards1_malId -eq 0) {$Staff2_cards1_customUrl} else {"https://myanimelist.net/anime/$($Staff2_cards1_malId)"})]$($Staff2_cards1_titleResult)[/url]"})$(if($Staff2_cards2_imageUri) {"|| ~~~~~~ || 2 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff2_cards2_malId -eq 0) {$Staff2_cards2_customUrl} else {"https://myanimelist.net/anime/$($Staff2_cards2_malId)"})]$($Staff2_cards2_titleResult)[/url] ||"})"})
 [img]$($Staff2_cards1_imageUri)[/img]$(if($Staff2_cards2_imageUri) {" [img]$($Staff2_cards2_imageUri)[/img]"})$(if($Staff2_cards3_imageUri) {@"
 
-|| 3 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff2_cards3_malId -eq 0) {$Staff2_cards3_customUrl} else {"https://myanimelist.net/anime/$($Staff2_cards3_malId)"})]$($Staff2_cards3_titleResult)[/url]"})$(if($Staff2_cards4_imageUri) {" ~~~~~~ || 4 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff2_cards4_malId -eq 0) {$Staff2_cards4_customUrl} else {"https://myanimelist.net/anime/$($Staff2_cards4_malId)"})]$($Staff2_cards4_titleResult)[/url]"})"})
+|| 3 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff2_cards3_malId -eq 0) {$Staff2_cards3_customUrl} else {"https://myanimelist.net/anime/$($Staff2_cards3_malId)"})]$($Staff2_cards3_titleResult)[/url]"})$(if($Staff2_cards4_imageUri) {"|| ~~~~~~ || 4 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff2_cards4_malId -eq 0) {$Staff2_cards4_customUrl} else {"https://myanimelist.net/anime/$($Staff2_cards4_malId)"})]$($Staff2_cards4_titleResult)[/url] ||"})"})
 [img]$($Staff2_cards3_imageUri)[/img]$(if($Staff2_cards4_imageUri) {" [img]$($Staff2_cards4_imageUri)[/img]"})
 "@})$(if($Staff2_cards5_imageUri) {@"
 
-|| 5 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff2_cards5_malId -eq 0) {$Staff2_cards5_customUrl} else {"https://myanimelist.net/anime/$($Staff2_cards5_malId)"})]$($Staff2_cards5_titleResult)[/url]"})$(if($Staff2_cards6_imageUri) {" ~~~~~~ || 6 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff2_cards6_malId -eq 0) {$Staff2_cards6_customUrl} else {"https://myanimelist.net/anime/$($Staff2_cards6_malId)"})]$($Staff2_cards6_titleResult)[/url]"})"})
+|| 5 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff2_cards5_malId -eq 0) {$Staff2_cards5_customUrl} else {"https://myanimelist.net/anime/$($Staff2_cards5_malId)"})]$($Staff2_cards5_titleResult)[/url]"})$(if($Staff2_cards6_imageUri) {"|| ~~~~~~ || 6 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff2_cards6_malId -eq 0) {$Staff2_cards6_customUrl} else {"https://myanimelist.net/anime/$($Staff2_cards6_malId)"})]$($Staff2_cards6_titleResult)[/url] ||"})"})
 [img]$($Staff2_cards5_imageUri)[/img]$(if($Staff2_cards6_imageUri) {" [img]$($Staff2_cards6_imageUri)[/img]"})
 "@})$(if($Staff2_cards7_imageUri) {@"
 
-|| 7 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff2_cards7_malId -eq 0) {$Staff2_cards7_customUrl} else {"https://myanimelist.net/anime/$($Staff2_cards7_malId)"})]$($Staff2_cards7_titleResult)[/url]"})$(if($Staff2_cards8_imageUri) {" ~~~~~~ || 8 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff2_cards8_malId -eq 0) {$Staff2_cards8_customUrl} else {"https://myanimelist.net/anime/$($Staff2_cards8_malId)"})]$($Staff2_cards8_titleResult)[/url]"})"})
+|| 7 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff2_cards7_malId -eq 0) {$Staff2_cards7_customUrl} else {"https://myanimelist.net/anime/$($Staff2_cards7_malId)"})]$($Staff2_cards7_titleResult)[/url]"})$(if($Staff2_cards8_imageUri) {"|| ~~~~~~ || 8 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff2_cards8_malId -eq 0) {$Staff2_cards8_customUrl} else {"https://myanimelist.net/anime/$($Staff2_cards8_malId)"})]$($Staff2_cards8_titleResult)[/url] ||"})"})
 [img]$($Staff2_cards7_imageUri)[/img]$(if($Staff2_cards8_imageUri) {" [img]$($Staff2_cards8_imageUri)[/img]"})
 "@})$(if($Staff2_cards9_imageUri) {@"
 
-|| 9 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff2_cards9_malId -eq 0) {$Staff2_cards9_customUrl} else {"https://myanimelist.net/anime/$($Staff2_cards9_malId)"})]$($Staff2_cards9_titleResult)[/url]"})
+|| 9 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff2_cards9_malId -eq 0) {$Staff2_cards9_customUrl} else {"https://myanimelist.net/anime/$($Staff2_cards9_malId)"})]$($Staff2_cards9_titleResult)[/url] ||"})
 [img]$($Staff2_cards9_imageUri)[/img]
 "@})
-[/spoiler]
+`[/spoiler`]
 [/quote]$(if($Staff3_username) {@"
 
 [size=150][b]$($Staff3_nickname)[/b][/size]
@@ -1799,26 +1847,26 @@ $( if ($Staff3_limitType -eq "role") {@"
 [b]Staff:[/b] $($Staff3_limitStaff)/$($Staff3_totalCards) $(if ($Staff3_limitStaff -eq $Staff3_totalCards) {"(ALL)"})
 "@} else {"[b]Any[/b]: $($Staff3_limitAny)/$($Staff3_totalCards) $(if ($Staff3_limitAny -eq $Staff3_totalCards) {"(ALL)"})"} )
 
-[spoiler=cards]
-|| 1 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff3_cards1_malId -eq 0) {$Staff3_cards1_customUrl} else {"https://myanimelist.net/anime/$($Staff3_cards1_malId)"})]$($Staff3_cards1_titleResult)[/url]"})$(if($Staff3_cards2_imageUri) {" ~~~~~~ || 2 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff3_cards2_malId -eq 0) {$Staff3_cards2_customUrl} else {"https://myanimelist.net/anime/$($Staff3_cards2_malId)"})]$($Staff3_cards2_titleResult)[/url]"})"})
+`[spoiler=cards`]
+|| 1 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff3_cards1_malId -eq 0) {$Staff3_cards1_customUrl} else {"https://myanimelist.net/anime/$($Staff3_cards1_malId)"})]$($Staff3_cards1_titleResult)[/url]"})$(if($Staff3_cards2_imageUri) {"|| ~~~~~~ || 2 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff3_cards2_malId -eq 0) {$Staff3_cards2_customUrl} else {"https://myanimelist.net/anime/$($Staff3_cards2_malId)"})]$($Staff3_cards2_titleResult)[/url] ||"})"})
 [img]$($Staff3_cards1_imageUri)[/img]$(if($Staff3_cards2_imageUri) {" [img]$($Staff3_cards2_imageUri)[/img]"})$(if($Staff3_cards3_imageUri) {@"
 
-|| 3 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff3_cards3_malId -eq 0) {$Staff3_cards3_customUrl} else {"https://myanimelist.net/anime/$($Staff3_cards3_malId)"})]$($Staff3_cards3_titleResult)[/url]"})$(if($Staff3_cards4_imageUri) {" ~~~~~~ || 4 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff3_cards4_malId -eq 0) {$Staff3_cards4_customUrl} else {"https://myanimelist.net/anime/$($Staff3_cards4_malId)"})]$($Staff3_cards4_titleResult)[/url]"})"})
+|| 3 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff3_cards3_malId -eq 0) {$Staff3_cards3_customUrl} else {"https://myanimelist.net/anime/$($Staff3_cards3_malId)"})]$($Staff3_cards3_titleResult)[/url]"})$(if($Staff3_cards4_imageUri) {"|| ~~~~~~ || 4 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff3_cards4_malId -eq 0) {$Staff3_cards4_customUrl} else {"https://myanimelist.net/anime/$($Staff3_cards4_malId)"})]$($Staff3_cards4_titleResult)[/url] ||"})"})
 [img]$($Staff3_cards3_imageUri)[/img]$(if($Staff3_cards4_imageUri) {" [img]$($Staff3_cards4_imageUri)[/img]"})
 "@})$(if($Staff3_cards5_imageUri) {@"
 
-|| 5 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff3_cards5_malId -eq 0) {$Staff3_cards5_customUrl} else {"https://myanimelist.net/anime/$($Staff3_cards5_malId)"})]$($Staff3_cards5_titleResult)[/url]"})$(if($Staff3_cards6_imageUri) {" ~~~~~~ || 6 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff3_cards6_malId -eq 0) {$Staff3_cards6_customUrl} else {"https://myanimelist.net/anime/$($Staff3_cards6_malId)"})]$($Staff3_cards6_titleResult)[/url]"})"})
+|| 5 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff3_cards5_malId -eq 0) {$Staff3_cards5_customUrl} else {"https://myanimelist.net/anime/$($Staff3_cards5_malId)"})]$($Staff3_cards5_titleResult)[/url]"})$(if($Staff3_cards6_imageUri) {"|| ~~~~~~ || 6 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff3_cards6_malId -eq 0) {$Staff3_cards6_customUrl} else {"https://myanimelist.net/anime/$($Staff3_cards6_malId)"})]$($Staff3_cards6_titleResult)[/url] ||"})"})
 [img]$($Staff3_cards5_imageUri)[/img]$(if($Staff3_cards6_imageUri) {" [img]$($Staff3_cards6_imageUri)[/img]"})
 "@})$(if($Staff3_cards7_imageUri) {@"
 
-|| 7 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff3_cards7_malId -eq 0) {$Staff3_cards7_customUrl} else {"https://myanimelist.net/anime/$($Staff3_cards7_malId)"})]$($Staff3_cards7_titleResult)[/url]"})$(if($Staff3_cards8_imageUri) {" ~~~~~~ || 8 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff3_cards8_malId -eq 0) {$Staff3_cards8_customUrl} else {"https://myanimelist.net/anime/$($Staff3_cards8_malId)"})]$($Staff3_cards8_titleResult)[/url]"})"})
+|| 7 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff3_cards7_malId -eq 0) {$Staff3_cards7_customUrl} else {"https://myanimelist.net/anime/$($Staff3_cards7_malId)"})]$($Staff3_cards7_titleResult)[/url]"})$(if($Staff3_cards8_imageUri) {"|| ~~~~~~ || 8 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff3_cards8_malId -eq 0) {$Staff3_cards8_customUrl} else {"https://myanimelist.net/anime/$($Staff3_cards8_malId)"})]$($Staff3_cards8_titleResult)[/url] ||"})"})
 [img]$($Staff3_cards7_imageUri)[/img]$(if($Staff3_cards8_imageUri) {" [img]$($Staff3_cards8_imageUri)[/img]"})
 "@})$(if($Staff3_cards9_imageUri) {@"
 
-|| 9 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff3_cards9_malId -eq 0) {$Staff3_cards9_customUrl} else {"https://myanimelist.net/anime/$($Staff3_cards9_malId)"})]$($Staff3_cards9_titleResult)[/url]"})
+|| 9 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff3_cards9_malId -eq 0) {$Staff3_cards9_customUrl} else {"https://myanimelist.net/anime/$($Staff3_cards9_malId)"})]$($Staff3_cards9_titleResult)[/url] ||"})
 [img]$($Staff3_cards9_imageUri)[/img]
 "@})
-[/spoiler]
+`[/spoiler`]
 [/quote]$(if($Staff4_username) {@"
 
 [size=150][b]$($Staff4_nickname)[/b][/size]
@@ -1827,26 +1875,26 @@ $( if ($Staff4_limitType -eq "role") {@"
 [b]Staff:[/b] $($Staff4_limitStaff)/$($Staff4_totalCards) $(if ($Staff4_limitStaff -eq $Staff4_totalCards) {"(ALL)"})
 "@} else {"[b]Any[/b]: $($Staff4_limitAny)/$($Staff4_totalCards) $(if ($Staff4_limitAny -eq $Staff4_totalCards) {"(ALL)"})"} )
 
-[spoiler=cards]
-|| 1 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff4_cards1_malId -eq 0) {$Staff4_cards1_customUrl} else {"https://myanimelist.net/anime/$($Staff4_cards1_malId)"})]$($Staff4_cards1_titleResult)[/url]"})$(if($Staff4_cards2_imageUri) {" ~~~~~~ || 2 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff4_cards2_malId -eq 0) {$Staff4_cards2_customUrl} else {"https://myanimelist.net/anime/$($Staff4_cards2_malId)"})]$($Staff4_cards2_titleResult)[/url]"})"})
+`[spoiler=cards`]
+|| 1 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff4_cards1_malId -eq 0) {$Staff4_cards1_customUrl} else {"https://myanimelist.net/anime/$($Staff4_cards1_malId)"})]$($Staff4_cards1_titleResult)[/url]"})$(if($Staff4_cards2_imageUri) {"|| ~~~~~~ || 2 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff4_cards2_malId -eq 0) {$Staff4_cards2_customUrl} else {"https://myanimelist.net/anime/$($Staff4_cards2_malId)"})]$($Staff4_cards2_titleResult)[/url] ||"})"})
 [img]$($Staff4_cards1_imageUri)[/img]$(if($Staff4_cards2_imageUri) {" [img]$($Staff4_cards2_imageUri)[/img]"})$(if($Staff4_cards3_imageUri) {@"
 
-|| 3 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff4_cards3_malId -eq 0) {$Staff4_cards3_customUrl} else {"https://myanimelist.net/anime/$($Staff4_cards3_malId)"})]$($Staff4_cards3_titleResult)[/url]"})$(if($Staff4_cards4_imageUri) {" ~~~~~~ || 4 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff4_cards4_malId -eq 0) {$Staff4_cards4_customUrl} else {"https://myanimelist.net/anime/$($Staff4_cards4_malId)"})]$($Staff4_cards4_titleResult)[/url]"})"})
+|| 3 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff4_cards3_malId -eq 0) {$Staff4_cards3_customUrl} else {"https://myanimelist.net/anime/$($Staff4_cards3_malId)"})]$($Staff4_cards3_titleResult)[/url]"})$(if($Staff4_cards4_imageUri) {"|| ~~~~~~ || 4 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff4_cards4_malId -eq 0) {$Staff4_cards4_customUrl} else {"https://myanimelist.net/anime/$($Staff4_cards4_malId)"})]$($Staff4_cards4_titleResult)[/url] ||"})"})
 [img]$($Staff4_cards3_imageUri)[/img]$(if($Staff4_cards4_imageUri) {" [img]$($Staff4_cards4_imageUri)[/img]"})
 "@})$(if($Staff4_cards5_imageUri) {@"
 
-|| 5 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff4_cards5_malId -eq 0) {$Staff4_cards5_customUrl} else {"https://myanimelist.net/anime/$($Staff4_cards5_malId)"})]$($Staff4_cards5_titleResult)[/url]"})$(if($Staff4_cards6_imageUri) {" ~~~~~~ || 6 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff4_cards6_malId -eq 0) {$Staff4_cards6_customUrl} else {"https://myanimelist.net/anime/$($Staff4_cards6_malId)"})]$($Staff4_cards6_titleResult)[/url]"})"})
+|| 5 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff4_cards5_malId -eq 0) {$Staff4_cards5_customUrl} else {"https://myanimelist.net/anime/$($Staff4_cards5_malId)"})]$($Staff4_cards5_titleResult)[/url]"})$(if($Staff4_cards6_imageUri) {"|| ~~~~~~ || 6 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff4_cards6_malId -eq 0) {$Staff4_cards6_customUrl} else {"https://myanimelist.net/anime/$($Staff4_cards6_malId)"})]$($Staff4_cards6_titleResult)[/url] ||"})"})
 [img]$($Staff4_cards5_imageUri)[/img]$(if($Staff4_cards6_imageUri) {" [img]$($Staff4_cards6_imageUri)[/img]"})
 "@})$(if($Staff4_cards7_imageUri) {@"
 
-|| 7 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff4_cards7_malId -eq 0) {$Staff4_cards7_customUrl} else {"https://myanimelist.net/anime/$($Staff4_cards7_malId)"})]$($Staff4_cards7_titleResult)[/url]"})$(if($Staff4_cards8_imageUri) {" ~~~~~~ || 8 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff4_cards8_malId -eq 0) {$Staff4_cards8_customUrl} else {"https://myanimelist.net/anime/$($Staff4_cards8_malId)"})]$($Staff4_cards8_titleResult)[/url]"})"})
+|| 7 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff4_cards7_malId -eq 0) {$Staff4_cards7_customUrl} else {"https://myanimelist.net/anime/$($Staff4_cards7_malId)"})]$($Staff4_cards7_titleResult)[/url]"})$(if($Staff4_cards8_imageUri) {"|| ~~~~~~ || 8 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff4_cards8_malId -eq 0) {$Staff4_cards8_customUrl} else {"https://myanimelist.net/anime/$($Staff4_cards8_malId)"})]$($Staff4_cards8_titleResult)[/url] ||"})"})
 [img]$($Staff4_cards7_imageUri)[/img]$(if($Staff4_cards8_imageUri) {" [img]$($Staff4_cards8_imageUri)[/img]"})
 "@})$(if($Staff4_cards9_imageUri) {@"
 
-|| 9 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff4_cards9_malId -eq 0) {$Staff4_cards9_customUrl} else {"https://myanimelist.net/anime/$($Staff4_cards9_malId)"})]$($Staff4_cards9_titleResult)[/url]"})
+|| 9 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff4_cards9_malId -eq 0) {$Staff4_cards9_customUrl} else {"https://myanimelist.net/anime/$($Staff4_cards9_malId)"})]$($Staff4_cards9_titleResult)[/url] ||"})
 [img]$($Staff4_cards9_imageUri)[/img]
 "@})
-[/spoiler]
+`[/spoiler`]
 [/quote]$(if($Staff5_username) {@"
 
 [size=150][b]$($Staff5_nickname)[/b][/size]
@@ -1855,26 +1903,26 @@ $( if ($Staff5_limitType -eq "role") {@"
 [b]Staff:[/b] $($Staff5_limitStaff)/$($Staff5_totalCards) $(if ($Staff5_limitStaff -eq $Staff5_totalCards) {"(ALL)"})
 "@} else {"[b]Any[/b]: $($Staff5_limitAny)/$($Staff5_totalCards) $(if ($Staff5_limitAny -eq $Staff5_totalCards) {"(ALL)"})"} )
 
-[spoiler=cards]
-|| 1 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff5_cards1_malId -eq 0) {$Staff5_cards1_customUrl} else {"https://myanimelist.net/anime/$($Staff5_cards1_malId)"})]$($Staff5_cards1_titleResult)[/url]"})$(if($Staff5_cards2_imageUri) {" ~~~~~~ || 2 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff5_cards2_malId -eq 0) {$Staff5_cards2_customUrl} else {"https://myanimelist.net/anime/$($Staff5_cards2_malId)"})]$($Staff5_cards2_titleResult)[/url]"})"})
+`[spoiler=cards`]
+|| 1 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff5_cards1_malId -eq 0) {$Staff5_cards1_customUrl} else {"https://myanimelist.net/anime/$($Staff5_cards1_malId)"})]$($Staff5_cards1_titleResult)[/url]"})$(if($Staff5_cards2_imageUri) {"|| ~~~~~~ || 2 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff5_cards2_malId -eq 0) {$Staff5_cards2_customUrl} else {"https://myanimelist.net/anime/$($Staff5_cards2_malId)"})]$($Staff5_cards2_titleResult)[/url] ||"})"})
 [img]$($Staff5_cards1_imageUri)[/img]$(if($Staff5_cards2_imageUri) {" [img]$($Staff5_cards2_imageUri)[/img]"})$(if($Staff5_cards3_imageUri) {@"
 
-|| 3 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff5_cards3_malId -eq 0) {$Staff5_cards3_customUrl} else {"https://myanimelist.net/anime/$($Staff5_cards3_malId)"})]$($Staff5_cards3_titleResult)[/url]"})$(if($Staff5_cards4_imageUri) {" ~~~~~~ || 4 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff5_cards4_malId -eq 0) {$Staff5_cards4_customUrl} else {"https://myanimelist.net/anime/$($Staff5_cards4_malId)"})]$($Staff5_cards4_titleResult)[/url]"})"})
+|| 3 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff5_cards3_malId -eq 0) {$Staff5_cards3_customUrl} else {"https://myanimelist.net/anime/$($Staff5_cards3_malId)"})]$($Staff5_cards3_titleResult)[/url]"})$(if($Staff5_cards4_imageUri) {"|| ~~~~~~ || 4 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff5_cards4_malId -eq 0) {$Staff5_cards4_customUrl} else {"https://myanimelist.net/anime/$($Staff5_cards4_malId)"})]$($Staff5_cards4_titleResult)[/url] ||"})"})
 [img]$($Staff5_cards3_imageUri)[/img]$(if($Staff5_cards4_imageUri) {" [img]$($Staff5_cards4_imageUri)[/img]"})
 "@})$(if($Staff5_cards5_imageUri) {@"
 
-|| 5 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff5_cards5_malId -eq 0) {$Staff5_cards5_customUrl} else {"https://myanimelist.net/anime/$($Staff5_cards5_malId)"})]$($Staff5_cards5_titleResult)[/url]"})$(if($Staff5_cards6_imageUri) {" ~~~~~~ || 6 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff5_cards6_malId -eq 0) {$Staff5_cards6_customUrl} else {"https://myanimelist.net/anime/$($Staff5_cards6_malId)"})]$($Staff5_cards6_titleResult)[/url]"})"})
+|| 5 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff5_cards5_malId -eq 0) {$Staff5_cards5_customUrl} else {"https://myanimelist.net/anime/$($Staff5_cards5_malId)"})]$($Staff5_cards5_titleResult)[/url]"})$(if($Staff5_cards6_imageUri) {"|| ~~~~~~ || 6 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff5_cards6_malId -eq 0) {$Staff5_cards6_customUrl} else {"https://myanimelist.net/anime/$($Staff5_cards6_malId)"})]$($Staff5_cards6_titleResult)[/url] ||"})"})
 [img]$($Staff5_cards5_imageUri)[/img]$(if($Staff5_cards6_imageUri) {" [img]$($Staff5_cards6_imageUri)[/img]"})
 "@})$(if($Staff5_cards7_imageUri) {@"
 
-|| 7 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff5_cards7_malId -eq 0) {$Staff5_cards7_customUrl} else {"https://myanimelist.net/anime/$($Staff5_cards7_malId)"})]$($Staff5_cards7_titleResult)[/url]"})$(if($Staff5_cards8_imageUri) {" ~~~~~~ || 8 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff5_cards8_malId -eq 0) {$Staff5_cards8_customUrl} else {"https://myanimelist.net/anime/$($Staff5_cards8_malId)"})]$($Staff5_cards8_titleResult)[/url]"})"})
+|| 7 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff5_cards7_malId -eq 0) {$Staff5_cards7_customUrl} else {"https://myanimelist.net/anime/$($Staff5_cards7_malId)"})]$($Staff5_cards7_titleResult)[/url]"})$(if($Staff5_cards8_imageUri) {"|| ~~~~~~ || 8 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff5_cards8_malId -eq 0) {$Staff5_cards8_customUrl} else {"https://myanimelist.net/anime/$($Staff5_cards8_malId)"})]$($Staff5_cards8_titleResult)[/url] ||"})"})
 [img]$($Staff5_cards7_imageUri)[/img]$(if($Staff5_cards8_imageUri) {" [img]$($Staff5_cards8_imageUri)[/img]"})
 "@})$(if($Staff5_cards9_imageUri) {@"
 
-|| 9 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff5_cards9_malId -eq 0) {$Staff5_cards9_customUrl} else {"https://myanimelist.net/anime/$($Staff5_cards9_malId)"})]$($Staff5_cards9_titleResult)[/url]"})
+|| 9 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff5_cards9_malId -eq 0) {$Staff5_cards9_customUrl} else {"https://myanimelist.net/anime/$($Staff5_cards9_malId)"})]$($Staff5_cards9_titleResult)[/url] ||"})
 [img]$($Staff5_cards9_imageUri)[/img]
 "@})
-[/spoiler]
+`[/spoiler`]
 [/quote][/center][/color]
 "@})
 "@} else {"[/center][/color]"})
@@ -1889,23 +1937,23 @@ DM @$($gfxAdmin) or @$($gfxDeputy) for any questions[/size]
 
 [/color][/quote]
 [color=black]Cards made by @$($Staff1_username)$(if($Staff2_username) {", @$($Staff2_username)$(if($Staff3_username) {", @$($Staff3_username)$(if($Staff4_username) {", @$($Staff4_username)$(if($Staff5_username) {", @$($Staff5_username)"} else {"."})"} else {"."})"} else {"."})"} else {"."})[/color][/size]
-[/center]
+`[/center`]
 [/size][/color]
 
 
 For internal use only:
-###SCRAPEDATA>>$($Edition_title)>>>$($Staff1_nickname);$(if ($Staff2_username) {$Staff2_username} else {"0"});$(if ($Staff3_username) {$Staff3_username} else {"0"});$(if ($Staff4_username) {$Staff4_username} else {"0"});$(if ($Staff5_username) {$Staff5_username} else {"0"})
+`###SCRAPEDATA>>$($Edition_title)>>>$($Staff1_nickname);$(if ($Staff2_username) {$Staff2_username} else {"0"});$(if ($Staff3_username) {$Staff3_username} else {"0"});$(if ($Staff4_username) {$Staff4_username} else {"0"});$(if ($Staff5_username) {$Staff5_username} else {"0"})
 >>>MAX>>$($Edition_count)
 >>>LIM>>$( if ($Staff1_limitType -eq "role") {"$($Staff1_limitMember)|$($Staff1_limitStaff)"} else {$($Staff1_limitAny)});$( if ($Staff2_username) {if ($Staff2_limitType -eq "role") {"$($Staff2_limitMember)|$($Staff2_limitStaff)"} else {$($Staff2_limitAny)}} else {"0"});$( if ($Staff3_username) {if ($Staff3_limitType -eq "role") {"$($Staff3_limitMember)|$($Staff3_limitStaff)"} else {$($Staff3_limitAny)}} else {"0"});$( if ($Staff4_username) {if ($Staff4_limitType -eq "role") {"$($Staff4_limitMember)|$($Staff4_limitStaff)"} else {$($Staff4_limitAny)}} else {"0"});$( if ($Staff5_username) {if ($Staff5_limitType -eq "role") {"$($Staff5_limitMember)|$($Staff5_limitStaff)"} else {$($Staff5_limitAny)}} else {"0"})
 >>>AVA>>$($Staff1_totalCards);$( if ($Staff2_username) {$Staff2_totalCards} else {"0"});$( if ($Staff3_username) {$Staff3_totalCards} else {"0"});$( if ($Staff4_username) {$Staff4_totalCards} else {"0"});$( if ($Staff5_username) {$Staff5_totalCards} else {"0"})###
-@#Generated with [url=https://github.com/theNewbieClub-MAL/editionThreadGenerator-ps1]GitHub:theNewbieClub-MAL/editionThreadGenerator-ps1[/url]@v$($version) in Powershell on $(Get-Date -AsUtc) UTC#@
+@#Generated with [url=https://github.com/theNewbieClub-MAL/editionThreadGenerator-ps1]GitHub:theNewbieClub-MAL/editionThreadGenerator-ps1[/url]@[i][/i]v$($version) in Powershell on $(Get-Date -AsUtc -Format "yyyy-MM-dd'T'HH:mm:ss'Z'")#@
 "@
 
 Write-Host $result
 $result > ./Generated.bbcode
 
 Write-Host "=============" -ForegroundColor Yellow
-Write-Host $i18n.Attention_GeneratedFile_Created_1, "`"$((Get-Location).Path)/Generated.bbcode`",", $i18n.Attention_GeneratedFile_Created_2 -ForegroundColor Blue -Separator " "
+Write-Host $i18n.Attention_File_Created_1, "`"$((Get-Location).Path)/Generated.bbcode`",", $i18n.Attention_File_Created_2 -ForegroundColor Blue -Separator " "
 Read-Host -Prompt $i18n.Prompt_Move_Section
 
 # Post GFX Reqeust Field
@@ -1920,7 +1968,7 @@ Write-Host @"
 [size=120]　[size=230][color=$($Thread_color)]💬 [b]GFX and Deliverer Staff Request[/b][/color][/size][/size][quote][center]
 [size=120][color=$($Thread_color)][i]For GFX staff who hasn't send the format yet, please DM me, and insert template to message using [[i][/i]code] tag.[/i][/color][/size]
 
-[spoiler=requests]
+`[spoiler=requests`]
 [code][quote][b]Staff Nickname: [/b] 
 [b]Delivery: [/b] 
 [i]—Cards by—[/i]
@@ -1930,7 +1978,7 @@ $($Staff1_nickname): $( if ($Edition_staffCount -ge 2) { "`n$($Staff2_nickname):
 [b]Edition Suggestion: [/b] 
 [/quote][/code]
 
-[/spoiler]
+`[/spoiler`]
 [/center][/quote]
 "@
 

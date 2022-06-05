@@ -22,7 +22,10 @@ function Get-MALTitle {
     if($false -eq $English){
         (ConvertFrom-Json ($iwr).content | Select-Object -Expand "data").title
     } else {
-        (ConvertFrom-Json ($iwr).content | Select-Object -Expand "data").title_english
+        $fallback = (ConvertFrom-Json ($iwr).content | Select-Object -Expand "data").title_english
+        if ($null -eq $fallback) {
+            (ConvertFrom-Json ($iwr).content | Select-Object -Expand "data").title
+        }
     }
 }
 
