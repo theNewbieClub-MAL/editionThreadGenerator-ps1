@@ -1775,12 +1775,7 @@ $($Staff1_nickname): $( if ($Edition_staffCount -ge 2) { "`n$($Staff2_nickname):
 $($Staff1_nickname): $( if ($Edition_staffCount -ge 2) { "`n$($Staff2_nickname): " } else {""} ) $( if ($Edition_staffCount -ge 3) { "`n$($Staff3_nickname): " } else {""} )$( if ($Edition_staffCount -ge 4) { "`n$($Staff4_nickname): " } else {""} )$( if ($Edition_staffCount -ge 5) { "`n$($Staff5_nickname): " } else {""} )
 ——
 [b]Comments:[/b] 
-[b]Edition Suggestion:[/b] 
-
-
-
-
-
+[b]Edition Suggestion:[/b] $( if ( $Edition_staffCount -eq 5) { "`n" } else {""} ) $( if ( $Edition_staffCount -eq 4) { "`n`n" } else {""} ) $( if ( $Edition_staffCount -eq 3) { "`n`n`n" } else {""} ) $( if ( $Edition_staffCount -eq 2) { "`n`n`n`n" } else {""} ) $( if ( $Edition_staffCount -eq 1) { "`n`n`n`n`n" } else {""} )
 [/size][size=80][right][color=#1d439b]Report[/color] - [color=#1d439b]Quote[/color][/right][/size]
 [/color][/quote]
 　[size=230]💳 [b]Cards[/b][/size]
