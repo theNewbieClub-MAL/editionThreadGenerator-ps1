@@ -125,6 +125,7 @@ if ($Edition_isSingle -eq "n") {
     if ($Banner_malId -eq "0") {
         Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
         $Banner_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
+        $Banner_titleResult = $Banner_titleQuery
     } else {
         $Banner_titleResult = if ($Locale_set -eq "romaji") {
             Get-MALTitle -MALId $Banner_malId -English $false
