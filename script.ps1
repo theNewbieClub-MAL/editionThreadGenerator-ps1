@@ -1808,7 +1808,7 @@ $( if ($Staff1_limitType -eq "role") {@"
 "@})
 `[/spoiler`]
 [/quote]$(if($Staff2_username) {@"
-
+[quote]
 [size=150][b]$($Staff2_nickname)[/b][/size]
 $( if ($Staff2_limitType -eq "role") {@"
 [b]Member:[/b] $($Staff2_limitMember)/$($Staff2_totalCards)
@@ -1836,7 +1836,7 @@ $( if ($Staff2_limitType -eq "role") {@"
 "@})
 `[/spoiler`]
 [/quote]$(if($Staff3_username) {@"
-
+[quote]
 [size=150][b]$($Staff3_nickname)[/b][/size]
 $( if ($Staff3_limitType -eq "role") {@"
 [b]Member:[/b] $($Staff3_limitMember)/$($Staff3_totalCards)
@@ -1864,7 +1864,7 @@ $( if ($Staff3_limitType -eq "role") {@"
 "@})
 `[/spoiler`]
 [/quote]$(if($Staff4_username) {@"
-
+[quote]
 [size=150][b]$($Staff4_nickname)[/b][/size]
 $( if ($Staff4_limitType -eq "role") {@"
 [b]Member:[/b] $($Staff4_limitMember)/$($Staff4_totalCards)
@@ -1892,7 +1892,7 @@ $( if ($Staff4_limitType -eq "role") {@"
 "@})
 `[/spoiler`]
 [/quote]$(if($Staff5_username) {@"
-
+[quote]
 [size=150][b]$($Staff5_nickname)[/b][/size]
 $( if ($Staff5_limitType -eq "role") {@"
 [b]Member:[/b] $($Staff5_limitMember)/$($Staff5_totalCards)
@@ -1938,11 +1938,11 @@ DM @$($gfxAdmin) or @$($gfxDeputy) for any questions[/size]
 
 
 For internal use only:
-`###SCRAPEDATA>>$($Edition_title)>>>$($Staff1_nickname);$(if ($Staff2_username) {$Staff2_username} else {"0"});$(if ($Staff3_username) {$Staff3_username} else {"0"});$(if ($Staff4_username) {$Staff4_username} else {"0"});$(if ($Staff5_username) {$Staff5_username} else {"0"})
+`###SCRAPEDATA>>$($Edition_title)>>>$($Staff1_nickname);$(if ($Staff2_username) {$Staff2_nickname} else {"0"});$(if ($Staff3_username) {$Staff3_nickname} else {"0"});$(if ($Staff4_username) {$Staff4_nickname} else {"0"});$(if ($Staff5_username) {$Staff5_nickname} else {"0"})
 >>>MAX>>$($Edition_count)
 >>>LIM>>$( if ($Staff1_limitType -eq "role") {"$($Staff1_limitMember)|$($Staff1_limitStaff)"} else {$($Staff1_limitAny)});$( if ($Staff2_username) {if ($Staff2_limitType -eq "role") {"$($Staff2_limitMember)|$($Staff2_limitStaff)"} else {$($Staff2_limitAny)}} else {"0"});$( if ($Staff3_username) {if ($Staff3_limitType -eq "role") {"$($Staff3_limitMember)|$($Staff3_limitStaff)"} else {$($Staff3_limitAny)}} else {"0"});$( if ($Staff4_username) {if ($Staff4_limitType -eq "role") {"$($Staff4_limitMember)|$($Staff4_limitStaff)"} else {$($Staff4_limitAny)}} else {"0"});$( if ($Staff5_username) {if ($Staff5_limitType -eq "role") {"$($Staff5_limitMember)|$($Staff5_limitStaff)"} else {$($Staff5_limitAny)}} else {"0"})
 >>>AVA>>$($Staff1_totalCards);$( if ($Staff2_username) {$Staff2_totalCards} else {"0"});$( if ($Staff3_username) {$Staff3_totalCards} else {"0"});$( if ($Staff4_username) {$Staff4_totalCards} else {"0"});$( if ($Staff5_username) {$Staff5_totalCards} else {"0"})###
-@#Generated with [url=https://github.com/theNewbieClub-MAL/editionThreadGenerator-ps1]GitHub:theNewbieClub-MAL/editionThreadGenerator-ps1[/url]@[i][/i]v$($version) in Powershell on $(Get-Date -AsUtc -Format "yyyy-MM-dd'T'HH:mm:ss'Z'")#@
+@#Generated with [url=https://github.com/theNewbieClub-MAL/editionThreadGenerator-ps1]GitHub:theNewbieClub-MAL/editionThreadGenerator-ps1[/url]@[i][/i]v$($version) in Powershell on $(Get-Date -AsUtc -Format "yyyy-MM-ddTHH:mm:ssZ")#@
 "@
 
 Write-Host $result
