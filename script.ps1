@@ -4,7 +4,7 @@
 # Script Metadata
 # ===============
 
-$version = "0.0.4"
+$version = "0.1.0"
 
 # MAL Usernames, without @
 $gfxAdmin = "nattadasu"
@@ -29,19 +29,11 @@ Write-Host ""
 # Import Localization
 # ===================
 
-# Write a warning for non-Windows system
-if ($IsWindows -or $ENV:OS) {
-    $localeName = Get-WinSystemLocale | ForEach-Object { $_.Name }
-} else {
-    Write-Host "😖 Uhm, this is kinda awkward..." -ForegroundColor Red
-    Write-Host "Since you are currently using non-Windows OS, we automatically set the locale to English US as the cmdlet (Get-WinSystemLocale) to autoselect locale is can not be installed on another system. Create an issue on PowerShell Official GitHub repo to implement the module natively, we guess." -ForegroundColor Red
-    Write-Host ""
-    $localeName = "en-US"
-}
+$localeName = (Get-Culture).Name
 
 # Write a warning when user used locale that doesn't translated yet.
 if (-not(Test-Path -Path ./Translations/$localeName)) {
-    Write-Host "Uh-oh. We can not find the localization file for $($localeName), so we temporarily replace it to English (US)" -ForegroundColor Red
+    Write-Host "Uh-oh. We can not find the localization file for $($localeName) ($((Get-Culture).DisplayName)), so we temporarily replace it to English (US)" -ForegroundColor Red
     Write-Host "You can change the locale in next prompt"
     $localeName = "en-US"
     Write-Host ""
@@ -49,7 +41,7 @@ if (-not(Test-Path -Path ./Translations/$localeName)) {
 
 Import-LocalizedData -BindingVariable i18n -UICulture $localeName -BaseDirectory ./Translations
 
-Write-Host $i18n.InitLocale_General_echo," ", $localeName, ". ", $i18n.InitLocale_General_prompt -ForegroundColor Yellow -Separator ""
+Write-Host $i18n.InitLocale_General_echo," ", $localeName, " (", (Get-Culture).DisplayName, "). ", $i18n.InitLocale_General_prompt -ForegroundColor Yellow -Separator ""
 Write-Host ""
 Write-Host $i18n.InitLocale_List_echo
 (Get-ChildItem ./Translations/ -Directory | ForEach-Object { $_.Name }) -Join ", "
@@ -57,7 +49,7 @@ Write-Host ""
 $changeLocale = Read-Host -Prompt $i18n.InitLocale_Replace_Prompt
 
 if (-not($changeLocale)) {
-    Import-LocalizedData -BindingVariable i18n -BaseDirectory ./Translations
+    Import-LocalizedData -BindingVariable i18n -UICulture $localeName -BaseDirectory ./Translations
     $changeLocale = $localeName
 } else {
     Import-LocalizedData -BindingVariable i18n -UICulture $changeLocale -BaseDirectory ./Translations
