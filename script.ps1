@@ -41,12 +41,12 @@ if (-not(Test-Path -Path ./Translations/$localeName)) {
 
 Import-LocalizedData -BindingVariable i18n -UICulture $localeName -BaseDirectory ./Translations
 
-Write-Host $i18n.InitLocale_General_echo_1," ", $localeName, " (", (Get-Culture).DisplayName, ") ", $i18n.InitLocale_General_echo_2, $i18n.InitLocale_General_prompt -ForegroundColor Yellow -Separator ""
+Write-Host $i18n.InitLocale_General_echo_1," ", $localeName, " (", (Get-Culture).DisplayName, ")", "$(if("." -eq $i18n.InitLocale_General_echo_2){"$($i18n.InitLocale_General_echo_2) "} else {"$($i18n.InitLocale_General_echo_2). "})", $i18n.InitLocale_General_prompt -ForegroundColor Yellow -Separator ""
 Write-Host ""
 Write-Host $i18n.InitLocale_List_echo
 
 # Implement JSON Table instead listing from `Get-ChildItem`.
-$i18nIndex = Get-Content ./Translation/index.json
+$i18nIndex = Get-Content ./Translations/index.json
 $i18nIndex | ConvertFrom-JSON | Format-Table @{L=$i18n.LocaleTable_cultureCode;E={$_.cultureCode}}, @{L=$i18n.LocaleTable_descEn;E={$_."desc-En"}}, @{L=$i18n.LocaleTable_descLoc;E={$_."desc-Loc"}}, @{L=$i18n.LocaleTable_contributors;E={$_.contributors}}
 
 Write-Host ""
