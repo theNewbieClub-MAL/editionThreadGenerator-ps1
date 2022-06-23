@@ -41,7 +41,7 @@ if (-not(Test-Path -Path ./Translations/$localeName)) {
 
 Import-LocalizedData -BindingVariable i18n -UICulture $localeName -BaseDirectory ./Translations
 
-Write-Host $i18n.InitLocale_General_echo_1," ", $localeName, " (", (Get-Culture).DisplayName, ")", "$(if("." -eq $i18n.InitLocale_General_echo_2){"$($i18n.InitLocale_General_echo_2) "} else {"$($i18n.InitLocale_General_echo_2). "})", $i18n.InitLocale_General_prompt -ForegroundColor Yellow -Separator ""
+Write-Host $i18n.InitLocale_General_echo_1," ", $localeName, " (", (Get-Culture).DisplayName, ")", "$(if("." -eq $i18n.InitLocale_General_echo_2){"$($i18n.InitLocale_General_echo_2) "} else {" $($i18n.InitLocale_General_echo_2) "})", $i18n.InitLocale_General_prompt -ForegroundColor Yellow -Separator ""
 Write-Host ""
 Write-Host $i18n.InitLocale_List_echo
 
