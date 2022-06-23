@@ -41,7 +41,7 @@ if (-not(Test-Path -Path ./Translations/$localeName)) {
 
 Import-LocalizedData -BindingVariable i18n -UICulture $localeName -BaseDirectory ./Translations
 
-Write-Host $i18n.InitLocale_General_echo," ", $localeName, " (", (Get-Culture).DisplayName, "). ", $i18n.InitLocale_General_prompt -ForegroundColor Yellow -Separator ""
+Write-Host $i18n.InitLocale_General_echo_1," ", $localeName, " (", (Get-Culture).DisplayName, ") ", $i18n.InitLocale_General_echo_2, $i18n.InitLocale_General_prompt -ForegroundColor Yellow -Separator ""
 Write-Host ""
 Write-Host $i18n.InitLocale_List_echo
 (Get-ChildItem ./Translations/ -Directory | ForEach-Object { $_.Name }) -Join ", "
@@ -1941,7 +1941,7 @@ Write-Host $result
 $result > ./Generated.bbcode
 
 Write-Host "=============" -ForegroundColor Yellow
-Write-Host $i18n.Attention_File_Created_1, "`"$((Get-Location).Path)/Generated.bbcode`",", $i18n.Attention_File_Created_2 -ForegroundColor Blue -Separator " "
+Write-Host $i18n.Attention_File_Created_1, "`"$((Get-Location).Path)/Generated.bbcode`"", $i18n.Attention_File_Created_2 -ForegroundColor Blue -Separator " "
 Read-Host -Prompt $i18n.Prompt_Move_Section
 
 # Post GFX Reqeust Field

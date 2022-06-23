@@ -1,6 +1,7 @@
 ﻿#culture=id-ID
 ConvertFrom-StringData @'
-    InitLocale_General_echo     = 🌐 Sistem otomatis atur bahasa skrip ke
+    InitLocale_General_echo_1   = 🌐 Sistem otomatis atur bahasa skrip ke
+    InitLocale_General_echo_2   = .
     InitLocale_General_prompt   = Apakah kamu ingin mengubah ke bahasa lainnya?
     InitLocale_List_echo        = Bahasa yang tersedia sekarang:
     InitLocale_Replace_prompt   = 🔤 Tulis kode bahasa. Tekan tombol Enter/Return untuk membiarkan pengaturan
@@ -50,7 +51,7 @@ ConvertFrom-StringData @'
     Generate_GFXRequest_Success = ✅ Berhasil membuat post Pusat Permintaan GFX/Pengiriman
 
     Attention_File_Created_1    = 💁 Kami juga sudah menyimpan berkas yang digenerasi otomatis ke
-    Attention_File_Created_2    = mohon diperiksa.
+    Attention_File_Created_2    = , mohon diperiksa.
 
     Selected_Banner_Title       = ✅ Berhasil mengambil penamaan judul resmi dari MAL untuk banner, yakni:
     Selected_Card_Title         = ✅ Berhasil mengambil penamaan judul resmi dari MAL untuk kartu, yakni:

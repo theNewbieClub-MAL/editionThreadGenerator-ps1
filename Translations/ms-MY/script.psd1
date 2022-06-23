@@ -1,6 +1,7 @@
 ﻿#culture=ms-MY
 ConvertFrom-StringData @'
-    InitLocale_General_echo     = 🌐 Sistem menetapkan bahasa skrip secara automatik ke
+    InitLocale_General_echo_1   = 🌐 Sistem menetapkan bahasa skrip secara automatik ke
+    InitLocale_General_echo_2   = .
     InitLocale_General_prompt   = Adakah anda mahu menukar ke bahasa lain?
     InitLocale_List_echo        = Bahasa tersedia sekarang:
     InitLocale_Replace_prompt   = 🔤 Tulis kod bahasa.Tekan kekunci Enter/Return untuk membiarkan tetapan
@@ -50,7 +51,7 @@ ConvertFrom-StringData @'
     Generate_GFXRequest_Success = ✅ Berjaya membuat pos Pusat Permintaan GFX/Penghantaran
 
     Attention_File_Created_1    = 💁 Kami juga telah menyimpan fail yang dihasilkan secara automatik kepada
-    Attention_File_Created_2    = sila periksa.
+    Attention_File_Created_2    = , sila periksa.
 
     Selected_Banner_Title       = ✅ Berjaya mengambil penamaan gelaran rasmi dari MAL ke spanduk, iaitu:
     Selected_Card_Title         = ✅ Berjaya mengambil penamaan gelaran rasmi dari MAL ke kad, iaitu:

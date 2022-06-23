@@ -1,6 +1,7 @@
 ﻿#culture=en-US
 ConvertFrom-StringData @'
-    InitLocale_General_echo     = 🌐 System automatically set the language for the script to
+    InitLocale_General_echo_1   = 🌐 System automatically set the language for the script to
+    InitLocale_General_echo_2   = .
     InitLocale_General_prompt   = Do you want to change the language to else?
     InitLocale_List_echo        = Currently available languages:
     InitLocale_Replace_prompt   = 🔤 Write language code. Press enter/return key to keep the language
@@ -50,7 +51,7 @@ ConvertFrom-StringData @'
     Generate_GFXRequest_Success = ✅ Successfuly generated GFX/Deliverer Request Corner post
 
     Attention_File_Created_1    = 💁 We also saved the generated file on
-    Attention_File_Created_2    = please to check it.
+    Attention_File_Created_2    = , please to check it.
 
     Selected_Banner_Title       = ✅ Successfuly fetched proper title for banner from MAL as:
     Selected_Card_Title         = ✅ Successfuly fetched proper title for card from MAL as:
