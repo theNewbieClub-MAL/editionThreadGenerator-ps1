@@ -7,6 +7,11 @@ ConvertFrom-StringData @'
     InitLocale_Replace_prompt   = 🔤 Sprachcode schreiben. Drücken Sie die Enter/Eingabetaste, um die Sprache beizubehalten.
     InitLocale_Replace_success  = ✅ Die Skriptsprache wurde erfolgreich auf
 
+    LocaleTable_cultureCode     = Sprachcode
+    LocaleTable_descEn          = Englischer Name
+    LocaleTable_descLoc         = Lokaler Name
+    LocaleTable_contributors    = Mitwirkende
+
     Header_GeneralInfo          = Allgemeine Informationen
     Header_Customizations       = Anpassungen
     Header_Intro                = Einführung

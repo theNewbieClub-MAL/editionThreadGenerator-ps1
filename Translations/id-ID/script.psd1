@@ -7,6 +7,11 @@ ConvertFrom-StringData @'
     InitLocale_Replace_prompt   = 🔤 Tulis kode bahasa. Tekan tombol Enter/Return untuk membiarkan pengaturan
     InitLocale_Replace_success  = ✅ Berhasil mengubah bahasa skrip menjadi
 
+    LocaleTable_cultureCode     = Kode Bahasa
+    LocaleTable_descEn          = Nama Inggris
+    LocaleTable_descLoc         = Nama Asal
+    LocaleTable_contributors    = Kontributor
+
     Header_GeneralInfo          = Informasi Umum
     Header_Customizations       = Kustomisasi
     Header_Intro                = Pengantar
@@ -18,7 +23,7 @@ ConvertFrom-StringData @'
     Header_Staff_5              = Staf Kelima
 
     Question_Edition_Title      = 🔤 Judul edisi
-    Question_Edition_Emoji      = 😄 Simbol/emoji edisi, enter untuk melewati
+    Question_Edition_Emoji      = 😄 Simbol/emoji edisi, Enter untuk melewati
     Question_Edition_IsSingle   = ❓ Apakah edisi hanya mencakup satu judul? Default, n (y/n)
     Question_Edition_Count      = 🔢 Limit balasan (reply), Default, 100
     Question_Edition_Start      = 📆 Tanggal mulai, Format, YYYY-MM-DD; Contoh:

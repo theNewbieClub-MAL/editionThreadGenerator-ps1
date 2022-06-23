@@ -7,6 +7,11 @@ ConvertFrom-StringData @'
     InitLocale_Replace_prompt   = 🔤 Write language code. Press enter/return key to keep the language
     InitLocale_Replace_success  = ✅ Successfuly changed the script language to
 
+    LocaleTable_cultureCode     = Language Code
+    LocaleTable_descEn          = English Name
+    LocaleTable_descLoc         = Local Name
+    LocaleTable_contributors    = Contributors
+
     Header_GeneralInfo          = General Information
     Header_Customizations       = Customizations
     Header_Intro                = Introduction

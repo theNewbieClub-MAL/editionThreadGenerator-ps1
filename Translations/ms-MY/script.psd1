@@ -4,8 +4,13 @@ ConvertFrom-StringData @'
     InitLocale_General_echo_2   = .
     InitLocale_General_prompt   = Adakah anda mahu menukar ke bahasa lain?
     InitLocale_List_echo        = Bahasa tersedia sekarang:
-    InitLocale_Replace_prompt   = 🔤 Tulis kod bahasa.Tekan kekunci Enter/Return untuk membiarkan tetapan
+    InitLocale_Replace_prompt   = 🔤 Tulis kod bahasa. Tekan kekunci Enter/Return untuk membiarkan tetapan
     InitLocale_Replace_success  = ✅ Berjaya mengubah bahasa skrip ke dalam
+
+    LocaleTable_cultureCode     = Kode Bahasa
+    LocaleTable_descEn          = Nama Inggeris
+    LocaleTable_descLoc         = Nama Asal
+    LocaleTable_contributors    = Penyumbang
 
     Header_GeneralInfo          = Maklumat Umum
     Header_Customizations       = Penyesuaian
@@ -18,7 +23,7 @@ ConvertFrom-StringData @'
     Header_Staff_5              = Kakitangan Kelima
 
     Question_Edition_Title      = 🔤 Tajuk edisi
-    Question_Edition_Emoji      = 😄 Simbol/emoji edisi, enter untuk melangkau
+    Question_Edition_Emoji      = 😄 Simbol/emoji edisi, Enter untuk melangkau
     Question_Edition_IsSingle   = ❓ Apa edisi hanya merangkumi satu tajuk? Lalai, n (y/n)
     Question_Edition_Count      = 🔢 Had balasan (reply), Lalai, 100
     Question_Edition_Start      = 📆 Tarikh mula, Format, YYYY-MM-DD; Contoh:

@@ -1,0 +1,36 @@
+[
+    {
+        "cultureCode": "de-DE",
+        "desc-En": "German (Germany)",
+        "desc-Loc": "Deutsch (Deutschland)",
+        "contributors": [
+            "Karasian",
+            "nattadasu",
+            "secoze"
+        ]
+    },
+    {
+        "cultureCode": "en-US",
+        "desc-En": "English (USA)",
+        "desc-Loc": "English (USA)",
+        "contributors": [
+            "nattadasu"
+        ]
+    },
+    {
+        "cultureCode": "id-ID",
+        "desc-En": "Indonesian",
+        "desc-Loc": "Bahasa Indonesia",
+        "contributors": [
+            "nattadasu"
+        ]
+    },
+    {
+        "cultureCode": "ms-MY",
+        "desc-En": "Malay (Malaysian)",
+        "desc-Loc": "Bahasa Melayu (Malaysia)",
+        "contributors": [
+            "nattadasu"
+        ]
+    }
+]
