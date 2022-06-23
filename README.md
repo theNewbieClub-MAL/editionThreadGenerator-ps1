@@ -120,6 +120,23 @@ If you are interested in translating this script, please follow the steps on [#C
      ```
 
    * We recommend you always check the grammar **in the script process**.
+   * We also recommend you to check how other languages implement/intepret the keys. Some languages, example `de-DE`, has different approach in grammar.
+4. Modify `Translation/index.json` after you made the translation and before push the commit.
+   * The object should be sorted alphabetically ascended by `cultureName` value.
+   * Format for the object is:
+
+     ```json
+     [
+          {
+               "cultureCode": "",
+               "desc-En": "",
+               "desc-Loc": "",
+               "contributors": [
+                   ""
+               ]
+          }
+     ]
+     ```
 
 ### Main script
 
