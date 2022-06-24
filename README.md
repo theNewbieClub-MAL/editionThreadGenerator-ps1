@@ -78,7 +78,8 @@ Set-ExecutionPolicy Bypass -Scope Process
 
 We offer the following languages for the prompt interface:
 
-* English (US) `en-US`, default
+* German (Germany) `de-DE`, by nattadasu, Karasian, and secoze
+* English (US) `en-US`, **default**
 * Indonesian (Indonesia) `id-ID`, by nattadasu
 * Melayu (Malaysia) `ms-MY`, by nattadasu
 
