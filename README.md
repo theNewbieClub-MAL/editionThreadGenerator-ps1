@@ -48,7 +48,8 @@ Also, the script should be cross-compatible with Windows Powershell 5 and any UN
      * Press <kbd>Win</kbd>, type Windows Terminal, and press <kbd>Enter</kbd>.
    * On a UNIX-like system, open your favorite Terminal and type `pwsh` or `powershell`.
 3. Move your current working directory on PowerShell to the cloned repo.
-   * On Windows, type `cd %USERPROFILE%\editionThreadGenerator-ps1` and press <kbd>Enter</kbd>.
+   * On Windows, type `cd ~\editionThreadGenerator-ps1` or `cd $env:USERPROFILE\editionThreadGenerator-ps1` and press <kbd>Enter</kbd>.
+     * We noticed PowerShell can not understand Batch path shorthand (`%USERPROFILE&`). It is because PowerShell handle variables quite differently. 
    * On UNIX-like system, type `cd ~/editionThreadGenerator-ps1` and press <kbd>Enter</kbd>.
 4. Run the script by typing `./script.ps1`.
 5. If the script greeted you with `The Newbie Club: Card Edition Post Generator v.(x)`, you're good to go!
