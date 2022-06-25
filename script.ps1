@@ -188,6 +188,13 @@ $Staff1_username = Read-Host -Prompt $i18n.Staff_Username
 $Staff1_nickname = Read-Host -Prompt $i18n.Staff_Nickname
 $Staff1_limitType = Read-Host -Prompt $i18n.Staff_Limit_Type
 
+if ($null -eq $cardSlip.$Staff1_username) {
+    Write-Host $i18n.Invalid_Slip -ForegroundColor Red
+} else {
+    $Staff1_isAllowSlip = Read-Host -Prompt $i18n.Staff_Allows_Slip_Card
+    if(-not($Staff1_isAllowSlip)) { $Staff1_isAllowSlip = "y" }
+}
+
 if (-not($Staff1_limitType)) { $Staff1_limitType = "role" }
 
 if ($Staff1_limitType -eq "role") {
@@ -491,6 +498,13 @@ if (2 -le $Edition_staffCount){
     $Staff2_username = Read-Host -Prompt $i18n.Staff_Username
     $Staff2_nickname = Read-Host -Prompt $i18n.Staff_Nickname
     $Staff2_limitType = Read-Host -Prompt $i18n.Staff_Limit_Type
+
+    if ($null -eq $cardSlip.$Staff2_username) {
+        Write-Host $i18n.Invalid_Slip -ForegroundColor Red
+    } else {
+        $Staff2_isAllowSlip = Read-Host -Prompt $i18n.Staff_Allows_Slip_Card
+        if(-not($Staff2_isAllowSlip)) { $Staff2_isAllowSlip = "y" }
+    }
 
     if (-not($Staff2_limitType)) { $Staff2_limitType = "role" }
 
@@ -797,6 +811,13 @@ if (3 -le $Edition_staffCount){
     $Staff3_nickname = Read-Host -Prompt $i18n.Staff_Nickname
     $Staff3_limitType = Read-Host -Prompt $i18n.Staff_Limit_Type
 
+    if ($null -eq $cardSlip.$Staff3_username) {
+        Write-Host $i18n.Invalid_Slip -ForegroundColor Red
+    } else {
+        $Staff3_isAllowSlip = Read-Host -Prompt $i18n.Staff_Allows_Slip_Card
+        if(-not($Staff3_isAllowSlip)) { $Staff3_isAllowSlip = "y" }
+    }
+
     if (-not($Staff3_limitType)) { $Staff3_limitType = "role" }
 
     if ($Staff3_limitType -eq "role") {
@@ -1102,6 +1123,13 @@ if (4 -le $Edition_staffCount){
     $Staff4_nickname = Read-Host -Prompt $i18n.Staff_Nickname
     $Staff4_limitType = Read-Host -Prompt $i18n.Staff_Limit_Type
 
+    if ($null -eq $cardSlip.$Staff4_username) {
+        Write-Host $i18n.Invalid_Slip -ForegroundColor Red
+    } else {
+        $Staff4_isAllowSlip = Read-Host -Prompt $i18n.Staff_Allows_Slip_Card
+        if(-not($Staff4_isAllowSlip)) { $Staff4_isAllowSlip = "y" }
+    }
+
     if (-not($Staff4_limitType)) { $Staff4_limitType = "role" }
 
     if ($Staff4_limitType -eq "role") {
@@ -1406,6 +1434,13 @@ if (5 -le $Edition_staffCount){
     $Staff5_username = Read-Host -Prompt $i18n.Staff_Username
     $Staff5_nickname = Read-Host -Prompt $i18n.Staff_Nickname
     $Staff5_limitType = Read-Host -Prompt $i18n.Staff_Limit_Type
+
+    if ($null -eq $cardSlip.$Staff5_username) {
+        Write-Host $i18n.Invalid_Slip -ForegroundColor Red
+    } else {
+        $Staff5_isAllowSlip = Read-Host -Prompt $i18n.Staff_Allows_Slip_Card
+        if(-not($Staff5_isAllowSlip)) { $Staff5_isAllowSlip = "y" }
+    }
 
     if (-not($Staff5_limitType)) { $Staff5_limitType = "role" }
 
@@ -1780,7 +1815,7 @@ $($Staff1_nickname): $( if ($Edition_staffCount -ge 2) { "`n$($Staff2_nickname):
 [b]Role:[/b] Member
 [b]Deliver to:[/b] Profile Comment
 [b][i]—Cards by—[/i][/b]
-$($Staff1_nickname): $( if ($Edition_staffCount -ge 2) { "`n$($Staff2_nickname): " } else {""} ) $( if ($Edition_staffCount -ge 3) { "`n$($Staff3_nickname): " } else {""} )$( if ($Edition_staffCount -ge 4) { "`n$($Staff4_nickname): " } else {""} )$( if ($Edition_staffCount -ge 5) { "`n$($Staff5_nickname): " } else {""} )
+$($Staff1_nickname): $( if ("y" -eq $Staff1_isAllowSlip) {"`[spoiler=slip`]`[img`]$($cardSlip.$Staff1_username)`[/img`]`[/spoiler`]"} )$( if ($Edition_staffCount -ge 2) { "`n$($Staff2_nickname): $( if ("y" -eq $Staff2_isAllowSlip) {"`[spoiler=slip`]`[img`]$($cardSlip.$Staff2_username)`[/img`]`[/spoiler`]"} )" } else {""} ) $( if ($Edition_staffCount -ge 3) { "`n$($Staff3_nickname): $( if ("y" -eq $Staff3_isAllowSlip) {"`[spoiler=slip`]`[img`]$($cardSlip.$Staff3_username)`[/img`]`[/spoiler`]"} )" } else {""} )$( if ($Edition_staffCount -ge 4) { "`n$($Staff4_nickname): $( if ("y" -eq $Staff4_isAllowSlip) {"`[spoiler=slip`]`[img`]$($cardSlip.$Staff4_username)`[/img`]`[/spoiler`]"} )" } else {""} )$( if ($Edition_staffCount -ge 5) { "`n$($Staff5_nickname): $( if ("y" -eq $Staff5_isAllowSlip) {"`[spoiler=slip`]`[img`]$($cardSlip.$Staff5_username)`[/img`]`[/spoiler`]"} )" } else {""} )
 ——
 [b]Comments:[/b] 
 [b]Edition Suggestion:[/b] $( if ( $Edition_staffCount -eq 5) { "`n" } else {""} ) $( if ( $Edition_staffCount -eq 4) { "`n`n" } else {""} ) $( if ( $Edition_staffCount -eq 3) { "`n`n`n" } else {""} ) $( if ( $Edition_staffCount -eq 2) { "`n`n`n`n" } else {""} ) $( if ( $Edition_staffCount -eq 1) { "`n`n`n`n`n" } else {""} )
@@ -1792,7 +1827,10 @@ $($Staff1_nickname): $( if ($Edition_staffCount -ge 2) { "`n$($Staff2_nickname):
 $( if ($Staff1_limitType -eq "role") {@"
 [b]Member:[/b] $($Staff1_limitMember)/$($Staff1_totalCards)
 [b]Staff:[/b] $($Staff1_limitStaff)/$($Staff1_totalCards) $(if ($Staff1_limitStaff -eq $Staff1_totalCards) {"(ALL)"})
-"@} else {"[b]Any[/b]: $($Staff1_limitAny)/$($Staff1_totalCards) $(if ($Staff1_limitAny -eq $Staff1_totalCards) {"(ALL)"})"} )
+"@} else {"[b]Any[/b]: $($Staff1_limitAny)/$($Staff1_totalCards) $(if ($Staff1_limitAny -eq $Staff1_totalCards) {"(ALL)"})"} )$(if ("n" -eq $Staff1_isAllowSlip) {@"
+
+`[color=red`]Slip card can not be used on this edition`[/color`]
+"@} {})
 
 `[spoiler=cards`]
 || 1 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff1_cards1_malId -eq 0) {$Staff1_cards1_customUrl} else {"https://myanimelist.net/anime/$($Staff1_cards1_malId)"})]$($Staff1_cards1_titleResult)[/url]"})$(if($Staff1_cards2_imageUri) {"|| ~~~~~~ || 2 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff1_cards2_malId -eq 0) {$Staff1_cards2_customUrl} else {"https://myanimelist.net/anime/$($Staff1_cards2_malId)"})]$($Staff1_cards2_titleResult)[/url] ||"})"})
@@ -1820,7 +1858,10 @@ $( if ($Staff1_limitType -eq "role") {@"
 $( if ($Staff2_limitType -eq "role") {@"
 [b]Member:[/b] $($Staff2_limitMember)/$($Staff2_totalCards)
 [b]Staff:[/b] $($Staff2_limitStaff)/$($Staff2_totalCards) $(if ($Staff2_limitStaff -eq $Staff2_totalCards) {"(ALL)"})
-"@} else {"[b]Any[/b]: $($Staff2_limitAny)/$($Staff2_totalCards) $(if ($Staff2_limitAny -eq $Staff2_totalCards) {"(ALL)"})"} )
+"@} else {"[b]Any[/b]: $($Staff2_limitAny)/$($Staff2_totalCards) $(if ($Staff2_limitAny -eq $Staff2_totalCards) {"(ALL)"})"} )$(if ("n" -eq $Staff2_isAllowSlip) {@"
+
+`[color=red`]Slip card can not be used on this edition`[/color`]
+"@} {})
 
 `[spoiler=cards`]
 || 1 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff2_cards1_malId -eq 0) {$Staff2_cards1_customUrl} else {"https://myanimelist.net/anime/$($Staff2_cards1_malId)"})]$($Staff2_cards1_titleResult)[/url]"})$(if($Staff2_cards2_imageUri) {"|| ~~~~~~ || 2 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff2_cards2_malId -eq 0) {$Staff2_cards2_customUrl} else {"https://myanimelist.net/anime/$($Staff2_cards2_malId)"})]$($Staff2_cards2_titleResult)[/url] ||"})"})
@@ -1848,7 +1889,10 @@ $( if ($Staff2_limitType -eq "role") {@"
 $( if ($Staff3_limitType -eq "role") {@"
 [b]Member:[/b] $($Staff3_limitMember)/$($Staff3_totalCards)
 [b]Staff:[/b] $($Staff3_limitStaff)/$($Staff3_totalCards) $(if ($Staff3_limitStaff -eq $Staff3_totalCards) {"(ALL)"})
-"@} else {"[b]Any[/b]: $($Staff3_limitAny)/$($Staff3_totalCards) $(if ($Staff3_limitAny -eq $Staff3_totalCards) {"(ALL)"})"} )
+"@} else {"[b]Any[/b]: $($Staff3_limitAny)/$($Staff3_totalCards) $(if ($Staff3_limitAny -eq $Staff3_totalCards) {"(ALL)"})"} )$(if ("n" -eq $Staff3_isAllowSlip) {@"
+
+`[color=red`]Slip card can not be used on this edition`[/color`]
+"@} {})
 
 `[spoiler=cards`]
 || 1 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff3_cards1_malId -eq 0) {$Staff3_cards1_customUrl} else {"https://myanimelist.net/anime/$($Staff3_cards1_malId)"})]$($Staff3_cards1_titleResult)[/url]"})$(if($Staff3_cards2_imageUri) {"|| ~~~~~~ || 2 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff3_cards2_malId -eq 0) {$Staff3_cards2_customUrl} else {"https://myanimelist.net/anime/$($Staff3_cards2_malId)"})]$($Staff3_cards2_titleResult)[/url] ||"})"})
@@ -1876,7 +1920,10 @@ $( if ($Staff3_limitType -eq "role") {@"
 $( if ($Staff4_limitType -eq "role") {@"
 [b]Member:[/b] $($Staff4_limitMember)/$($Staff4_totalCards)
 [b]Staff:[/b] $($Staff4_limitStaff)/$($Staff4_totalCards) $(if ($Staff4_limitStaff -eq $Staff4_totalCards) {"(ALL)"})
-"@} else {"[b]Any[/b]: $($Staff4_limitAny)/$($Staff4_totalCards) $(if ($Staff4_limitAny -eq $Staff4_totalCards) {"(ALL)"})"} )
+"@} else {"[b]Any[/b]: $($Staff4_limitAny)/$($Staff4_totalCards) $(if ($Staff4_limitAny -eq $Staff4_totalCards) {"(ALL)"})"} )$(if ("n" -eq $Staff4_isAllowSlip) {@"
+
+`[color=red`]Slip card can not be used on this edition`[/color`]
+"@} {})
 
 `[spoiler=cards`]
 || 1 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff4_cards1_malId -eq 0) {$Staff4_cards1_customUrl} else {"https://myanimelist.net/anime/$($Staff4_cards1_malId)"})]$($Staff4_cards1_titleResult)[/url]"})$(if($Staff4_cards2_imageUri) {"|| ~~~~~~ || 2 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff4_cards2_malId -eq 0) {$Staff4_cards2_customUrl} else {"https://myanimelist.net/anime/$($Staff4_cards2_malId)"})]$($Staff4_cards2_titleResult)[/url] ||"})"})
@@ -1904,7 +1951,10 @@ $( if ($Staff4_limitType -eq "role") {@"
 $( if ($Staff5_limitType -eq "role") {@"
 [b]Member:[/b] $($Staff5_limitMember)/$($Staff5_totalCards)
 [b]Staff:[/b] $($Staff5_limitStaff)/$($Staff5_totalCards) $(if ($Staff5_limitStaff -eq $Staff5_totalCards) {"(ALL)"})
-"@} else {"[b]Any[/b]: $($Staff5_limitAny)/$($Staff5_totalCards) $(if ($Staff5_limitAny -eq $Staff5_totalCards) {"(ALL)"})"} )
+"@} else {"[b]Any[/b]: $($Staff5_limitAny)/$($Staff5_totalCards) $(if ($Staff5_limitAny -eq $Staff5_totalCards) {"(ALL)"})"} )$(if ("n" -eq $Staff5_isAllowSlip) {@"
+
+`[color=red`]Slip card can not be used on this edition`[/color`]
+"@} {})
 
 `[spoiler=cards`]
 || 1 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff5_cards1_malId -eq 0) {$Staff5_cards1_customUrl} else {"https://myanimelist.net/anime/$($Staff5_cards1_malId)"})]$($Staff5_cards1_titleResult)[/url]"})$(if($Staff5_cards2_imageUri) {"|| ~~~~~~ || 2 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff5_cards2_malId -eq 0) {$Staff5_cards2_customUrl} else {"https://myanimelist.net/anime/$($Staff5_cards2_malId)"})]$($Staff5_cards2_titleResult)[/url] ||"})"})

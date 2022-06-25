@@ -70,9 +70,11 @@ ConvertFrom-StringData @'
     Staff_Limit_Staff           = 🔢 Had kad untuk kakitangan
     Staff_Limit_Member          = 🔢 Had kad untuk ahli kelab
     Staff_Limit_Total           = 🔢 Jumlah kad yang boleh dipilih, Maksimum, 9
+    Staff_Allows_Slip_Card      = ❓ Apa kakitangan membolehkan slip kad dapat digunakan? Lalai, y (y/n)
     Staff_Cards_Url             = 🖼️  Pautan imej kad
     Staff_Cards_Title           = 🔤 Tajuk kerja yang digunakan pada kad
 
     Invalid_Staff_Amount        = ❌ Bilangan kakitangan tidak sah, secara automatik akan diatur hingga 5
     Invalid_Card_Amount         = ❌ Bilangan kad yang tidak sah, akan diatur secara automatik hingga 9
+    Invalid_Slip                = ❌ Kakitangan ini mungkin tidak menyediakan perkhidmatan slip kad ATAU kartu sampel belum dibuat
 '@

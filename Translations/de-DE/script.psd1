@@ -70,10 +70,12 @@ ConvertFrom-StringData @'
     Staff_Limit_Staff           = 🔢 Kartenlimit für Mitarbeiterrolle
     Staff_Limit_Member          = 🔢 Kartenlimit für reguläre Mitglieder
     Staff_Limit_Total           = 🔢 Insgesamt zu erhaltende Karten, Maximum, 9
+    Staff_Allows_Slip_Card      = ❓ Erlaubt der jeweilige Mitarbeiter die Benutzung von Gutscheinen? Standard, y (y/n)
     Staff_Cards_Url             = 🖼️  URL des Kartenbildes
     Staff_Cards_Title           = 🔤 Titel des auf der Karte verwendeten Werks
 
     Invalid_Staff_Amount        = ❌ Ungültige Personalmenge, automatisch auf 5 gesetzt
     Invalid_Card_Amount         = ❌ Ungültige Kartenmenge, automatisch auf 9 gesetzt
+    Invalid_Slip                = ❌ Der Designer erlaubt nicht die Benutzung von Gutscheinen ODER der Muster-Gutschein wurde noch nicht erstellt
 
 '@

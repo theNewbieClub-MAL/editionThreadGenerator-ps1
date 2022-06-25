@@ -70,9 +70,11 @@ ConvertFrom-StringData @'
     Staff_Limit_Staff           = 🔢 Limit kartu untuk para staf
     Staff_Limit_Member          = 🔢 Limit kartu untuk para member
     Staff_Limit_Total           = 🔢 Total kartu yang dapat dipilih, Maksimum, 9
+    Staff_Allows_Slip_Card      = ❓ Apakah staf bersangkutan membolehkan menggunakan kartu slip? Default, y (y/n)
     Staff_Cards_Url             = 🖼️  Tautan gambar kartu
     Staff_Cards_Title           = 🔤 Judul karya yang digunakan di kartu
 
     Invalid_Staff_Amount        = ❌ Jumlah staff tidak sah, otomatis akan diatur menjadi 5
     Invalid_Card_Amount         = ❌ Jumlah kartu tidak sah, otomatis akan diatur menjadi 9
+    Invalid_Slip                = ❌ Staff ini mungkin belum menyediakan layanan kartu slip ATAU kartu sampel belum dibuat
 '@

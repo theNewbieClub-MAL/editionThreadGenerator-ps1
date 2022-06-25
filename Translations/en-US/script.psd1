@@ -70,9 +70,11 @@ ConvertFrom-StringData @'
     Staff_Limit_Staff           = 🔢 Card limit for staff role
     Staff_Limit_Member          = 🔢 Card limit for regular member
     Staff_Limit_Total           = 🔢 Total card to be obtained, Maximum, 9
+    Staff_Allows_Slip_Card      = ❓ Is respective staff allows the use of slip card? Default, y (y/n)
     Staff_Cards_Url             = 🖼️  Card image URL
     Staff_Cards_Title           = 🔤 Title of work used on card
 
     Invalid_Staff_Amount        = ❌ Invalid staff amount, automatically set to 5
     Invalid_Card_Amount         = ❌ Invalid card amount, automatically set to 9
+    Invalid_Slip                = ❌ This designer does not provide slip card service OR sample slip card have not been made yet
 '@
