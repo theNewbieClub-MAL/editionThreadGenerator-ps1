@@ -1827,7 +1827,7 @@ $($Staff1_nickname): $( if ("y" -eq $Staff1_isAllowSlip) {"`[spoiler=slip`]`[img
 $( if ($Staff1_limitType -eq "role") {@"
 [b]Member:[/b] $($Staff1_limitMember)/$($Staff1_totalCards)
 [b]Staff:[/b] $($Staff1_limitStaff)/$($Staff1_totalCards) $(if ($Staff1_limitStaff -eq $Staff1_totalCards) {"(ALL)"})
-"@} else {"[b]Any[/b]: $($Staff1_limitAny)/$($Staff1_totalCards) $(if ($Staff1_limitAny -eq $Staff1_totalCards) {"(ALL)"})"} )$(if ("n" -eq $Staff1_isAllowSlip) {@"
+"@} else {"[b]Member & Staff[/b]: $($Staff1_limitAny)/$($Staff1_totalCards) $(if ($Staff1_limitAny -eq $Staff1_totalCards) {"(ALL)"})"} )$(if ("n" -eq $Staff1_isAllowSlip) {@"
 
 `[color=red`]Slip card can not be used on this edition`[/color`]
 "@} {})
@@ -1858,7 +1858,7 @@ $( if ($Staff1_limitType -eq "role") {@"
 $( if ($Staff2_limitType -eq "role") {@"
 [b]Member:[/b] $($Staff2_limitMember)/$($Staff2_totalCards)
 [b]Staff:[/b] $($Staff2_limitStaff)/$($Staff2_totalCards) $(if ($Staff2_limitStaff -eq $Staff2_totalCards) {"(ALL)"})
-"@} else {"[b]Any[/b]: $($Staff2_limitAny)/$($Staff2_totalCards) $(if ($Staff2_limitAny -eq $Staff2_totalCards) {"(ALL)"})"} )$(if ("n" -eq $Staff2_isAllowSlip) {@"
+"@} else {"[b]Member & Staff[/b]: $($Staff2_limitAny)/$($Staff2_totalCards) $(if ($Staff2_limitAny -eq $Staff2_totalCards) {"(ALL)"})"} )$(if ("n" -eq $Staff2_isAllowSlip) {@"
 
 `[color=red`]Slip card can not be used on this edition`[/color`]
 "@} {})
@@ -1889,7 +1889,7 @@ $( if ($Staff2_limitType -eq "role") {@"
 $( if ($Staff3_limitType -eq "role") {@"
 [b]Member:[/b] $($Staff3_limitMember)/$($Staff3_totalCards)
 [b]Staff:[/b] $($Staff3_limitStaff)/$($Staff3_totalCards) $(if ($Staff3_limitStaff -eq $Staff3_totalCards) {"(ALL)"})
-"@} else {"[b]Any[/b]: $($Staff3_limitAny)/$($Staff3_totalCards) $(if ($Staff3_limitAny -eq $Staff3_totalCards) {"(ALL)"})"} )$(if ("n" -eq $Staff3_isAllowSlip) {@"
+"@} else {"[b]Member & Staff[/b]: $($Staff3_limitAny)/$($Staff3_totalCards) $(if ($Staff3_limitAny -eq $Staff3_totalCards) {"(ALL)"})"} )$(if ("n" -eq $Staff3_isAllowSlip) {@"
 
 `[color=red`]Slip card can not be used on this edition`[/color`]
 "@} {})
@@ -1920,7 +1920,7 @@ $( if ($Staff3_limitType -eq "role") {@"
 $( if ($Staff4_limitType -eq "role") {@"
 [b]Member:[/b] $($Staff4_limitMember)/$($Staff4_totalCards)
 [b]Staff:[/b] $($Staff4_limitStaff)/$($Staff4_totalCards) $(if ($Staff4_limitStaff -eq $Staff4_totalCards) {"(ALL)"})
-"@} else {"[b]Any[/b]: $($Staff4_limitAny)/$($Staff4_totalCards) $(if ($Staff4_limitAny -eq $Staff4_totalCards) {"(ALL)"})"} )$(if ("n" -eq $Staff4_isAllowSlip) {@"
+"@} else {"[b]Member & Staff[/b]: $($Staff4_limitAny)/$($Staff4_totalCards) $(if ($Staff4_limitAny -eq $Staff4_totalCards) {"(ALL)"})"} )$(if ("n" -eq $Staff4_isAllowSlip) {@"
 
 `[color=red`]Slip card can not be used on this edition`[/color`]
 "@} {})
@@ -1951,7 +1951,7 @@ $( if ($Staff4_limitType -eq "role") {@"
 $( if ($Staff5_limitType -eq "role") {@"
 [b]Member:[/b] $($Staff5_limitMember)/$($Staff5_totalCards)
 [b]Staff:[/b] $($Staff5_limitStaff)/$($Staff5_totalCards) $(if ($Staff5_limitStaff -eq $Staff5_totalCards) {"(ALL)"})
-"@} else {"[b]Any[/b]: $($Staff5_limitAny)/$($Staff5_totalCards) $(if ($Staff5_limitAny -eq $Staff5_totalCards) {"(ALL)"})"} )$(if ("n" -eq $Staff5_isAllowSlip) {@"
+"@} else {"[b]Member & Staff[/b]: $($Staff5_limitAny)/$($Staff5_totalCards) $(if ($Staff5_limitAny -eq $Staff5_totalCards) {"(ALL)"})"} )$(if ("n" -eq $Staff5_isAllowSlip) {@"
 
 `[color=red`]Slip card can not be used on this edition`[/color`]
 "@} {})
