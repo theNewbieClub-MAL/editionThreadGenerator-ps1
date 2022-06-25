@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env pwsh
+#!/usr/bin/env pwsh
 
 # ===============
 # Script Metadata
@@ -15,6 +15,8 @@ $gfxDeputy = "Annie_Law"
 # =================================
 
 Import-Module "./Modules/jikanmoe.psm1"
+
+$cardSlip = Import-PowerShellDataFile -Path './Resources/slipCards.psd1'
 
 # =====
 # Intro
