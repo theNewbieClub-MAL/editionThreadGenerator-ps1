@@ -1,4 +1,4 @@
-#!/usr/bin/env pwsh
+﻿#!/usr/bin/env pwsh
 
 # ===============
 # Script Metadata
@@ -111,26 +111,35 @@ if (-not($Locale_set)) { $Locale_set = "romaji" }
 Write-Host $i18n.Question_Locale_success, $Locale_set -ForegroundColor Green
 
 # Banner
-$Banner_creator = Read-Host -Prompt $i18n.Question_Banner_Creator
 $Banner_imageUrl = Read-Host -Prompt $i18n.Question_Banner_Uri
+if(-not($Banner_imageUrl)) {
+    $Banner_imageUrl = ""
+    $Banner_creator = ""
+    if ($Edition_isSingle -eq "n") {
+        $Banner_malId = "0"
+        $Banner_customUrl = "https://github.com/theNewbieClub-MAL/editionThreadGenerator-ps1"
+        $Banner_titleResult = "Placeholder"
+    }
+} else {
+    $Banner_creator = Read-Host -Prompt $i18n.Question_Banner_Creator
+    if ($Edition_isSingle -eq "n") {
+        $Banner_titleQuery = Read-Host -Prompt $i18n.Question_Banner_Title
+        Find-MAL -SearchQuery $Banner_titleQuery
 
-if ($Edition_isSingle -eq "n") {
-    $Banner_titleQuery = Read-Host -Prompt $i18n.Question_Banner_Title
-    Find-MAL -SearchQuery $Banner_titleQuery
-
-    $Banner_malId = Read-Host -Prompt $i18n.Prompt_MALId_Insert
-    if (-not($Banner_malId)) { $Banner_malId = "0" }
-    if ($Banner_malId -eq "0") {
-        Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
-        $Banner_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
-        $Banner_titleResult = $Banner_titleQuery
-    } else {
-        $Banner_titleResult = if ($Locale_set -eq "romaji") {
-            Get-MALTitle -MALId $Banner_malId -English $false
-        } elseif ($Locale_set -eq "english") {
-            Get-MALTitle -MALId $Banner_malId -English $true
+        $Banner_malId = Read-Host -Prompt $i18n.Prompt_MALId_Insert
+        if (-not($Banner_malId)) { $Banner_malId = "0" }
+        if ($Banner_malId -eq "0") {
+            Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
+            $Banner_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
+            $Banner_titleResult = $Banner_titleQuery
+        } else {
+            $Banner_titleResult = if ($Locale_set -eq "romaji") {
+                Get-MALTitle -MALId $Banner_malId -English $false
+            } elseif ($Locale_set -eq "english") {
+                Get-MALTitle -MALId $Banner_malId -English $true
+            }
+            Write-Host $i18n.Selected_Banner_Title, $Banner_titleResult -ForegroundColor Green
         }
-        Write-Host $i18n.Selected_Banner_Title, $Banner_titleResult -ForegroundColor Green
     }
 }
 
