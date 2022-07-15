@@ -51,7 +51,6 @@ Write-Host $i18n.InitLocale_List_echo
 $i18nIndex = Get-Content ./Translations/index.json
 $i18nIndex | ConvertFrom-JSON | Format-Table @{L=$i18n.LocaleTable_cultureCode;E={$_.cultureCode}}, @{L=$i18n.LocaleTable_descEn;E={$_."desc-En"}}, @{L=$i18n.LocaleTable_descLoc;E={$_."desc-Loc"}}, @{L=$i18n.LocaleTable_contributors;E={$_.contributors}}
 
-Write-Host ""
 $changeLocale = Read-Host -Prompt $i18n.InitLocale_Replace_Prompt
 
 if (-not($changeLocale)) {
