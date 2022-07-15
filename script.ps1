@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env pwsh
+#!/usr/bin/env pwsh
 
 # ===============
 # Script Metadata
@@ -86,8 +86,10 @@ $Edition_count = Read-Host -Prompt $i18n.Question_Edition_Count
 if (-not($Edition_count)) { $Edition_count = "100" }
 
 # Date input
-$Edition_startInput = Read-Host -Prompt "$($i18n.Question_Edition_Start) $(Get-Date -Format yyyy-MM-dd)"
-$Edition_endInput = Read-Host -Prompt "$($i18n.Question_Edition_End) $(Get-Date -Format yyyy-MM-dd)"
+$Edition_startInput = Read-Host -Prompt "$($i18n.Question_Edition_Start) $(Get-Date -Format yyyy-MM-dd)$($i18n.Question_Edition_Default) $(Get-Date -Format yyyy-MM-dd)"
+if (-not($Edition_startInput)) { $Edition_startInput = "$(Get-Date -Format yyyy-MM-dd)" }
+$Edition_endInput = Read-Host -Prompt "$($i18n.Question_Edition_End) $(Get-Date -Format yyyy-MM-dd)$($i18n.Question_Edition_Default) $(Get-Date (Get-Date $Edition_startInput).AddDays(3) -Format yyyy-MM-dd)"
+if (-not($Edition_endInput)) { $Edition_endInput = "$(Get-Date (Get-Date $Edition_startInput).AddDays(3) -Format yyyy-MM-dd)" }
 $Edition_start = Get-Date $Edition_startInput -Format "MMMM d, yyyy"
 $Edition_end = Get-Date $Edition_endInput -Format "MMMM d, yyyy"
 

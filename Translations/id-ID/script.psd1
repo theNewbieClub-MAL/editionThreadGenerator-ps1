@@ -26,8 +26,9 @@ ConvertFrom-StringData @'
     Question_Edition_Emoji      = 😄 Simbol/emoji edisi, Enter untuk melewati
     Question_Edition_IsSingle   = ❓ Apakah edisi hanya mencakup satu judul? Default, n (y/n)
     Question_Edition_Count      = 🔢 Limit balasan (reply), Default, 100
-    Question_Edition_Start      = 📆 Tanggal mulai, Format, YYYY-MM-DD; Contoh:
-    Question_Edition_End        = 📆 Tanggal selesai, Format, YYYY-MM-DD; Contoh:
+    Question_Edition_Start      = 📆 Tanggal mulai, Format, YYYY-MM-DD; Contoh,
+    Question_Edition_End        = 📆 Tanggal selesai, Format, YYYY-MM-DD; Contoh,
+    Question_Edition_Default    = ; Default,
     Question_Edition_Staff      = 👤 Total staf bergabung, Default, 1
 
     Question_Locale_Set         = 🌐 Format judul mana yang kamu utamakan? Default, romaji (romaji/english)

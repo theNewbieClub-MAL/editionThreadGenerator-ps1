@@ -26,8 +26,9 @@ ConvertFrom-StringData @'
     Question_Edition_Emoji      = 😄 Emoji ausgeben, Enter zum Überspringen
     Question_Edition_IsSingle   = ❓ Umfasst die Ausgabe nur einen Titel? Standard, n (y/n)
     Question_Edition_Count      = 🔢 Antwortgrenze, Standard, 100
-    Question_Edition_Start      = 📆 Startdatum, Format, JJJJ-MM-TT; Beispiel:
-    Question_Edition_End        = 📆 Enddatum, Format, JJJJ-MM-TT; Beispiel:
+    Question_Edition_Start      = 📆 Startdatum, Format, JJJJ-MM-TT; Beispiel,
+    Question_Edition_End        = 📆 Enddatum, Format, JJJJ-MM-TT; Beispiel,
+    Question_Edition_Default    = ; Standard,
     Question_Edition_Staff      = 👤 Gesamtzahl der beitragenden Mitarbeiter, Standard, 1; Max, 5
 
     Question_Locale_Set         = 🌐 Welches Titelformat bevorzugen Sie? Standard, romaji (romaji/english)

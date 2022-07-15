@@ -26,8 +26,9 @@ ConvertFrom-StringData @'
     Question_Edition_Emoji      = 😄 Simbol/emoji edisi, Enter untuk melangkau
     Question_Edition_IsSingle   = ❓ Apa edisi hanya merangkumi satu tajuk? Lalai, n (y/n)
     Question_Edition_Count      = 🔢 Had balasan (reply), Lalai, 100
-    Question_Edition_Start      = 📆 Tarikh mula, Format, YYYY-MM-DD; Contoh:
-    Question_Edition_End        = 📆 Tarikh siap, Format, YYYY-MM-DD; Contoh:
+    Question_Edition_Start      = 📆 Tarikh mula, Format, YYYY-MM-DD; Contoh,
+    Question_Edition_End        = 📆 Tarikh siap, Format, YYYY-MM-DD; Contoh,
+    Question_Edition_Default    = ; Lalai,
     Question_Edition_Staff      = 👤 Jumlah kakitangan yang mengambil bahagian, Lalai, 1
 
     Question_Locale_Set         = 🌐 Format tajuk mana yang anda keutamaan? Lalai, romaji (romaji/english)

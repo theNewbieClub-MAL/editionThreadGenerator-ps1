@@ -26,8 +26,9 @@ ConvertFrom-StringData @'
     Question_Edition_Emoji      = 😄 Edition emoji, enter to skip
     Question_Edition_IsSingle   = ❓ Is the edition only covers one title? Default, n (y/n)
     Question_Edition_Count      = 🔢 Reply limit, Default, 100
-    Question_Edition_Start      = 📆 Start date, Format, YYYY-MM-DD; Sample:
-    Question_Edition_End        = 📆 End date, Format, YYYY-MM-DD; Sample:
+    Question_Edition_Start      = 📆 Start date, Format, YYYY-MM-DD; Sample,
+    Question_Edition_End        = 📆 End date, Format, YYYY-MM-DD; Sample,
+    Question_Edition_Default    = ; Default,
     Question_Edition_Staff      = 👤 Total staff joined, Default, 1; Max, 5
 
     Question_Locale_Set         = 🌐 Which title format do you prefer? Default, romaji (romaji/english)
