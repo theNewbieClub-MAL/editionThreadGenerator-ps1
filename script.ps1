@@ -138,9 +138,9 @@ if(-not($Banner_imageUrl)) {
             $Banner_titleResult = $Banner_titleQuery
         } else {
             $Banner_titleResult = if ($Locale_set -eq "romaji") {
-                Get-MALTitle -MALId $Banner_malId -English $false
+                Get-MALTitle -MALId $Banner_malId
             } elseif ($Locale_set -eq "english") {
-                Get-MALTitle -MALId $Banner_malId -English $true
+                Get-MALTitle -MALId $Banner_malId -English
             }
             Write-Host $i18n.Selected_Banner_Title, $Banner_titleResult -ForegroundColor Green
         }
@@ -235,9 +235,9 @@ if ( $Edition_isSingle -eq "n" ) {
         $Staff1_cards1_titleResult = $Staff1_cards1_titleQuery
     } else {
         $Staff1_cards1_titleResult = if ($Locale_set -eq "romaji") {
-            Get-MALTitle -MALId $Staff1_cards1_malId -English $false
+            Get-MALTitle -MALId $Staff1_cards1_malId
         } elseif ($Locale_set -eq "english") {
-            Get-MALTitle -MALId $Staff1_cards1_malId -English $true
+            Get-MALTitle -MALId $Staff1_cards1_malId -English
         }
         Write-Host $i18n.Selected_Card_Title, $Staff1_cards1_titleResult -ForegroundColor Green
     }
@@ -265,9 +265,9 @@ if ( 2 -le $Staff1_totalCards ) {
         $Staff1_cards2_titleResult = $Staff1_cards2_titleQuery
         } else {
             $Staff1_cards2_titleResult = if ($Locale_set -eq "romaji") {
-                Get-MALTitle -MALId $Staff1_cards2_malId -English $false
+                Get-MALTitle -MALId $Staff1_cards2_malId
             } elseif ($Locale_set -eq "english") {
-                Get-MALTitle -MALId $Staff1_cards2_malId -English $true
+                Get-MALTitle -MALId $Staff1_cards2_malId -English
             }
             Write-Host $i18n.Selected_Card_Title, $Staff1_cards2_titleResult -ForegroundColor Green
         }
@@ -296,9 +296,9 @@ if ( 3 -le $Staff1_totalCards ) {
         $Staff1_cards3_titleResult = $Staff1_cards3_titleQuery
         } else {
             $Staff1_cards3_titleResult = if ($Locale_set -eq "romaji") {
-                Get-MALTitle -MALId $Staff1_cards3_malId -English $false
+                Get-MALTitle -MALId $Staff1_cards3_malId
             } elseif ($Locale_set -eq "english") {
-                Get-MALTitle -MALId $Staff1_cards3_malId -English $true
+                Get-MALTitle -MALId $Staff1_cards3_malId -English
             }
             Write-Host $i18n.Selected_Card_Title, $Staff1_cards3_titleResult -ForegroundColor Green
         }
@@ -327,9 +327,9 @@ if ( 4 -le $Staff1_totalCards ) {
         $Staff1_cards4_titleResult = $Staff1_cards4_titleQuery
         } else {
             $Staff1_cards4_titleResult = if ($Locale_set -eq "romaji") {
-                Get-MALTitle -MALId $Staff1_cards4_malId -English $false
+                Get-MALTitle -MALId $Staff1_cards4_malId
             } elseif ($Locale_set -eq "english") {
-                Get-MALTitle -MALId $Staff1_cards4_malId -English $true
+                Get-MALTitle -MALId $Staff1_cards4_malId -English
             }
             Write-Host $i18n.Selected_Card_Title, $Staff1_cards4_titleResult -ForegroundColor Green
         }
@@ -358,9 +358,9 @@ if ( 5 -le $Staff1_totalCards ) {
         $Staff1_cards5_titleResult = $Staff1_cards5_titleQuery
         } else {
             $Staff1_cards5_titleResult = if ($Locale_set -eq "romaji") {
-                Get-MALTitle -MALId $Staff1_cards5_malId -English $false
+                Get-MALTitle -MALId $Staff1_cards5_malId
             } elseif ($Locale_set -eq "english") {
-                Get-MALTitle -MALId $Staff1_cards5_malId -English $true
+                Get-MALTitle -MALId $Staff1_cards5_malId -English
             }
             Write-Host $i18n.Selected_Card_Title, $Staff1_cards5_titleResult -ForegroundColor Green
         }
@@ -389,9 +389,9 @@ if ( 6 -le $Staff1_totalCards ) {
         $Staff1_cards6_titleResult = $Staff1_cards6_titleQuery
         } else {
             $Staff1_cards6_titleResult = if ($Locale_set -eq "romaji") {
-                Get-MALTitle -MALId $Staff1_cards6_malId -English $false
+                Get-MALTitle -MALId $Staff1_cards6_malId
             } elseif ($Locale_set -eq "english") {
-                Get-MALTitle -MALId $Staff1_cards6_malId -English $true
+                Get-MALTitle -MALId $Staff1_cards6_malId -English
             }
             Write-Host $i18n.Selected_Card_Title, $Staff1_cards6_titleResult -ForegroundColor Green
         }
@@ -420,9 +420,9 @@ if ( 7 -le $Staff1_totalCards ) {
         $Staff1_cards7_titleResult = $Staff1_cards7_titleQuery
         } else {
             $Staff1_cards7_titleResult = if ($Locale_set -eq "romaji") {
-                Get-MALTitle -MALId $Staff1_cards7_malId -English $false
+                Get-MALTitle -MALId $Staff1_cards7_malId
             } elseif ($Locale_set -eq "english") {
-                Get-MALTitle -MALId $Staff1_cards7_malId -English $true
+                Get-MALTitle -MALId $Staff1_cards7_malId -English
             }
             Write-Host $i18n.Selected_Card_Title, $Staff1_cards7_titleResult -ForegroundColor Green
         }
@@ -451,9 +451,9 @@ if ( 8 -le $Staff1_totalCards ) {
         $Staff1_cards8_titleResult = $Staff1_cards8_titleQuery
         } else {
             $Staff1_cards8_titleResult = if ($Locale_set -eq "romaji") {
-                Get-MALTitle -MALId $Staff1_cards8_malId -English $false
+                Get-MALTitle -MALId $Staff1_cards8_malId
             } elseif ($Locale_set -eq "english") {
-                Get-MALTitle -MALId $Staff1_cards8_malId -English $true
+                Get-MALTitle -MALId $Staff1_cards8_malId -English
             }
             Write-Host $i18n.Selected_Card_Title, $Staff1_cards8_titleResult -ForegroundColor Green
         }
@@ -482,9 +482,9 @@ if ( 9 -le $Staff1_totalCards ) {
         $Staff1_cards9_titleResult = $Staff1_cards9_titleQuery
         } else {
             $Staff1_cards9_titleResult = if ($Locale_set -eq "romaji") {
-                Get-MALTitle -MALId $Staff1_cards9_malId -English $false
+                Get-MALTitle -MALId $Staff1_cards9_malId
             } elseif ($Locale_set -eq "english") {
-                Get-MALTitle -MALId $Staff1_cards9_malId -English $true
+                Get-MALTitle -MALId $Staff1_cards9_malId -English
             }
             Write-Host $i18n.Selected_Card_Title, $Staff1_cards9_titleResult -ForegroundColor Green
         }
@@ -546,9 +546,9 @@ if (2 -le $Edition_staffCount){
                 $Staff2_cards1_titleResult = $Staff2_cards1_titleQuery
         } else {
             $Staff2_cards1_titleResult = if ($Locale_set -eq "romaji") {
-                Get-MALTitle -MALId $Staff2_cards1_malId -English $false
+                Get-MALTitle -MALId $Staff2_cards1_malId
             } elseif ($Locale_set -eq "english") {
-                Get-MALTitle -MALId $Staff2_cards1_malId -English $true
+                Get-MALTitle -MALId $Staff2_cards1_malId -English
             }
             Write-Host $i18n.Selected_Card_Title, $Staff2_cards1_titleResult -ForegroundColor Green
         }
@@ -576,9 +576,9 @@ if (2 -le $Edition_staffCount){
                 $Staff2_cards2_titleResult = $Staff2_cards2_titleQuery
             } else {
                 $Staff2_cards2_titleResult = if ($Locale_set -eq "romaji") {
-                    Get-MALTitle -MALId $Staff2_cards2_malId -English $false
+                    Get-MALTitle -MALId $Staff2_cards2_malId
                 } elseif ($Locale_set -eq "english") {
-                    Get-MALTitle -MALId $Staff2_cards2_malId -English $true
+                    Get-MALTitle -MALId $Staff2_cards2_malId -English
                 }
                 Write-Host $i18n.Selected_Card_Title, $Staff2_cards2_titleResult -ForegroundColor Green
             }
@@ -607,9 +607,9 @@ if (2 -le $Edition_staffCount){
                 $Staff2_cards3_titleResult = $Staff2_cards3_titleQuery
             } else {
                 $Staff2_cards3_titleResult = if ($Locale_set -eq "romaji") {
-                    Get-MALTitle -MALId $Staff2_cards3_malId -English $false
+                    Get-MALTitle -MALId $Staff2_cards3_malId
                 } elseif ($Locale_set -eq "english") {
-                    Get-MALTitle -MALId $Staff2_cards3_malId -English $true
+                    Get-MALTitle -MALId $Staff2_cards3_malId -English
                 }
                 Write-Host $i18n.Selected_Card_Title, $Staff2_cards3_titleResult -ForegroundColor Green
             }
@@ -638,9 +638,9 @@ if (2 -le $Edition_staffCount){
                 $Staff2_cards4_titleResult = $Staff2_cards4_titleQuery
             } else {
                 $Staff2_cards4_titleResult = if ($Locale_set -eq "romaji") {
-                    Get-MALTitle -MALId $Staff2_cards4_malId -English $false
+                    Get-MALTitle -MALId $Staff2_cards4_malId
                 } elseif ($Locale_set -eq "english") {
-                    Get-MALTitle -MALId $Staff2_cards4_malId -English $true
+                    Get-MALTitle -MALId $Staff2_cards4_malId -English
                 }
                 Write-Host $i18n.Selected_Card_Title, $Staff2_cards4_titleResult -ForegroundColor Green
             }
@@ -669,9 +669,9 @@ if (2 -le $Edition_staffCount){
                 $Staff2_cards5_titleResult = $Staff2_cards5_titleQuery
             } else {
                 $Staff2_cards5_titleResult = if ($Locale_set -eq "romaji") {
-                    Get-MALTitle -MALId $Staff2_cards5_malId -English $false
+                    Get-MALTitle -MALId $Staff2_cards5_malId
                 } elseif ($Locale_set -eq "english") {
-                    Get-MALTitle -MALId $Staff2_cards5_malId -English $true
+                    Get-MALTitle -MALId $Staff2_cards5_malId -English
                 }
                 Write-Host $i18n.Selected_Card_Title, $Staff2_cards5_titleResult -ForegroundColor Green
             }
@@ -700,9 +700,9 @@ if (2 -le $Edition_staffCount){
                 $Staff2_cards6_titleResult = $Staff2_cards6_titleQuery
             } else {
                 $Staff2_cards6_titleResult = if ($Locale_set -eq "romaji") {
-                    Get-MALTitle -MALId $Staff2_cards6_malId -English $false
+                    Get-MALTitle -MALId $Staff2_cards6_malId
                 } elseif ($Locale_set -eq "english") {
-                    Get-MALTitle -MALId $Staff2_cards6_malId -English $true
+                    Get-MALTitle -MALId $Staff2_cards6_malId -English
                 }
                 Write-Host $i18n.Selected_Card_Title, $Staff2_cards6_titleResult -ForegroundColor Green
             }
@@ -731,9 +731,9 @@ if (2 -le $Edition_staffCount){
                 $Staff2_cards7_titleResult = $Staff2_cards7_titleQuery
             } else {
                 $Staff2_cards7_titleResult = if ($Locale_set -eq "romaji") {
-                    Get-MALTitle -MALId $Staff2_cards7_malId -English $false
+                    Get-MALTitle -MALId $Staff2_cards7_malId
                 } elseif ($Locale_set -eq "english") {
-                    Get-MALTitle -MALId $Staff2_cards7_malId -English $true
+                    Get-MALTitle -MALId $Staff2_cards7_malId -English
                 }
                 Write-Host $i18n.Selected_Card_Title, $Staff2_cards7_titleResult -ForegroundColor Green
             }
@@ -762,9 +762,9 @@ if (2 -le $Edition_staffCount){
                 $Staff2_cards8_titleResult = $Staff2_cards8_titleQuery
             } else {
                 $Staff2_cards8_titleResult = if ($Locale_set -eq "romaji") {
-                    Get-MALTitle -MALId $Staff2_cards8_malId -English $false
+                    Get-MALTitle -MALId $Staff2_cards8_malId
                 } elseif ($Locale_set -eq "english") {
-                    Get-MALTitle -MALId $Staff2_cards8_malId -English $true
+                    Get-MALTitle -MALId $Staff2_cards8_malId -English
                 }
                 Write-Host $i18n.Selected_Card_Title, $Staff2_cards8_titleResult -ForegroundColor Green
             }
@@ -793,9 +793,9 @@ if (2 -le $Edition_staffCount){
                 $Staff2_cards9_titleResult = $Staff2_cards9_titleQuery
             } else {
                 $Staff2_cards9_titleResult = if ($Locale_set -eq "romaji") {
-                    Get-MALTitle -MALId $Staff2_cards9_malId -English $false
+                    Get-MALTitle -MALId $Staff2_cards9_malId
                 } elseif ($Locale_set -eq "english") {
-                    Get-MALTitle -MALId $Staff2_cards9_malId -English $true
+                    Get-MALTitle -MALId $Staff2_cards9_malId -English
                 }
                 Write-Host $i18n.Selected_Card_Title, $Staff2_cards9_titleResult -ForegroundColor Green
             }
@@ -858,9 +858,9 @@ if (3 -le $Edition_staffCount){
                 $Staff3_cards1_titleResult = $Staff3_cards1_titleQuery
         } else {
             $Staff3_cards1_titleResult = if ($Locale_set -eq "romaji") {
-                Get-MALTitle -MALId $Staff3_cards1_malId -English $false
+                Get-MALTitle -MALId $Staff3_cards1_malId
             } elseif ($Locale_set -eq "english") {
-                Get-MALTitle -MALId $Staff3_cards1_malId -English $true
+                Get-MALTitle -MALId $Staff3_cards1_malId -English
             }
             Write-Host $i18n.Selected_Card_Title, $Staff3_cards1_titleResult -ForegroundColor Green
         }
@@ -888,9 +888,9 @@ if (3 -le $Edition_staffCount){
                 $Staff3_cards2_titleResult = $Staff3_cards2_titleQuery
             } else {
                 $Staff3_cards2_titleResult = if ($Locale_set -eq "romaji") {
-                    Get-MALTitle -MALId $Staff3_cards2_malId -English $false
+                    Get-MALTitle -MALId $Staff3_cards2_malId
                 } elseif ($Locale_set -eq "english") {
-                    Get-MALTitle -MALId $Staff3_cards2_malId -English $true
+                    Get-MALTitle -MALId $Staff3_cards2_malId -English
                 }
                 Write-Host $i18n.Selected_Card_Title, $Staff3_cards2_titleResult -ForegroundColor Green
             }
@@ -919,9 +919,9 @@ if (3 -le $Edition_staffCount){
                 $Staff3_cards3_titleResult = $Staff3_cards3_titleQuery
             } else {
                 $Staff3_cards3_titleResult = if ($Locale_set -eq "romaji") {
-                    Get-MALTitle -MALId $Staff3_cards3_malId -English $false
+                    Get-MALTitle -MALId $Staff3_cards3_malId
                 } elseif ($Locale_set -eq "english") {
-                    Get-MALTitle -MALId $Staff3_cards3_malId -English $true
+                    Get-MALTitle -MALId $Staff3_cards3_malId -English
                 }
                 Write-Host $i18n.Selected_Card_Title, $Staff3_cards3_titleResult -ForegroundColor Green
             }
@@ -950,9 +950,9 @@ if (3 -le $Edition_staffCount){
                 $Staff3_cards4_titleResult = $Staff3_cards4_titleQuery
             } else {
                 $Staff3_cards4_titleResult = if ($Locale_set -eq "romaji") {
-                    Get-MALTitle -MALId $Staff3_cards4_malId -English $false
+                    Get-MALTitle -MALId $Staff3_cards4_malId
                 } elseif ($Locale_set -eq "english") {
-                    Get-MALTitle -MALId $Staff3_cards4_malId -English $true
+                    Get-MALTitle -MALId $Staff3_cards4_malId -English
                 }
                 Write-Host $i18n.Selected_Card_Title, $Staff3_cards4_titleResult -ForegroundColor Green
             }
@@ -981,9 +981,9 @@ if (3 -le $Edition_staffCount){
                 $Staff3_cards5_titleResult = $Staff3_cards5_titleQuery
             } else {
                 $Staff3_cards5_titleResult = if ($Locale_set -eq "romaji") {
-                    Get-MALTitle -MALId $Staff3_cards5_malId -English $false
+                    Get-MALTitle -MALId $Staff3_cards5_malId
                 } elseif ($Locale_set -eq "english") {
-                    Get-MALTitle -MALId $Staff3_cards5_malId -English $true
+                    Get-MALTitle -MALId $Staff3_cards5_malId -English
                 }
                 Write-Host $i18n.Selected_Card_Title, $Staff3_cards5_titleResult -ForegroundColor Green
             }
@@ -1012,9 +1012,9 @@ if (3 -le $Edition_staffCount){
                 $Staff3_cards6_titleResult = $Staff3_cards6_titleQuery
             } else {
                 $Staff3_cards6_titleResult = if ($Locale_set -eq "romaji") {
-                    Get-MALTitle -MALId $Staff3_cards6_malId -English $false
+                    Get-MALTitle -MALId $Staff3_cards6_malId
                 } elseif ($Locale_set -eq "english") {
-                    Get-MALTitle -MALId $Staff3_cards6_malId -English $true
+                    Get-MALTitle -MALId $Staff3_cards6_malId -English
                 }
                 Write-Host $i18n.Selected_Card_Title, $Staff3_cards6_titleResult -ForegroundColor Green
             }
@@ -1043,9 +1043,9 @@ if (3 -le $Edition_staffCount){
                 $Staff3_cards7_titleResult = $Staff3_cards7_titleQuery
             } else {
                 $Staff3_cards7_titleResult = if ($Locale_set -eq "romaji") {
-                    Get-MALTitle -MALId $Staff3_cards7_malId -English $false
+                    Get-MALTitle -MALId $Staff3_cards7_malId
                 } elseif ($Locale_set -eq "english") {
-                    Get-MALTitle -MALId $Staff3_cards7_malId -English $true
+                    Get-MALTitle -MALId $Staff3_cards7_malId -English
                 }
                 Write-Host $i18n.Selected_Card_Title, $Staff3_cards7_titleResult -ForegroundColor Green
             }
@@ -1074,9 +1074,9 @@ if (3 -le $Edition_staffCount){
                 $Staff3_cards8_titleResult = $Staff3_cards8_titleQuery
             } else {
                 $Staff3_cards8_titleResult = if ($Locale_set -eq "romaji") {
-                    Get-MALTitle -MALId $Staff3_cards8_malId -English $false
+                    Get-MALTitle -MALId $Staff3_cards8_malId
                 } elseif ($Locale_set -eq "english") {
-                    Get-MALTitle -MALId $Staff3_cards8_malId -English $true
+                    Get-MALTitle -MALId $Staff3_cards8_malId -English
                 }
                 Write-Host $i18n.Selected_Card_Title, $Staff3_cards8_titleResult -ForegroundColor Green
             }
@@ -1105,9 +1105,9 @@ if (3 -le $Edition_staffCount){
                 $Staff3_cards9_titleResult = $Staff3_cards9_titleQuery
             } else {
                 $Staff3_cards9_titleResult = if ($Locale_set -eq "romaji") {
-                    Get-MALTitle -MALId $Staff3_cards9_malId -English $false
+                    Get-MALTitle -MALId $Staff3_cards9_malId
                 } elseif ($Locale_set -eq "english") {
-                    Get-MALTitle -MALId $Staff3_cards9_malId -English $true
+                    Get-MALTitle -MALId $Staff3_cards9_malId -English
                 }
                 Write-Host $i18n.Selected_Card_Title, $Staff3_cards9_titleResult -ForegroundColor Green
             }
@@ -1170,9 +1170,9 @@ if (4 -le $Edition_staffCount){
                 $Staff4_cards1_titleResult = $Staff4_cards1_titleQuery
         } else {
             $Staff4_cards1_titleResult = if ($Locale_set -eq "romaji") {
-                Get-MALTitle -MALId $Staff4_cards1_malId -English $false
+                Get-MALTitle -MALId $Staff4_cards1_malId
             } elseif ($Locale_set -eq "english") {
-                Get-MALTitle -MALId $Staff4_cards1_malId -English $true
+                Get-MALTitle -MALId $Staff4_cards1_malId -English
             }
             Write-Host $i18n.Selected_Card_Title, $Staff4_cards1_titleResult -ForegroundColor Green
         }
@@ -1200,9 +1200,9 @@ if (4 -le $Edition_staffCount){
                 $Staff4_cards2_titleResult = $Staff4_cards2_titleQuery
             } else {
                 $Staff4_cards2_titleResult = if ($Locale_set -eq "romaji") {
-                    Get-MALTitle -MALId $Staff4_cards2_malId -English $false
+                    Get-MALTitle -MALId $Staff4_cards2_malId
                 } elseif ($Locale_set -eq "english") {
-                    Get-MALTitle -MALId $Staff4_cards2_malId -English $true
+                    Get-MALTitle -MALId $Staff4_cards2_malId -English
                 }
                 Write-Host $i18n.Selected_Card_Title, $Staff4_cards2_titleResult -ForegroundColor Green
             }
@@ -1231,9 +1231,9 @@ if (4 -le $Edition_staffCount){
                 $Staff4_cards3_titleResult = $Staff4_cards3_titleQuery
             } else {
                 $Staff4_cards3_titleResult = if ($Locale_set -eq "romaji") {
-                    Get-MALTitle -MALId $Staff4_cards3_malId -English $false
+                    Get-MALTitle -MALId $Staff4_cards3_malId
                 } elseif ($Locale_set -eq "english") {
-                    Get-MALTitle -MALId $Staff4_cards3_malId -English $true
+                    Get-MALTitle -MALId $Staff4_cards3_malId -English
                 }
                 Write-Host $i18n.Selected_Card_Title, $Staff4_cards3_titleResult -ForegroundColor Green
             }
@@ -1262,9 +1262,9 @@ if (4 -le $Edition_staffCount){
                 $Staff4_cards4_titleResult = $Staff4_cards4_titleQuery
             } else {
                 $Staff4_cards4_titleResult = if ($Locale_set -eq "romaji") {
-                    Get-MALTitle -MALId $Staff4_cards4_malId -English $false
+                    Get-MALTitle -MALId $Staff4_cards4_malId
                 } elseif ($Locale_set -eq "english") {
-                    Get-MALTitle -MALId $Staff4_cards4_malId -English $true
+                    Get-MALTitle -MALId $Staff4_cards4_malId -English
                 }
                 Write-Host $i18n.Selected_Card_Title, $Staff4_cards4_titleResult -ForegroundColor Green
             }
@@ -1293,9 +1293,9 @@ if (4 -le $Edition_staffCount){
                 $Staff4_cards5_titleResult = $Staff4_cards5_titleQuery
             } else {
                 $Staff4_cards5_titleResult = if ($Locale_set -eq "romaji") {
-                    Get-MALTitle -MALId $Staff4_cards5_malId -English $false
+                    Get-MALTitle -MALId $Staff4_cards5_malId
                 } elseif ($Locale_set -eq "english") {
-                    Get-MALTitle -MALId $Staff4_cards5_malId -English $true
+                    Get-MALTitle -MALId $Staff4_cards5_malId -English
                 }
                 Write-Host $i18n.Selected_Card_Title, $Staff4_cards5_titleResult -ForegroundColor Green
             }
@@ -1324,9 +1324,9 @@ if (4 -le $Edition_staffCount){
                 $Staff4_cards6_titleResult = $Staff4_cards6_titleQuery
             } else {
                 $Staff4_cards6_titleResult = if ($Locale_set -eq "romaji") {
-                    Get-MALTitle -MALId $Staff4_cards6_malId -English $false
+                    Get-MALTitle -MALId $Staff4_cards6_malId
                 } elseif ($Locale_set -eq "english") {
-                    Get-MALTitle -MALId $Staff4_cards6_malId -English $true
+                    Get-MALTitle -MALId $Staff4_cards6_malId -English
                 }
                 Write-Host $i18n.Selected_Card_Title, $Staff4_cards6_titleResult -ForegroundColor Green
             }
@@ -1355,9 +1355,9 @@ if (4 -le $Edition_staffCount){
                 $Staff4_cards7_titleResult = $Staff4_cards7_titleQuery
             } else {
                 $Staff4_cards7_titleResult = if ($Locale_set -eq "romaji") {
-                    Get-MALTitle -MALId $Staff4_cards7_malId -English $false
+                    Get-MALTitle -MALId $Staff4_cards7_malId
                 } elseif ($Locale_set -eq "english") {
-                    Get-MALTitle -MALId $Staff4_cards7_malId -English $true
+                    Get-MALTitle -MALId $Staff4_cards7_malId -English
                 }
                 Write-Host $i18n.Selected_Card_Title, $Staff4_cards7_titleResult -ForegroundColor Green
             }
@@ -1386,9 +1386,9 @@ if (4 -le $Edition_staffCount){
                 $Staff4_cards8_titleResult = $Staff4_cards8_titleQuery
             } else {
                 $Staff4_cards8_titleResult = if ($Locale_set -eq "romaji") {
-                    Get-MALTitle -MALId $Staff4_cards8_malId -English $false
+                    Get-MALTitle -MALId $Staff4_cards8_malId
                 } elseif ($Locale_set -eq "english") {
-                    Get-MALTitle -MALId $Staff4_cards8_malId -English $true
+                    Get-MALTitle -MALId $Staff4_cards8_malId -English
                 }
                 Write-Host $i18n.Selected_Card_Title, $Staff4_cards8_titleResult -ForegroundColor Green
             }
@@ -1417,9 +1417,9 @@ if (4 -le $Edition_staffCount){
                 $Staff4_cards9_titleResult = $Staff4_cards9_titleQuery
             } else {
                 $Staff4_cards9_titleResult = if ($Locale_set -eq "romaji") {
-                    Get-MALTitle -MALId $Staff4_cards9_malId -English $false
+                    Get-MALTitle -MALId $Staff4_cards9_malId
                 } elseif ($Locale_set -eq "english") {
-                    Get-MALTitle -MALId $Staff4_cards9_malId -English $true
+                    Get-MALTitle -MALId $Staff4_cards9_malId -English
                 }
                 Write-Host $i18n.Selected_Card_Title, $Staff4_cards9_titleResult -ForegroundColor Green
             }
@@ -1482,9 +1482,9 @@ if (5 -le $Edition_staffCount){
                 $Staff5_cards1_titleResult = $Staff5_cards1_titleQuery
         } else {
             $Staff5_cards1_titleResult = if ($Locale_set -eq "romaji") {
-                Get-MALTitle -MALId $Staff5_cards1_malId -English $false
+                Get-MALTitle -MALId $Staff5_cards1_malId
             } elseif ($Locale_set -eq "english") {
-                Get-MALTitle -MALId $Staff5_cards1_malId -English $true
+                Get-MALTitle -MALId $Staff5_cards1_malId -English
             }
             Write-Host $i18n.Selected_Card_Title, $Staff5_cards1_titleResult -ForegroundColor Green
         }
@@ -1512,9 +1512,9 @@ if (5 -le $Edition_staffCount){
                 $Staff5_cards2_titleResult = $Staff5_cards2_titleQuery
             } else {
                 $Staff5_cards2_titleResult = if ($Locale_set -eq "romaji") {
-                    Get-MALTitle -MALId $Staff5_cards2_malId -English $false
+                    Get-MALTitle -MALId $Staff5_cards2_malId
                 } elseif ($Locale_set -eq "english") {
-                    Get-MALTitle -MALId $Staff5_cards2_malId -English $true
+                    Get-MALTitle -MALId $Staff5_cards2_malId -English
                 }
                 Write-Host $i18n.Selected_Card_Title, $Staff5_cards2_titleResult -ForegroundColor Green
             }
@@ -1543,9 +1543,9 @@ if (5 -le $Edition_staffCount){
                 $Staff5_cards3_titleResult = $Staff5_cards3_titleQuery
             } else {
                 $Staff5_cards3_titleResult = if ($Locale_set -eq "romaji") {
-                    Get-MALTitle -MALId $Staff5_cards3_malId -English $false
+                    Get-MALTitle -MALId $Staff5_cards3_malId
                 } elseif ($Locale_set -eq "english") {
-                    Get-MALTitle -MALId $Staff5_cards3_malId -English $true
+                    Get-MALTitle -MALId $Staff5_cards3_malId -English
                 }
                 Write-Host $i18n.Selected_Card_Title, $Staff5_cards3_titleResult -ForegroundColor Green
             }
@@ -1574,9 +1574,9 @@ if (5 -le $Edition_staffCount){
                 $Staff5_cards4_titleResult = $Staff5_cards4_titleQuery
             } else {
                 $Staff5_cards4_titleResult = if ($Locale_set -eq "romaji") {
-                    Get-MALTitle -MALId $Staff5_cards4_malId -English $false
+                    Get-MALTitle -MALId $Staff5_cards4_malId
                 } elseif ($Locale_set -eq "english") {
-                    Get-MALTitle -MALId $Staff5_cards4_malId -English $true
+                    Get-MALTitle -MALId $Staff5_cards4_malId -English
                 }
                 Write-Host $i18n.Selected_Card_Title, $Staff5_cards4_titleResult -ForegroundColor Green
             }
@@ -1605,9 +1605,9 @@ if (5 -le $Edition_staffCount){
                 $Staff5_cards5_titleResult = $Staff5_cards5_titleQuery
             } else {
                 $Staff5_cards5_titleResult = if ($Locale_set -eq "romaji") {
-                    Get-MALTitle -MALId $Staff5_cards5_malId -English $false
+                    Get-MALTitle -MALId $Staff5_cards5_malId
                 } elseif ($Locale_set -eq "english") {
-                    Get-MALTitle -MALId $Staff5_cards5_malId -English $true
+                    Get-MALTitle -MALId $Staff5_cards5_malId -English
                 }
                 Write-Host $i18n.Selected_Card_Title, $Staff5_cards5_titleResult -ForegroundColor Green
             }
@@ -1636,9 +1636,9 @@ if (5 -le $Edition_staffCount){
                 $Staff5_cards6_titleResult = $Staff5_cards6_titleQuery
             } else {
                 $Staff5_cards6_titleResult = if ($Locale_set -eq "romaji") {
-                    Get-MALTitle -MALId $Staff5_cards6_malId -English $false
+                    Get-MALTitle -MALId $Staff5_cards6_malId
                 } elseif ($Locale_set -eq "english") {
-                    Get-MALTitle -MALId $Staff5_cards6_malId -English $true
+                    Get-MALTitle -MALId $Staff5_cards6_malId -English
                 }
                 Write-Host $i18n.Selected_Card_Title, $Staff5_cards6_titleResult -ForegroundColor Green
             }
@@ -1667,9 +1667,9 @@ if (5 -le $Edition_staffCount){
                 $Staff5_cards7_titleResult = $Staff5_cards7_titleQuery
             } else {
                 $Staff5_cards7_titleResult = if ($Locale_set -eq "romaji") {
-                    Get-MALTitle -MALId $Staff5_cards7_malId -English $false
+                    Get-MALTitle -MALId $Staff5_cards7_malId
                 } elseif ($Locale_set -eq "english") {
-                    Get-MALTitle -MALId $Staff5_cards7_malId -English $true
+                    Get-MALTitle -MALId $Staff5_cards7_malId -English
                 }
                 Write-Host $i18n.Selected_Card_Title, $Staff5_cards7_titleResult -ForegroundColor Green
             }
@@ -1698,9 +1698,9 @@ if (5 -le $Edition_staffCount){
                 $Staff5_cards8_titleResult = $Staff5_cards8_titleQuery
             } else {
                 $Staff5_cards8_titleResult = if ($Locale_set -eq "romaji") {
-                    Get-MALTitle -MALId $Staff5_cards8_malId -English $false
+                    Get-MALTitle -MALId $Staff5_cards8_malId
                 } elseif ($Locale_set -eq "english") {
-                    Get-MALTitle -MALId $Staff5_cards8_malId -English $true
+                    Get-MALTitle -MALId $Staff5_cards8_malId -English
                 }
                 Write-Host $i18n.Selected_Card_Title, $Staff5_cards8_titleResult -ForegroundColor Green
             }
@@ -1729,9 +1729,9 @@ if (5 -le $Edition_staffCount){
                 $Staff5_cards9_titleResult = $Staff5_cards9_titleQuery
             } else {
                 $Staff5_cards9_titleResult = if ($Locale_set -eq "romaji") {
-                    Get-MALTitle -MALId $Staff5_cards9_malId -English $false
+                    Get-MALTitle -MALId $Staff5_cards9_malId
                 } elseif ($Locale_set -eq "english") {
-                    Get-MALTitle -MALId $Staff5_cards9_malId -English $true
+                    Get-MALTitle -MALId $Staff5_cards9_malId -English
                 }
                 Write-Host $i18n.Selected_Card_Title, $Staff5_cards9_titleResult -ForegroundColor Green
             }
