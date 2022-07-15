@@ -59,43 +59,42 @@ Function Get-RandomCard {
     #>
 }
 
-# Function Get-WorkStaff {
-# 	param (
-# 		[Parameter(Mandatory=$true)]
-# 		[string]$FileName
-# 	)
+Function Get-WorkStaff {
+    param (
+        [Parameter(Mandatory=$true)]
+        [string]$FileName
+    )
 
-# 	$StaffQuery = $FileName -match '^[\w\-_.]{1,16}'
-# 	[regex]::Match($StaffQuery, "^[\w\-_]+").Groups[0].Value
-#     <#
-#         .SYNOPSIS
-#         Extract staff name from file with RegEx
+    [regex]::Match($FileName, "^[\w\-_]{2,16}").Groups[0].Value
+    <#
+        .SYNOPSIS
+        Extract staff name from file with RegEx
 
-#         .DESCRIPTION
-#         Extract a staff name from file with RegEx.
-#         This function is optimized to use for MyAnimeList username rules:
-#         Alphanumeric case-sensitive with dash and underscore up to 16 characters ("[\w\-_]{,16}")
+        .DESCRIPTION
+        Extract a staff name from file with RegEx.
+        This function is optimized to use for MyAnimeList username rules:
+        Alphanumeric case-sensitive with dash and underscore up to 16 characters ("[\w\-_]{2,16}")
 
-#         .PARAMETER FileName
-#         Specifies the file name.
+        .PARAMETER FileName
+        Specifies the file name.
 
-#         .EXAMPLE
-#         PS> $FileName = Get-RandomCard
+        .EXAMPLE
+        PS> $FileName = Get-RandomCard
 
-#         PS> $FileName
-#         un1corn_tnc@cards1_v1.png
+        PS> $FileName
+        un1corn_tnc@cards1_v1.png
 
-#         PS> Get-WorkStaff -FileName $FileName
-#         un1corn_tnc
+        PS> Get-WorkStaff -FileName $FileName
+        un1corn_tnc
 
-#         .LINK
-#         Get-RandomBanner
+        .LINK
+        Get-RandomBanner
 
-#         .LINK
-#         Get-RandomCard
-#     #>
-# }
+        .LINK
+        Get-RandomCard
+    #>
+}
 
 Export-ModuleMember -Function Get-RandomBanner
 Export-ModuleMember -Function Get-RandomCard
-# Export-ModuleMember -Function Get-WorkStaff
+Export-ModuleMember -Function Get-WorkStaff
