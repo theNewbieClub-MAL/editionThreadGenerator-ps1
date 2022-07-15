@@ -1,18 +1,17 @@
-Function Get-RandomBanner {    
+Function Get-RandomBanner {
     if (Test-Path ./Resources/Banners) {
         $randomBanner = (Get-ChildItem -Path ./Resources/Banners/ | Get-Random).Name
         Write-Verbose "$($randomBanner) has been set"
-        $randomBanner
+        Write-Output $randomBanner
     } else {
         $WarningMessage = "./Resources/Banners can not be found on $(Get-Location)"
-        Write-Host $WarningMessage -ForegroundColor Red
-        Write-Verbose $WarningMessage
+        Write-Information $WarningMessage -ForegroundColor Red
     }
 
     <#
         .SYNOPSIS
         Get Random Banner placeholder filename
-        
+
         .DESCRIPTION
         Get Random Banner placeholder filename that is available on ./Resources/Banners
 
@@ -33,14 +32,19 @@ Function Get-RandomBanner {
 }
 
 Function Get-RandomCard {
-    $randomCard = (Get-ChildItem -Path ./Resources/Cards/ | Get-Random).Name
-    Write-Verbose "$($randomCard) has been set"
-    $randomCard
+    if (Test-Path ./Resources/Cards) {
+        $randomCard = (Get-ChildItem -Path ./Resources/Cards/ | Get-Random).Name
+        Write-Verbose "$($randomCard) has been set"
+        Write-Output $randomCard
+    } else {
+        $WarningMessage = "./Resources/Cards can not be found on $(Get-Location)"
+        Write-Information $WarningMessage -ForegroundColor Red
+    }
 
     <#
         .SYNOPSIS
         Get Random Card placeholder filename
-        
+
         .DESCRIPTION
         Get Random Card placeholder filename that is available on ./Resources/Cards
 
@@ -65,7 +69,7 @@ Function Get-WorkStaff {
         [string]$FileName
     )
 
-    [regex]::Match($FileName, "^[\w\-_]{2,16}").Groups[0].Value
+    Write-Output "$([regex]::Match($FileName, "^[\w\-_]{2,16}").Groups[0].Value)"
     <#
         .SYNOPSIS
         Extract staff name from file with RegEx
