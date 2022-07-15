@@ -4,6 +4,18 @@
 
 Generated.bbcode
 
+# ==============
+# Initialization
+# ==============
+
+buildInit_success
+
+# =======
+# Backups
+# =======
+
+*.bkup
+
 # ======
 # Editor
 # ======
