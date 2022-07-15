@@ -1,4 +1,4 @@
-#!/usr/bin/env pwsh
+﻿#!/usr/bin/env pwsh
 
 # ===============
 # Script Metadata
@@ -56,6 +56,9 @@ $changeLocale = Read-Host -Prompt $i18n.InitLocale_Replace_Prompt
 if (-not($changeLocale)) {
     Import-LocalizedData -BindingVariable i18n -UICulture $localeName -BaseDirectory ./Translations
     $changeLocale = $localeName
+} elseif ("exit" -eq $changeLocale) {
+    Clear-Host
+    exit
 } else {
     Import-LocalizedData -BindingVariable i18n -UICulture $changeLocale -BaseDirectory ./Translations
 }
