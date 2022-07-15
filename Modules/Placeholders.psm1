@@ -1,12 +1,12 @@
 Function Get-RandomBanner {    
-    if (Test-Path ./Sources/Banners) {
-        $randomBanner = (Get-ChildItem -Path ./Sources/Banners/ | Get-Random).Name
+    if (Test-Path ./Resources/Banners) {
+        $randomBanner = (Get-ChildItem -Path ./Resources/Banners/ | Get-Random).Name
         Write-Verbose "$($randomBanner) has been set"
         $randomBanner
     } else {
-        $WarningMessage = "./Sources/Banners can not be found on $(Get-Location)"
-    	Write-Host $WarningMessage -ForegroundColor Red
-    	Write-Verbose $WarningMessage
+        $WarningMessage = "./Resources/Banners can not be found on $(Get-Location)"
+        Write-Host $WarningMessage -ForegroundColor Red
+        Write-Verbose $WarningMessage
     }
 
     <#
@@ -14,14 +14,14 @@ Function Get-RandomBanner {
         Get Random Banner placeholder filename
         
         .DESCRIPTION
-        Get Random Banner placeholder filename that is available on ./Sources/Banners
+        Get Random Banner placeholder filename that is available on ./Resources/Banners
 
         .EXAMPLE
         PS> Get-RandomBanner
         un1corn_tnc@banner1_v1.png
 
         .NOTES
-        Function will not work if ./Sources/Banners directory is not exist.
+        Function will not work if ./Resources/Banners directory is not exist.
 
         .LINK
         Get-RandomCard
@@ -33,7 +33,7 @@ Function Get-RandomBanner {
 }
 
 Function Get-RandomCard {
-    $randomCard = (Get-ChildItem -Path ./Sources/Cards/ | Get-Random).Name
+    $randomCard = (Get-ChildItem -Path ./Resources/Cards/ | Get-Random).Name
     Write-Verbose "$($randomCard) has been set"
     $randomCard
 
@@ -42,14 +42,14 @@ Function Get-RandomCard {
         Get Random Card placeholder filename
         
         .DESCRIPTION
-        Get Random Card placeholder filename that is available on ./Sources/Cards
+        Get Random Card placeholder filename that is available on ./Resources/Cards
 
         .EXAMPLE
         PS> Get-RandomCard
         un1corn_tnc@cards1_v1.png
 
         .NOTES
-        Function will not work if ./Sources/Cards directory is not exist.
+        Function will not work if ./Resources/Cards directory is not exist.
 
         .LINK
         Get-RandomBanner
