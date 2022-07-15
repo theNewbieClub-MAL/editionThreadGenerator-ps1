@@ -34,36 +34,36 @@ Write-Host ""
 $localeName = (Get-Culture).Name
 
 # Write a warning when user used locale that doesn't translated yet.
-if (-not(Test-Path -Path ./Translations/$localeName)) {
-    Write-Host "Uh-oh. We can not find the localization file for $($localeName) ($((Get-Culture).DisplayName)), so we temporarily replace it to English (US)" -ForegroundColor Red
-    Write-Host "You can change the locale in next prompt"
-    $localeName = "en-US"
-    Write-Host ""
+if (-not (Test-Path -Path ./Translations/$localeName)) {
+  Write-Host "Uh-oh. We can not find the localization file for $($localeName) ($((Get-Culture).DisplayName)), so we temporarily replace it to English (US)" -ForegroundColor Red
+  Write-Host "You can change the locale in next prompt"
+  $localeName = "en-US"
+  Write-Host ""
 }
 
 Import-LocalizedData -BindingVariable i18n -UICulture $localeName -BaseDirectory ./Translations
 
-Write-Host $i18n.InitLocale_General_echo_1," ", $localeName, " (", (Get-Culture -Name $localeName).DisplayName, ")", "$(if("." -eq $i18n.InitLocale_General_echo_2){"$($i18n.InitLocale_General_echo_2) "} else {" $($i18n.InitLocale_General_echo_2) "})", $i18n.InitLocale_General_prompt -ForegroundColor Yellow -Separator ""
+Write-Host $i18n.InitLocale_General_echo_1," ",$localeName," (",(Get-Culture -Name $localeName).DisplayName,")","$(if("." -eq $i18n.InitLocale_General_echo_2){"$($i18n.InitLocale_General_echo_2) "} else {" $($i18n.InitLocale_General_echo_2) "})",$i18n.InitLocale_General_prompt -ForegroundColor Yellow -Separator ""
 Write-Host ""
 Write-Host $i18n.InitLocale_List_echo
 
 # Implement JSON Table instead listing from `Get-ChildItem`.
 $i18nIndex = Get-Content ./Translations/index.json
-$i18nIndex | ConvertFrom-JSON | Format-Table @{L=$i18n.LocaleTable_cultureCode;E={$_.cultureCode}}, @{L=$i18n.LocaleTable_descEn;E={$_."desc-En"}}, @{L=$i18n.LocaleTable_descLoc;E={$_."desc-Loc"}}, @{L=$i18n.LocaleTable_contributors;E={$_.contributors}}
+$i18nIndex | ConvertFrom-Json | Format-Table @{ L = $i18n.LocaleTable_cultureCode; E = { $_.cultureCode } },@{ L = $i18n.LocaleTable_descEn; E = { $_. "desc-En" } },@{ L = $i18n.LocaleTable_descLoc; E = { $_. "desc-Loc" } },@{ L = $i18n.LocaleTable_contributors; E = { $_.contributors } }
 
 $changeLocale = Read-Host -Prompt $i18n.InitLocale_Replace_Prompt
 
-if (-not($changeLocale)) {
-    Import-LocalizedData -BindingVariable i18n -UICulture $localeName -BaseDirectory ./Translations
-    $changeLocale = $localeName
+if (-not ($changeLocale)) {
+  Import-LocalizedData -BindingVariable i18n -UICulture $localeName -BaseDirectory ./Translations
+  $changeLocale = $localeName
 } elseif ("exit" -eq $changeLocale) {
-    Clear-Host
-    exit
+  Clear-Host
+  exit
 } else {
-    Import-LocalizedData -BindingVariable i18n -UICulture $changeLocale -BaseDirectory ./Translations
+  Import-LocalizedData -BindingVariable i18n -UICulture $changeLocale -BaseDirectory ./Translations
 }
 
-Write-Host $i18n.InitLocale_Replace_success, $changeLocale -ForegroundColor Green
+Write-Host $i18n.InitLocale_Replace_success,$changeLocale -ForegroundColor Green
 
 # ============================
 # Start Logic - By asking user
@@ -78,28 +78,28 @@ Write-Host "=============" -ForegroundColor Blue
 # Title
 $Edition_title = Read-Host -Prompt $i18n.Question_Edition_Title
 $Edition_emoji = Read-Host -Prompt $i18n.Question_Edition_Emoji
-if (-not($Edition_emoji)) { $Edition_emoji = "😄" }
+if (-not ($Edition_emoji)) { $Edition_emoji = "😄" }
 
 # Is the editon only covers one title of media?
 $Edition_isSingle = Read-Host -Prompt $i18n.Question_Edition_IsSingle
-if (-not($Edition_isSingle)) { $Edition_isSingle = "n" }
+if (-not ($Edition_isSingle)) { $Edition_isSingle = "n" }
 
 # Count
 $Edition_count = Read-Host -Prompt $i18n.Question_Edition_Count
-if (-not($Edition_count)) { $Edition_count = "100" }
+if (-not ($Edition_count)) { $Edition_count = "100" }
 
 # Date input
 $Edition_startInput = Read-Host -Prompt "$($i18n.Question_Edition_Start) $(Get-Date -Format yyyy-MM-dd)$($i18n.Question_Edition_Default) $(Get-Date -Format yyyy-MM-dd)"
-if (-not($Edition_startInput)) { $Edition_startInput = "$(Get-Date -Format yyyy-MM-dd)" }
+if (-not ($Edition_startInput)) { $Edition_startInput = "$(Get-Date -Format yyyy-MM-dd)" }
 $Edition_endInput = Read-Host -Prompt "$($i18n.Question_Edition_End) $(Get-Date -Format yyyy-MM-dd)$($i18n.Question_Edition_Default) $(Get-Date (Get-Date $Edition_startInput).AddDays(3) -Format yyyy-MM-dd)"
-if (-not($Edition_endInput)) { $Edition_endInput = "$(Get-Date (Get-Date $Edition_startInput).AddDays(3) -Format yyyy-MM-dd)" }
+if (-not ($Edition_endInput)) { $Edition_endInput = "$(Get-Date (Get-Date $Edition_startInput).AddDays(3) -Format yyyy-MM-dd)" }
 $Edition_start = Get-Date $Edition_startInput -Format "MMMM d, yyyy"
 $Edition_end = Get-Date $Edition_endInput -Format "MMMM d, yyyy"
 
 $Edition_staffCount = Read-Host -Prompt $i18n.Question_Edition_Staff
-if (-not($Edition_staffCount)) { $Edition_staffCount = "1" } elseif ( $Edition_staffCount -gt 5) {
-    Write-Host $i18n.Invalid_Staff_Amount -ForegroundColor Red
-    $Edition_staffCount = 5
+if (-not ($Edition_staffCount)) { $Edition_staffCount = "1" } elseif ($Edition_staffCount -gt 5) {
+  Write-Host $i18n.Invalid_Staff_Amount -ForegroundColor Red
+  $Edition_staffCount = 5
 }
 
 # Customizations
@@ -111,49 +111,49 @@ Write-Host "=============" -ForegroundColor Blue
 
 # Set title locale
 $Locale_set = Read-Host -Prompt $i18n.Question_Locale_Set
-if (-not($Locale_set)) { $Locale_set = "romaji" }
-Write-Host $i18n.Question_Locale_success, $Locale_set -ForegroundColor Green
+if (-not ($Locale_set)) { $Locale_set = "romaji" }
+Write-Host $i18n.Question_Locale_success,$Locale_set -ForegroundColor Green
 
 # Banner
 $Banner_imageUrl = Read-Host -Prompt $i18n.Question_Banner_Uri
-if(-not($Banner_imageUrl)) {
-    $Banner_imageUrl = ""
-    $Banner_creator = ""
-    if ($Edition_isSingle -eq "n") {
-        $Banner_malId = "0"
-        $Banner_customUrl = "https://github.com/theNewbieClub-MAL/editionThreadGenerator-ps1"
-        $Banner_titleResult = "Placeholder"
-    }
+if (-not ($Banner_imageUrl)) {
+  $Banner_imageUrl = ""
+  $Banner_creator = ""
+  if ($Edition_isSingle -eq "n") {
+    $Banner_malId = "0"
+    $Banner_customUrl = "https://github.com/theNewbieClub-MAL/editionThreadGenerator-ps1"
+    $Banner_titleResult = "Placeholder"
+  }
 } else {
-    $Banner_creator = Read-Host -Prompt $i18n.Question_Banner_Creator
-    if ($Edition_isSingle -eq "n") {
-        $Banner_titleQuery = Read-Host -Prompt $i18n.Question_Banner_Title
-        Find-MAL -SearchQuery $Banner_titleQuery
+  $Banner_creator = Read-Host -Prompt $i18n.Question_Banner_Creator
+  if ($Edition_isSingle -eq "n") {
+    $Banner_titleQuery = Read-Host -Prompt $i18n.Question_Banner_Title
+    Find-MAL -SearchQuery $Banner_titleQuery
 
-        $Banner_malId = Read-Host -Prompt $i18n.Prompt_MALId_Insert
-        if (-not($Banner_malId)) { $Banner_malId = "0" }
-        if ($Banner_malId -eq "0") {
-            Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
-            $Banner_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
-            $Banner_titleResult = $Banner_titleQuery
-        } else {
-            $Banner_titleResult = if ($Locale_set -eq "romaji") {
-                Get-MALTitle -MALId $Banner_malId
-            } elseif ($Locale_set -eq "english") {
-                Get-MALTitle -MALId $Banner_malId -English
-            }
-            Write-Host $i18n.Selected_Banner_Title, $Banner_titleResult -ForegroundColor Green
-        }
+    $Banner_malId = Read-Host -Prompt $i18n.Prompt_MALId_Insert
+    if (-not ($Banner_malId)) { $Banner_malId = "0" }
+    if ($Banner_malId -eq "0") {
+      Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
+      $Banner_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
+      $Banner_titleResult = $Banner_titleQuery
+    } else {
+      $Banner_titleResult = if ($Locale_set -eq "romaji") {
+        Get-MALTitle -MALId $Banner_malId
+      } elseif ($Locale_set -eq "english") {
+        Get-MALTitle -MALId $Banner_malId -English
+      }
+      Write-Host $i18n.Selected_Banner_Title,$Banner_titleResult -ForegroundColor Green
     }
+  }
 }
 
 # Set thread color
 $Thread_color = Read-Host -Prompt $i18n.Question_Color
-if (-not($Thread_color)) { $Thread_color = "#000000" }
+if (-not ($Thread_color)) { $Thread_color = "#000000" }
 
 # Show dark mode warning
 $DarkMode_warn = Read-Host -Prompt $i18n.Question_DarkMode
-if (-not($DarkMode_warn)) { $DarkMode_warn = "y" }
+if (-not ($DarkMode_warn)) { $DarkMode_warn = "y" }
 
 # ============
 # Introduction
@@ -167,8 +167,8 @@ $Intro_gif = Read-Host -Prompt $i18n.Question_Intro_GifUrl
 
 # Text
 $Intro_textRaw = Read-Host -Prompt $i18n.Question_Intro_Text
-$Intro_replaceParentheses = $Intro_textRaw -replace("`{`{", "`[color=$Thread_color`]") -replace("`}`}", "`[/color`]")
-$Intro_textFormat = $Intro_replaceParentheses.Replace("^@", "`n")
+$Intro_replaceParentheses = $Intro_textRaw -replace ("`{`{","`[color=$Thread_color`]") -replace ("`}`}","`[/color`]")
+$Intro_textFormat = $Intro_replaceParentheses.Replace("^@","`n")
 
 Write-Host $i18n.Generate_Intro_Success -ForegroundColor Green
 Write-Host $Intro_textFormat -ForegroundColor Green
@@ -193,1550 +193,1550 @@ $Staff1_nickname = Read-Host -Prompt $i18n.Staff_Nickname
 $Staff1_limitType = Read-Host -Prompt $i18n.Staff_Limit_Type
 
 if ($null -eq $cardSlip.$Staff1_username) {
-    Write-Host $i18n.Invalid_Slip -ForegroundColor Red
+  Write-Host $i18n.Invalid_Slip -ForegroundColor Red
 } else {
-    $Staff1_isAllowSlip = Read-Host -Prompt $i18n.Staff_Allows_Slip_Card
-    if(-not($Staff1_isAllowSlip)) { $Staff1_isAllowSlip = "y" }
+  $Staff1_isAllowSlip = Read-Host -Prompt $i18n.Staff_Allows_Slip_Card
+  if (-not ($Staff1_isAllowSlip)) { $Staff1_isAllowSlip = "y" }
 }
 
-if (-not($Staff1_limitType)) { $Staff1_limitType = "role" }
+if (-not ($Staff1_limitType)) { $Staff1_limitType = "role" }
 
 if ($Staff1_limitType -eq "role") {
-    $Staff1_limitStaff = Read-Host -Prompt $i18n.Staff_Limit_Staff
-    $Staff1_limitMember = Read-Host -Prompt $i18n.Staff_Limit_Member
+  $Staff1_limitStaff = Read-Host -Prompt $i18n.Staff_Limit_Staff
+  $Staff1_limitMember = Read-Host -Prompt $i18n.Staff_Limit_Member
 } else {
-    $Staff1_limitAny = Read-Host -Prompt $i18n.Staff_Limit_Any
+  $Staff1_limitAny = Read-Host -Prompt $i18n.Staff_Limit_Any
 }
 
 $Staff1_totalCards = Read-Host -Prompt $i18n.Staff_Limit_Total
 if ($Staff1_totalCards -gt 9) {
-    Write-Host $i18n.Invalid_Card_amount -ForegroundColor Red
-    $Staff1_totalCards = 9
+  Write-Host $i18n.Invalid_Card_amount -ForegroundColor Red
+  $Staff1_totalCards = 9
 }
 
 # Card 1
 Write-Host ""
-$Staff1_cards1_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url, "(1)"
+$Staff1_cards1_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url,"(1)"
 
-if ( $Edition_isSingle -eq "n" ) {
+if ($Edition_isSingle -eq "n") {
+  # Search title on MAL
+  $Staff1_cards1_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
+
+  Find-MAL -SearchQuery $Staff1_cards1_titleQuery
+
+  # Get MAL ID
+  $Staff1_cards1_malId = Read-Host -Prompt $i18n.Prompt_MALId_Insert
+  if (-not ($Staff1_cards1_malId)) { $Staff1_cards1_malId = "0" }
+
+  # Manually assign url if MAL ID is 0
+  if ($Staff1_cards1_malId -eq "0") {
+    Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
+    $Staff1_cards1_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
+    $Staff1_cards1_titleResult = $Staff1_cards1_titleQuery
+  } else {
+    $Staff1_cards1_titleResult = if ($Locale_set -eq "romaji") {
+      Get-MALTitle -MALId $Staff1_cards1_malId
+    } elseif ($Locale_set -eq "english") {
+      Get-MALTitle -MALId $Staff1_cards1_malId -English
+    }
+    Write-Host $i18n.Selected_Card_Title,$Staff1_cards1_titleResult -ForegroundColor Green
+  }
+}
+
+if (2 -le $Staff1_totalCards) {
+  # Card 2
+  Write-Host ""
+  $Staff1_cards2_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url,"(2)"
+
+  if ($Edition_isSingle -eq "n") {
     # Search title on MAL
-    $Staff1_cards1_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
+    $Staff1_cards2_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
 
-    Find-MAL -SearchQuery $Staff1_cards1_titleQuery
+    Find-MAL -SearchQuery $Staff1_cards2_titleQuery
 
     # Get MAL ID
-    $Staff1_cards1_malId = Read-Host -Prompt $i18n.Prompt_MALId_Insert
-    if (-not($Staff1_cards1_malId)) { $Staff1_cards1_malId = "0" }
+    $Staff1_cards2_malId = Read-Host -Prompt $i18n.Prompt_MALId_Insert
+    if (-not ($Staff1_cards2_malId)) { $Staff1_cards2_malId = "0" }
 
     # Manually assign url if MAL ID is 0
-    if ($Staff1_cards1_malId -eq "0") {
-        Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
-        $Staff1_cards1_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
-        $Staff1_cards1_titleResult = $Staff1_cards1_titleQuery
+    if ($Staff1_cards2_malId -eq "0") {
+      Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
+      $Staff1_cards2_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
+      $Staff1_cards2_titleResult = $Staff1_cards2_titleQuery
     } else {
-        $Staff1_cards1_titleResult = if ($Locale_set -eq "romaji") {
-            Get-MALTitle -MALId $Staff1_cards1_malId
-        } elseif ($Locale_set -eq "english") {
-            Get-MALTitle -MALId $Staff1_cards1_malId -English
-        }
-        Write-Host $i18n.Selected_Card_Title, $Staff1_cards1_titleResult -ForegroundColor Green
+      $Staff1_cards2_titleResult = if ($Locale_set -eq "romaji") {
+        Get-MALTitle -MALId $Staff1_cards2_malId
+      } elseif ($Locale_set -eq "english") {
+        Get-MALTitle -MALId $Staff1_cards2_malId -English
+      }
+      Write-Host $i18n.Selected_Card_Title,$Staff1_cards2_titleResult -ForegroundColor Green
     }
+  }
 }
 
-if ( 2 -le $Staff1_totalCards ) {
-    # Card 2
-    Write-Host ""
-    $Staff1_cards2_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url, "(2)"
+if (3 -le $Staff1_totalCards) {
+  # Card 3
+  Write-Host ""
+  $Staff1_cards3_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url,"(3)"
 
-    if ( $Edition_isSingle -eq "n" ) {
-        # Search title on MAL
-        $Staff1_cards2_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
+  if ($Edition_isSingle -eq "n") {
+    # Search title on MAL
+    $Staff1_cards3_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
 
-        Find-MAL -SearchQuery $Staff1_cards2_titleQuery
+    Find-MAL -SearchQuery $Staff1_cards3_titleQuery
 
-        # Get MAL ID
-        $Staff1_cards2_malId = Read-Host -Prompt $i18n.Prompt_MALId_Insert
-        if (-not($Staff1_cards2_malId)) { $Staff1_cards2_malId = "0" }
+    # Get MAL ID
+    $Staff1_cards3_malId = Read-Host -Prompt $i18n.Prompt_MALId_Insert
+    if (-not ($Staff1_cards3_malId)) { $Staff1_cards3_malId = "0" }
 
-        # Manually assign url if MAL ID is 0
-        if ($Staff1_cards2_malId -eq "0") {
-            Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
-            $Staff1_cards2_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
-        $Staff1_cards2_titleResult = $Staff1_cards2_titleQuery
-        } else {
-            $Staff1_cards2_titleResult = if ($Locale_set -eq "romaji") {
-                Get-MALTitle -MALId $Staff1_cards2_malId
-            } elseif ($Locale_set -eq "english") {
-                Get-MALTitle -MALId $Staff1_cards2_malId -English
-            }
-            Write-Host $i18n.Selected_Card_Title, $Staff1_cards2_titleResult -ForegroundColor Green
-        }
+    # Manually assign url if MAL ID is 0
+    if ($Staff1_cards3_malId -eq "0") {
+      Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
+      $Staff1_cards3_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
+      $Staff1_cards3_titleResult = $Staff1_cards3_titleQuery
+    } else {
+      $Staff1_cards3_titleResult = if ($Locale_set -eq "romaji") {
+        Get-MALTitle -MALId $Staff1_cards3_malId
+      } elseif ($Locale_set -eq "english") {
+        Get-MALTitle -MALId $Staff1_cards3_malId -English
+      }
+      Write-Host $i18n.Selected_Card_Title,$Staff1_cards3_titleResult -ForegroundColor Green
     }
+  }
 }
 
-if ( 3 -le $Staff1_totalCards ) {
-    # Card 3
-    Write-Host ""
-    $Staff1_cards3_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url, "(3)"
+if (4 -le $Staff1_totalCards) {
+  # Card 4
+  Write-Host ""
+  $Staff1_cards4_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url,"(4)"
 
-    if ( $Edition_isSingle -eq "n" ) {
-        # Search title on MAL
-        $Staff1_cards3_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
+  if ($Edition_isSingle -eq "n") {
+    # Search title on MAL
+    $Staff1_cards4_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
 
-        Find-MAL -SearchQuery $Staff1_cards3_titleQuery
+    Find-MAL -SearchQuery $Staff1_cards4_titleQuery
 
-        # Get MAL ID
-        $Staff1_cards3_malId = Read-Host -Prompt $i18n.Prompt_MALId_Insert
-        if (-not($Staff1_cards3_malId)) { $Staff1_cards3_malId = "0" }
+    # Get MAL ID
+    $Staff1_cards4_malId = Read-Host -Prompt $i18n.Prompt_MALId_Insert
+    if (-not ($Staff1_cards4_malId)) { $Staff1_cards4_malId = "0" }
 
-        # Manually assign url if MAL ID is 0
-        if ($Staff1_cards3_malId -eq "0") {
-            Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
-            $Staff1_cards3_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
-        $Staff1_cards3_titleResult = $Staff1_cards3_titleQuery
-        } else {
-            $Staff1_cards3_titleResult = if ($Locale_set -eq "romaji") {
-                Get-MALTitle -MALId $Staff1_cards3_malId
-            } elseif ($Locale_set -eq "english") {
-                Get-MALTitle -MALId $Staff1_cards3_malId -English
-            }
-            Write-Host $i18n.Selected_Card_Title, $Staff1_cards3_titleResult -ForegroundColor Green
-        }
+    # Manually assign url if MAL ID is 0
+    if ($Staff1_cards4_malId -eq "0") {
+      Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
+      $Staff1_cards4_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
+      $Staff1_cards4_titleResult = $Staff1_cards4_titleQuery
+    } else {
+      $Staff1_cards4_titleResult = if ($Locale_set -eq "romaji") {
+        Get-MALTitle -MALId $Staff1_cards4_malId
+      } elseif ($Locale_set -eq "english") {
+        Get-MALTitle -MALId $Staff1_cards4_malId -English
+      }
+      Write-Host $i18n.Selected_Card_Title,$Staff1_cards4_titleResult -ForegroundColor Green
     }
+  }
 }
 
-if ( 4 -le $Staff1_totalCards ) {
-    # Card 4
-    Write-Host ""
-    $Staff1_cards4_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url, "(4)"
+if (5 -le $Staff1_totalCards) {
+  # Card 5
+  Write-Host ""
+  $Staff1_cards5_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url,"(5)"
 
-    if ( $Edition_isSingle -eq "n" ) {
-        # Search title on MAL
-        $Staff1_cards4_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
+  if ($Edition_isSingle -eq "n") {
+    # Search title on MAL
+    $Staff1_cards5_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
 
-        Find-MAL -SearchQuery $Staff1_cards4_titleQuery
+    Find-MAL -SearchQuery $Staff1_cards5_titleQuery
 
-        # Get MAL ID
-        $Staff1_cards4_malId = Read-Host -Prompt $i18n.Prompt_MALId_Insert
-        if (-not($Staff1_cards4_malId)) { $Staff1_cards4_malId = "0" }
+    # Get MAL ID
+    $Staff1_cards5_malId = Read-Host -Prompt $i18n.Prompt_MALId_Insert
+    if (-not ($Staff1_cards5_malId)) { $Staff1_cards5_malId = "0" }
 
-        # Manually assign url if MAL ID is 0
-        if ($Staff1_cards4_malId -eq "0") {
-            Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
-            $Staff1_cards4_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
-        $Staff1_cards4_titleResult = $Staff1_cards4_titleQuery
-        } else {
-            $Staff1_cards4_titleResult = if ($Locale_set -eq "romaji") {
-                Get-MALTitle -MALId $Staff1_cards4_malId
-            } elseif ($Locale_set -eq "english") {
-                Get-MALTitle -MALId $Staff1_cards4_malId -English
-            }
-            Write-Host $i18n.Selected_Card_Title, $Staff1_cards4_titleResult -ForegroundColor Green
-        }
+    # Manually assign url if MAL ID is 0
+    if ($Staff1_cards5_malId -eq "0") {
+      Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
+      $Staff1_cards5_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
+      $Staff1_cards5_titleResult = $Staff1_cards5_titleQuery
+    } else {
+      $Staff1_cards5_titleResult = if ($Locale_set -eq "romaji") {
+        Get-MALTitle -MALId $Staff1_cards5_malId
+      } elseif ($Locale_set -eq "english") {
+        Get-MALTitle -MALId $Staff1_cards5_malId -English
+      }
+      Write-Host $i18n.Selected_Card_Title,$Staff1_cards5_titleResult -ForegroundColor Green
     }
+  }
 }
 
-if ( 5 -le $Staff1_totalCards ) {
-    # Card 5
-    Write-Host ""
-    $Staff1_cards5_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url, "(5)"
+if (6 -le $Staff1_totalCards) {
+  # Card 6
+  Write-Host ""
+  $Staff1_cards6_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url,"(6)"
 
-    if ( $Edition_isSingle -eq "n" ) {
-        # Search title on MAL
-        $Staff1_cards5_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
+  if ($Edition_isSingle -eq "n") {
+    # Search title on MAL
+    $Staff1_cards6_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
 
-        Find-MAL -SearchQuery $Staff1_cards5_titleQuery
+    Find-MAL -SearchQuery $Staff1_cards6_titleQuery
 
-        # Get MAL ID
-        $Staff1_cards5_malId = Read-Host -Prompt $i18n.Prompt_MALId_Insert
-        if (-not($Staff1_cards5_malId)) { $Staff1_cards5_malId = "0" }
+    # Get MAL ID
+    $Staff1_cards6_malId = Read-Host -Prompt $i18n.Prompt_MALId_Insert
+    if (-not ($Staff1_cards6_malId)) { $Staff1_cards6_malId = "0" }
 
-        # Manually assign url if MAL ID is 0
-        if ($Staff1_cards5_malId -eq "0") {
-            Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
-            $Staff1_cards5_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
-        $Staff1_cards5_titleResult = $Staff1_cards5_titleQuery
-        } else {
-            $Staff1_cards5_titleResult = if ($Locale_set -eq "romaji") {
-                Get-MALTitle -MALId $Staff1_cards5_malId
-            } elseif ($Locale_set -eq "english") {
-                Get-MALTitle -MALId $Staff1_cards5_malId -English
-            }
-            Write-Host $i18n.Selected_Card_Title, $Staff1_cards5_titleResult -ForegroundColor Green
-        }
+    # Manually assign url if MAL ID is 0
+    if ($Staff1_cards6_malId -eq "0") {
+      Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
+      $Staff1_cards6_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
+      $Staff1_cards6_titleResult = $Staff1_cards6_titleQuery
+    } else {
+      $Staff1_cards6_titleResult = if ($Locale_set -eq "romaji") {
+        Get-MALTitle -MALId $Staff1_cards6_malId
+      } elseif ($Locale_set -eq "english") {
+        Get-MALTitle -MALId $Staff1_cards6_malId -English
+      }
+      Write-Host $i18n.Selected_Card_Title,$Staff1_cards6_titleResult -ForegroundColor Green
     }
+  }
 }
 
-if ( 6 -le $Staff1_totalCards ) {
-    # Card 6
-    Write-Host ""
-    $Staff1_cards6_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url, "(6)"
+if (7 -le $Staff1_totalCards) {
+  # Card 7
+  Write-Host ""
+  $Staff1_cards7_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url,"(7)"
 
-    if ( $Edition_isSingle -eq "n" ) {
-        # Search title on MAL
-        $Staff1_cards6_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
+  if ($Edition_isSingle -eq "n") {
+    # Search title on MAL
+    $Staff1_cards7_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
 
-        Find-MAL -SearchQuery $Staff1_cards6_titleQuery
+    Find-MAL -SearchQuery $Staff1_cards7_titleQuery
 
-        # Get MAL ID
-        $Staff1_cards6_malId = Read-Host -Prompt $i18n.Prompt_MALId_Insert
-        if (-not($Staff1_cards6_malId)) { $Staff1_cards6_malId = "0" }
+    # Get MAL ID
+    $Staff1_cards7_malId = Read-Host -Prompt $i18n.Prompt_MALId_Insert
+    if (-not ($Staff1_cards7_malId)) { $Staff1_cards7_malId = "0" }
 
-        # Manually assign url if MAL ID is 0
-        if ($Staff1_cards6_malId -eq "0") {
-            Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
-            $Staff1_cards6_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
-        $Staff1_cards6_titleResult = $Staff1_cards6_titleQuery
-        } else {
-            $Staff1_cards6_titleResult = if ($Locale_set -eq "romaji") {
-                Get-MALTitle -MALId $Staff1_cards6_malId
-            } elseif ($Locale_set -eq "english") {
-                Get-MALTitle -MALId $Staff1_cards6_malId -English
-            }
-            Write-Host $i18n.Selected_Card_Title, $Staff1_cards6_titleResult -ForegroundColor Green
-        }
+    # Manually assign url if MAL ID is 0
+    if ($Staff1_cards7_malId -eq "0") {
+      Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
+      $Staff1_cards7_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
+      $Staff1_cards7_titleResult = $Staff1_cards7_titleQuery
+    } else {
+      $Staff1_cards7_titleResult = if ($Locale_set -eq "romaji") {
+        Get-MALTitle -MALId $Staff1_cards7_malId
+      } elseif ($Locale_set -eq "english") {
+        Get-MALTitle -MALId $Staff1_cards7_malId -English
+      }
+      Write-Host $i18n.Selected_Card_Title,$Staff1_cards7_titleResult -ForegroundColor Green
     }
+  }
 }
 
-if ( 7 -le $Staff1_totalCards ) {
-    # Card 7
-    Write-Host ""
-    $Staff1_cards7_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url, "(7)"
+if (8 -le $Staff1_totalCards) {
+  # Card 8
+  Write-Host ""
+  $Staff1_cards8_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url,"(8)"
 
-    if ( $Edition_isSingle -eq "n" ) {
-        # Search title on MAL
-        $Staff1_cards7_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
+  if ($Edition_isSingle -eq "n") {
+    # Search title on MAL
+    $Staff1_cards8_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
 
-        Find-MAL -SearchQuery $Staff1_cards7_titleQuery
+    Find-MAL -SearchQuery $Staff1_cards8_titleQuery
 
-        # Get MAL ID
-        $Staff1_cards7_malId = Read-Host -Prompt $i18n.Prompt_MALId_Insert
-        if (-not($Staff1_cards7_malId)) { $Staff1_cards7_malId = "0" }
+    # Get MAL ID
+    $Staff1_cards8_malId = Read-Host -Prompt $i18n.Prompt_MALId_Insert
+    if (-not ($Staff1_cards8_malId)) { $Staff1_cards8_malId = "0" }
 
-        # Manually assign url if MAL ID is 0
-        if ($Staff1_cards7_malId -eq "0") {
-            Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
-            $Staff1_cards7_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
-        $Staff1_cards7_titleResult = $Staff1_cards7_titleQuery
-        } else {
-            $Staff1_cards7_titleResult = if ($Locale_set -eq "romaji") {
-                Get-MALTitle -MALId $Staff1_cards7_malId
-            } elseif ($Locale_set -eq "english") {
-                Get-MALTitle -MALId $Staff1_cards7_malId -English
-            }
-            Write-Host $i18n.Selected_Card_Title, $Staff1_cards7_titleResult -ForegroundColor Green
-        }
+    # Manually assign url if MAL ID is 0
+    if ($Staff1_cards8_malId -eq "0") {
+      Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
+      $Staff1_cards8_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
+      $Staff1_cards8_titleResult = $Staff1_cards8_titleQuery
+    } else {
+      $Staff1_cards8_titleResult = if ($Locale_set -eq "romaji") {
+        Get-MALTitle -MALId $Staff1_cards8_malId
+      } elseif ($Locale_set -eq "english") {
+        Get-MALTitle -MALId $Staff1_cards8_malId -English
+      }
+      Write-Host $i18n.Selected_Card_Title,$Staff1_cards8_titleResult -ForegroundColor Green
     }
+  }
 }
 
-if ( 8 -le $Staff1_totalCards ) {
-    # Card 8
-    Write-Host ""
-    $Staff1_cards8_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url, "(8)"
+if (9 -le $Staff1_totalCards) {
+  # Card 9
+  Write-Host ""
+  $Staff1_cards9_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url,"(9)"
 
-    if ( $Edition_isSingle -eq "n" ) {
-        # Search title on MAL
-        $Staff1_cards8_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
+  if ($Edition_isSingle -eq "n") {
+    # Search title on MAL
+    $Staff1_cards9_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
 
-        Find-MAL -SearchQuery $Staff1_cards8_titleQuery
+    Find-MAL -SearchQuery $Staff1_cards9_titleQuery
 
-        # Get MAL ID
-        $Staff1_cards8_malId = Read-Host -Prompt $i18n.Prompt_MALId_Insert
-        if (-not($Staff1_cards8_malId)) { $Staff1_cards8_malId = "0" }
+    # Get MAL ID
+    $Staff1_cards9_malId = Read-Host -Prompt $i18n.Prompt_MALId_Insert
+    if (-not ($Staff1_cards9_malId)) { $Staff1_cards9_malId = "0" }
 
-        # Manually assign url if MAL ID is 0
-        if ($Staff1_cards8_malId -eq "0") {
-            Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
-            $Staff1_cards8_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
-        $Staff1_cards8_titleResult = $Staff1_cards8_titleQuery
-        } else {
-            $Staff1_cards8_titleResult = if ($Locale_set -eq "romaji") {
-                Get-MALTitle -MALId $Staff1_cards8_malId
-            } elseif ($Locale_set -eq "english") {
-                Get-MALTitle -MALId $Staff1_cards8_malId -English
-            }
-            Write-Host $i18n.Selected_Card_Title, $Staff1_cards8_titleResult -ForegroundColor Green
-        }
+    # Manually assign url if MAL ID is 0
+    if ($Staff1_cards9_malId -eq "0") {
+      Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
+      $Staff1_cards9_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
+      $Staff1_cards9_titleResult = $Staff1_cards9_titleQuery
+    } else {
+      $Staff1_cards9_titleResult = if ($Locale_set -eq "romaji") {
+        Get-MALTitle -MALId $Staff1_cards9_malId
+      } elseif ($Locale_set -eq "english") {
+        Get-MALTitle -MALId $Staff1_cards9_malId -English
+      }
+      Write-Host $i18n.Selected_Card_Title,$Staff1_cards9_titleResult -ForegroundColor Green
     }
-}
-
-if ( 9 -le $Staff1_totalCards ) {
-    # Card 9
-    Write-Host ""
-    $Staff1_cards9_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url, "(9)"
-
-    if ( $Edition_isSingle -eq "n" ) {
-        # Search title on MAL
-        $Staff1_cards9_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
-
-        Find-MAL -SearchQuery $Staff1_cards9_titleQuery
-
-        # Get MAL ID
-        $Staff1_cards9_malId = Read-Host -Prompt $i18n.Prompt_MALId_Insert
-        if (-not($Staff1_cards9_malId)) { $Staff1_cards9_malId = "0" }
-
-        # Manually assign url if MAL ID is 0
-        if ($Staff1_cards9_malId -eq "0") {
-            Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
-            $Staff1_cards9_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
-        $Staff1_cards9_titleResult = $Staff1_cards9_titleQuery
-        } else {
-            $Staff1_cards9_titleResult = if ($Locale_set -eq "romaji") {
-                Get-MALTitle -MALId $Staff1_cards9_malId
-            } elseif ($Locale_set -eq "english") {
-                Get-MALTitle -MALId $Staff1_cards9_malId -English
-            }
-            Write-Host $i18n.Selected_Card_Title, $Staff1_cards9_titleResult -ForegroundColor Green
-        }
-    }
+  }
 }
 
 # Staff 2
 # -------
 
-if (2 -le $Edition_staffCount){
-    Write-Host ""
-    Write-Host $i18n.Header_Staff_2 -ForegroundColor Blue
-    Write-Host "-------------"
+if (2 -le $Edition_staffCount) {
+  Write-Host ""
+  Write-Host $i18n.Header_Staff_2 -ForegroundColor Blue
+  Write-Host "-------------"
 
-    $Staff2_username = Read-Host -Prompt $i18n.Staff_Username
-    $Staff2_nickname = Read-Host -Prompt $i18n.Staff_Nickname
-    $Staff2_limitType = Read-Host -Prompt $i18n.Staff_Limit_Type
+  $Staff2_username = Read-Host -Prompt $i18n.Staff_Username
+  $Staff2_nickname = Read-Host -Prompt $i18n.Staff_Nickname
+  $Staff2_limitType = Read-Host -Prompt $i18n.Staff_Limit_Type
 
-    if ($null -eq $cardSlip.$Staff2_username) {
-        Write-Host $i18n.Invalid_Slip -ForegroundColor Red
+  if ($null -eq $cardSlip.$Staff2_username) {
+    Write-Host $i18n.Invalid_Slip -ForegroundColor Red
+  } else {
+    $Staff2_isAllowSlip = Read-Host -Prompt $i18n.Staff_Allows_Slip_Card
+    if (-not ($Staff2_isAllowSlip)) { $Staff2_isAllowSlip = "y" }
+  }
+
+  if (-not ($Staff2_limitType)) { $Staff2_limitType = "role" }
+
+  if ($Staff2_limitType -eq "role") {
+    $Staff2_limitStaff = Read-Host -Prompt $i18n.Staff_Limit_Staff
+    $Staff2_limitMember = Read-Host -Prompt $i18n.Staff_Limit_Member
+  } else {
+    $Staff2_limitAny = Read-Host -Prompt $i18n.Staff_Limit_Any
+  }
+
+  $Staff2_totalCards = Read-Host -Prompt $i18n.Staff_Limit_Total
+  if ($Staff2_totalCards -gt 9) {
+    Write-Host $i18n.Invalid_Card_amount -ForegroundColor Red
+    $Staff2_totalCards = 9
+  }
+
+  # Card 1
+  Write-Host ""
+  $Staff2_cards1_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url,"(1)"
+
+  if ($Edition_isSingle -eq "n") {
+    # Search title on MAL
+    $Staff2_cards1_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
+
+    Find-MAL -SearchQuery $Staff2_cards1_titleQuery
+
+    # Get MAL ID
+    $Staff2_cards1_malId = Read-Host -Prompt $i18n.Prompt_MALId_Insert
+    if (-not ($Staff2_cards1_malId)) { $Staff2_cards1_malId = "0" }
+
+    # Manually assign url if MAL ID is 0
+    if ($Staff2_cards1_malId -eq "0") {
+      Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
+      $Staff2_cards1_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
+      $Staff2_cards1_titleResult = $Staff2_cards1_titleQuery
     } else {
-        $Staff2_isAllowSlip = Read-Host -Prompt $i18n.Staff_Allows_Slip_Card
-        if(-not($Staff2_isAllowSlip)) { $Staff2_isAllowSlip = "y" }
+      $Staff2_cards1_titleResult = if ($Locale_set -eq "romaji") {
+        Get-MALTitle -MALId $Staff2_cards1_malId
+      } elseif ($Locale_set -eq "english") {
+        Get-MALTitle -MALId $Staff2_cards1_malId -English
+      }
+      Write-Host $i18n.Selected_Card_Title,$Staff2_cards1_titleResult -ForegroundColor Green
     }
+  }
 
-    if (-not($Staff2_limitType)) { $Staff2_limitType = "role" }
-
-    if ($Staff2_limitType -eq "role") {
-        $Staff2_limitStaff = Read-Host -Prompt $i18n.Staff_Limit_Staff
-        $Staff2_limitMember = Read-Host -Prompt $i18n.Staff_Limit_Member
-    } else {
-        $Staff2_limitAny = Read-Host -Prompt $i18n.Staff_Limit_Any
-    }
-
-    $Staff2_totalCards = Read-Host -Prompt $i18n.Staff_Limit_Total
-    if ($Staff2_totalCards -gt 9) {
-        Write-Host $i18n.Invalid_Card_amount -ForegroundColor Red
-        $Staff2_totalCards = 9
-    }
-
-    # Card 1
+  if (2 -le $Staff2_totalCards) {
+    # Card 2
     Write-Host ""
-    $Staff2_cards1_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url, "(1)"
+    $Staff2_cards2_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url,"(2)"
 
-    if ( $Edition_isSingle -eq "n" ) {
-        # Search title on MAL
-        $Staff2_cards1_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
+    if ($Edition_isSingle -eq "n") {
+      # Search title on MAL
+      $Staff2_cards2_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
 
-        Find-MAL -SearchQuery $Staff2_cards1_titleQuery
+      Find-MAL -SearchQuery $Staff2_cards2_titleQuery
 
-        # Get MAL ID
-        $Staff2_cards1_malId = Read-Host -Prompt $i18n.Prompt_MALId_Insert
-        if (-not($Staff2_cards1_malId)) { $Staff2_cards1_malId = "0" }
+      # Get MAL ID
+      $Staff2_cards2_malId = Read-Host -Prompt $i18n.Prompt_MALId_Insert
+      if (-not ($Staff2_cards2_malId)) { $Staff2_cards2_malId = "0" }
 
-        # Manually assign url if MAL ID is 0
-        if ($Staff2_cards1_malId -eq "0") {
-            Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
-            $Staff2_cards1_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
-                $Staff2_cards1_titleResult = $Staff2_cards1_titleQuery
-        } else {
-            $Staff2_cards1_titleResult = if ($Locale_set -eq "romaji") {
-                Get-MALTitle -MALId $Staff2_cards1_malId
-            } elseif ($Locale_set -eq "english") {
-                Get-MALTitle -MALId $Staff2_cards1_malId -English
-            }
-            Write-Host $i18n.Selected_Card_Title, $Staff2_cards1_titleResult -ForegroundColor Green
+      # Manually assign url if MAL ID is 0
+      if ($Staff2_cards2_malId -eq "0") {
+        Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
+        $Staff2_cards2_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
+        $Staff2_cards2_titleResult = $Staff2_cards2_titleQuery
+      } else {
+        $Staff2_cards2_titleResult = if ($Locale_set -eq "romaji") {
+          Get-MALTitle -MALId $Staff2_cards2_malId
+        } elseif ($Locale_set -eq "english") {
+          Get-MALTitle -MALId $Staff2_cards2_malId -English
         }
+        Write-Host $i18n.Selected_Card_Title,$Staff2_cards2_titleResult -ForegroundColor Green
+      }
     }
+  }
 
-    if ( 2 -le $Staff2_totalCards ) {
-        # Card 2
-        Write-Host ""
-        $Staff2_cards2_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url, "(2)"
+  if (3 -le $Staff2_totalCards) {
+    # Card 3
+    Write-Host ""
+    $Staff2_cards3_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url,"(3)"
 
-        if ( $Edition_isSingle -eq "n" ) {
-            # Search title on MAL
-            $Staff2_cards2_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
+    if ($Edition_isSingle -eq "n") {
+      # Search title on MAL
+      $Staff2_cards3_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
 
-            Find-MAL -SearchQuery $Staff2_cards2_titleQuery
+      Find-MAL -SearchQuery $Staff2_cards3_titleQuery
 
-            # Get MAL ID
-            $Staff2_cards2_malId = Read-Host -Prompt $i18n.Prompt_MALId_Insert
-            if (-not($Staff2_cards2_malId)) { $Staff2_cards2_malId = "0" }
+      # Get MAL ID
+      $Staff2_cards3_malId = Read-Host -Prompt $i18n.Prompt_MALId_Insert
+      if (-not ($Staff2_cards3_malId)) { $Staff2_cards3_malId = "0" }
 
-            # Manually assign url if MAL ID is 0
-            if ($Staff2_cards2_malId -eq "0") {
-                Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
-                $Staff2_cards2_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
-                $Staff2_cards2_titleResult = $Staff2_cards2_titleQuery
-            } else {
-                $Staff2_cards2_titleResult = if ($Locale_set -eq "romaji") {
-                    Get-MALTitle -MALId $Staff2_cards2_malId
-                } elseif ($Locale_set -eq "english") {
-                    Get-MALTitle -MALId $Staff2_cards2_malId -English
-                }
-                Write-Host $i18n.Selected_Card_Title, $Staff2_cards2_titleResult -ForegroundColor Green
-            }
+      # Manually assign url if MAL ID is 0
+      if ($Staff2_cards3_malId -eq "0") {
+        Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
+        $Staff2_cards3_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
+        $Staff2_cards3_titleResult = $Staff2_cards3_titleQuery
+      } else {
+        $Staff2_cards3_titleResult = if ($Locale_set -eq "romaji") {
+          Get-MALTitle -MALId $Staff2_cards3_malId
+        } elseif ($Locale_set -eq "english") {
+          Get-MALTitle -MALId $Staff2_cards3_malId -English
         }
+        Write-Host $i18n.Selected_Card_Title,$Staff2_cards3_titleResult -ForegroundColor Green
+      }
     }
+  }
 
-    if ( 3 -le $Staff2_totalCards ) {
-        # Card 3
-        Write-Host ""
-        $Staff2_cards3_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url, "(3)"
+  if (4 -le $Staff2_totalCards) {
+    # Card 4
+    Write-Host ""
+    $Staff2_cards4_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url,"(4)"
 
-        if ( $Edition_isSingle -eq "n" ) {
-            # Search title on MAL
-            $Staff2_cards3_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
+    if ($Edition_isSingle -eq "n") {
+      # Search title on MAL
+      $Staff2_cards4_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
 
-            Find-MAL -SearchQuery $Staff2_cards3_titleQuery
+      Find-MAL -SearchQuery $Staff2_cards4_titleQuery
 
-            # Get MAL ID
-            $Staff2_cards3_malId = Read-Host -Prompt $i18n.Prompt_MALId_Insert
-            if (-not($Staff2_cards3_malId)) { $Staff2_cards3_malId = "0" }
+      # Get MAL ID
+      $Staff2_cards4_malId = Read-Host -Prompt $i18n.Prompt_MALId_Insert
+      if (-not ($Staff2_cards4_malId)) { $Staff2_cards4_malId = "0" }
 
-            # Manually assign url if MAL ID is 0
-            if ($Staff2_cards3_malId -eq "0") {
-                Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
-                $Staff2_cards3_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
-                $Staff2_cards3_titleResult = $Staff2_cards3_titleQuery
-            } else {
-                $Staff2_cards3_titleResult = if ($Locale_set -eq "romaji") {
-                    Get-MALTitle -MALId $Staff2_cards3_malId
-                } elseif ($Locale_set -eq "english") {
-                    Get-MALTitle -MALId $Staff2_cards3_malId -English
-                }
-                Write-Host $i18n.Selected_Card_Title, $Staff2_cards3_titleResult -ForegroundColor Green
-            }
+      # Manually assign url if MAL ID is 0
+      if ($Staff2_cards4_malId -eq "0") {
+        Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
+        $Staff2_cards4_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
+        $Staff2_cards4_titleResult = $Staff2_cards4_titleQuery
+      } else {
+        $Staff2_cards4_titleResult = if ($Locale_set -eq "romaji") {
+          Get-MALTitle -MALId $Staff2_cards4_malId
+        } elseif ($Locale_set -eq "english") {
+          Get-MALTitle -MALId $Staff2_cards4_malId -English
         }
+        Write-Host $i18n.Selected_Card_Title,$Staff2_cards4_titleResult -ForegroundColor Green
+      }
     }
+  }
 
-    if ( 4 -le $Staff2_totalCards ) {
-        # Card 4
-        Write-Host ""
-        $Staff2_cards4_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url, "(4)"
+  if (5 -le $Staff2_totalCards) {
+    # Card 5
+    Write-Host ""
+    $Staff2_cards5_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url,"(5)"
 
-        if ( $Edition_isSingle -eq "n" ) {
-            # Search title on MAL
-            $Staff2_cards4_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
+    if ($Edition_isSingle -eq "n") {
+      # Search title on MAL
+      $Staff2_cards5_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
 
-            Find-MAL -SearchQuery $Staff2_cards4_titleQuery
+      Find-MAL -SearchQuery $Staff2_cards5_titleQuery
 
-            # Get MAL ID
-            $Staff2_cards4_malId = Read-Host -Prompt $i18n.Prompt_MALId_Insert
-            if (-not($Staff2_cards4_malId)) { $Staff2_cards4_malId = "0" }
+      # Get MAL ID
+      $Staff2_cards5_malId = Read-Host -Prompt $i18n.Prompt_MALId_Insert
+      if (-not ($Staff2_cards5_malId)) { $Staff2_cards5_malId = "0" }
 
-            # Manually assign url if MAL ID is 0
-            if ($Staff2_cards4_malId -eq "0") {
-                Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
-                $Staff2_cards4_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
-                $Staff2_cards4_titleResult = $Staff2_cards4_titleQuery
-            } else {
-                $Staff2_cards4_titleResult = if ($Locale_set -eq "romaji") {
-                    Get-MALTitle -MALId $Staff2_cards4_malId
-                } elseif ($Locale_set -eq "english") {
-                    Get-MALTitle -MALId $Staff2_cards4_malId -English
-                }
-                Write-Host $i18n.Selected_Card_Title, $Staff2_cards4_titleResult -ForegroundColor Green
-            }
+      # Manually assign url if MAL ID is 0
+      if ($Staff2_cards5_malId -eq "0") {
+        Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
+        $Staff2_cards5_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
+        $Staff2_cards5_titleResult = $Staff2_cards5_titleQuery
+      } else {
+        $Staff2_cards5_titleResult = if ($Locale_set -eq "romaji") {
+          Get-MALTitle -MALId $Staff2_cards5_malId
+        } elseif ($Locale_set -eq "english") {
+          Get-MALTitle -MALId $Staff2_cards5_malId -English
         }
+        Write-Host $i18n.Selected_Card_Title,$Staff2_cards5_titleResult -ForegroundColor Green
+      }
     }
+  }
 
-    if ( 5 -le $Staff2_totalCards ) {
-        # Card 5
-        Write-Host ""
-        $Staff2_cards5_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url, "(5)"
+  if (6 -le $Staff2_totalCards) {
+    # Card 6
+    Write-Host ""
+    $Staff2_cards6_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url,"(6)"
 
-        if ( $Edition_isSingle -eq "n" ) {
-            # Search title on MAL
-            $Staff2_cards5_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
+    if ($Edition_isSingle -eq "n") {
+      # Search title on MAL
+      $Staff2_cards6_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
 
-            Find-MAL -SearchQuery $Staff2_cards5_titleQuery
+      Find-MAL -SearchQuery $Staff2_cards6_titleQuery
 
-            # Get MAL ID
-            $Staff2_cards5_malId = Read-Host -Prompt $i18n.Prompt_MALId_Insert
-            if (-not($Staff2_cards5_malId)) { $Staff2_cards5_malId = "0" }
+      # Get MAL ID
+      $Staff2_cards6_malId = Read-Host -Prompt $i18n.Prompt_MALId_Insert
+      if (-not ($Staff2_cards6_malId)) { $Staff2_cards6_malId = "0" }
 
-            # Manually assign url if MAL ID is 0
-            if ($Staff2_cards5_malId -eq "0") {
-                Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
-                $Staff2_cards5_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
-                $Staff2_cards5_titleResult = $Staff2_cards5_titleQuery
-            } else {
-                $Staff2_cards5_titleResult = if ($Locale_set -eq "romaji") {
-                    Get-MALTitle -MALId $Staff2_cards5_malId
-                } elseif ($Locale_set -eq "english") {
-                    Get-MALTitle -MALId $Staff2_cards5_malId -English
-                }
-                Write-Host $i18n.Selected_Card_Title, $Staff2_cards5_titleResult -ForegroundColor Green
-            }
+      # Manually assign url if MAL ID is 0
+      if ($Staff2_cards6_malId -eq "0") {
+        Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
+        $Staff2_cards6_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
+        $Staff2_cards6_titleResult = $Staff2_cards6_titleQuery
+      } else {
+        $Staff2_cards6_titleResult = if ($Locale_set -eq "romaji") {
+          Get-MALTitle -MALId $Staff2_cards6_malId
+        } elseif ($Locale_set -eq "english") {
+          Get-MALTitle -MALId $Staff2_cards6_malId -English
         }
+        Write-Host $i18n.Selected_Card_Title,$Staff2_cards6_titleResult -ForegroundColor Green
+      }
     }
+  }
 
-    if ( 6 -le $Staff2_totalCards ) {
-        # Card 6
-        Write-Host ""
-        $Staff2_cards6_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url, "(6)"
+  if (7 -le $Staff2_totalCards) {
+    # Card 7
+    Write-Host ""
+    $Staff2_cards7_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url,"(7)"
 
-        if ( $Edition_isSingle -eq "n" ) {
-            # Search title on MAL
-            $Staff2_cards6_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
+    if ($Edition_isSingle -eq "n") {
+      # Search title on MAL
+      $Staff2_cards7_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
 
-            Find-MAL -SearchQuery $Staff2_cards6_titleQuery
+      Find-MAL -SearchQuery $Staff2_cards7_titleQuery
 
-            # Get MAL ID
-            $Staff2_cards6_malId = Read-Host -Prompt $i18n.Prompt_MALId_Insert
-            if (-not($Staff2_cards6_malId)) { $Staff2_cards6_malId = "0" }
+      # Get MAL ID
+      $Staff2_cards7_malId = Read-Host -Prompt $i18n.Prompt_MALId_Insert
+      if (-not ($Staff2_cards7_malId)) { $Staff2_cards7_malId = "0" }
 
-            # Manually assign url if MAL ID is 0
-            if ($Staff2_cards6_malId -eq "0") {
-                Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
-                $Staff2_cards6_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
-                $Staff2_cards6_titleResult = $Staff2_cards6_titleQuery
-            } else {
-                $Staff2_cards6_titleResult = if ($Locale_set -eq "romaji") {
-                    Get-MALTitle -MALId $Staff2_cards6_malId
-                } elseif ($Locale_set -eq "english") {
-                    Get-MALTitle -MALId $Staff2_cards6_malId -English
-                }
-                Write-Host $i18n.Selected_Card_Title, $Staff2_cards6_titleResult -ForegroundColor Green
-            }
+      # Manually assign url if MAL ID is 0
+      if ($Staff2_cards7_malId -eq "0") {
+        Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
+        $Staff2_cards7_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
+        $Staff2_cards7_titleResult = $Staff2_cards7_titleQuery
+      } else {
+        $Staff2_cards7_titleResult = if ($Locale_set -eq "romaji") {
+          Get-MALTitle -MALId $Staff2_cards7_malId
+        } elseif ($Locale_set -eq "english") {
+          Get-MALTitle -MALId $Staff2_cards7_malId -English
         }
+        Write-Host $i18n.Selected_Card_Title,$Staff2_cards7_titleResult -ForegroundColor Green
+      }
     }
+  }
 
-    if ( 7 -le $Staff2_totalCards ) {
-        # Card 7
-        Write-Host ""
-        $Staff2_cards7_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url, "(7)"
+  if (8 -le $Staff2_totalCards) {
+    # Card 8
+    Write-Host ""
+    $Staff2_cards8_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url,"(8)"
 
-        if ( $Edition_isSingle -eq "n" ) {
-            # Search title on MAL
-            $Staff2_cards7_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
+    if ($Edition_isSingle -eq "n") {
+      # Search title on MAL
+      $Staff2_cards8_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
 
-            Find-MAL -SearchQuery $Staff2_cards7_titleQuery
+      Find-MAL -SearchQuery $Staff2_cards8_titleQuery
 
-            # Get MAL ID
-            $Staff2_cards7_malId = Read-Host -Prompt $i18n.Prompt_MALId_Insert
-            if (-not($Staff2_cards7_malId)) { $Staff2_cards7_malId = "0" }
+      # Get MAL ID
+      $Staff2_cards8_malId = Read-Host -Prompt $i18n.Prompt_MALId_Insert
+      if (-not ($Staff2_cards8_malId)) { $Staff2_cards8_malId = "0" }
 
-            # Manually assign url if MAL ID is 0
-            if ($Staff2_cards7_malId -eq "0") {
-                Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
-                $Staff2_cards7_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
-                $Staff2_cards7_titleResult = $Staff2_cards7_titleQuery
-            } else {
-                $Staff2_cards7_titleResult = if ($Locale_set -eq "romaji") {
-                    Get-MALTitle -MALId $Staff2_cards7_malId
-                } elseif ($Locale_set -eq "english") {
-                    Get-MALTitle -MALId $Staff2_cards7_malId -English
-                }
-                Write-Host $i18n.Selected_Card_Title, $Staff2_cards7_titleResult -ForegroundColor Green
-            }
+      # Manually assign url if MAL ID is 0
+      if ($Staff2_cards8_malId -eq "0") {
+        Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
+        $Staff2_cards8_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
+        $Staff2_cards8_titleResult = $Staff2_cards8_titleQuery
+      } else {
+        $Staff2_cards8_titleResult = if ($Locale_set -eq "romaji") {
+          Get-MALTitle -MALId $Staff2_cards8_malId
+        } elseif ($Locale_set -eq "english") {
+          Get-MALTitle -MALId $Staff2_cards8_malId -English
         }
+        Write-Host $i18n.Selected_Card_Title,$Staff2_cards8_titleResult -ForegroundColor Green
+      }
     }
+  }
 
-    if ( 8 -le $Staff2_totalCards ) {
-        # Card 8
-        Write-Host ""
-        $Staff2_cards8_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url, "(8)"
+  if (9 -le $Staff2_totalCards) {
+    # Card 9
+    Write-Host ""
+    $Staff2_cards9_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url,"(9)"
 
-        if ( $Edition_isSingle -eq "n" ) {
-            # Search title on MAL
-            $Staff2_cards8_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
+    if ($Edition_isSingle -eq "n") {
+      # Search title on MAL
+      $Staff2_cards9_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
 
-            Find-MAL -SearchQuery $Staff2_cards8_titleQuery
+      Find-MAL -SearchQuery $Staff2_cards9_titleQuery
 
-            # Get MAL ID
-            $Staff2_cards8_malId = Read-Host -Prompt $i18n.Prompt_MALId_Insert
-            if (-not($Staff2_cards8_malId)) { $Staff2_cards8_malId = "0" }
+      # Get MAL ID
+      $Staff2_cards9_malId = Read-Host -Prompt $i18n.Prompt_MALId_Insert
+      if (-not ($Staff2_cards9_malId)) { $Staff2_cards9_malId = "0" }
 
-            # Manually assign url if MAL ID is 0
-            if ($Staff2_cards8_malId -eq "0") {
-                Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
-                $Staff2_cards8_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
-                $Staff2_cards8_titleResult = $Staff2_cards8_titleQuery
-            } else {
-                $Staff2_cards8_titleResult = if ($Locale_set -eq "romaji") {
-                    Get-MALTitle -MALId $Staff2_cards8_malId
-                } elseif ($Locale_set -eq "english") {
-                    Get-MALTitle -MALId $Staff2_cards8_malId -English
-                }
-                Write-Host $i18n.Selected_Card_Title, $Staff2_cards8_titleResult -ForegroundColor Green
-            }
+      # Manually assign url if MAL ID is 0
+      if ($Staff2_cards9_malId -eq "0") {
+        Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
+        $Staff2_cards9_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
+        $Staff2_cards9_titleResult = $Staff2_cards9_titleQuery
+      } else {
+        $Staff2_cards9_titleResult = if ($Locale_set -eq "romaji") {
+          Get-MALTitle -MALId $Staff2_cards9_malId
+        } elseif ($Locale_set -eq "english") {
+          Get-MALTitle -MALId $Staff2_cards9_malId -English
         }
+        Write-Host $i18n.Selected_Card_Title,$Staff2_cards9_titleResult -ForegroundColor Green
+      }
     }
-
-    if ( 9 -le $Staff2_totalCards ) {
-        # Card 9
-        Write-Host ""
-        $Staff2_cards9_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url, "(9)"
-
-        if ( $Edition_isSingle -eq "n" ) {
-            # Search title on MAL
-            $Staff2_cards9_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
-
-            Find-MAL -SearchQuery $Staff2_cards9_titleQuery
-
-            # Get MAL ID
-            $Staff2_cards9_malId = Read-Host -Prompt $i18n.Prompt_MALId_Insert
-            if (-not($Staff2_cards9_malId)) { $Staff2_cards9_malId = "0" }
-
-            # Manually assign url if MAL ID is 0
-            if ($Staff2_cards9_malId -eq "0") {
-                Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
-                $Staff2_cards9_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
-                $Staff2_cards9_titleResult = $Staff2_cards9_titleQuery
-            } else {
-                $Staff2_cards9_titleResult = if ($Locale_set -eq "romaji") {
-                    Get-MALTitle -MALId $Staff2_cards9_malId
-                } elseif ($Locale_set -eq "english") {
-                    Get-MALTitle -MALId $Staff2_cards9_malId -English
-                }
-                Write-Host $i18n.Selected_Card_Title, $Staff2_cards9_titleResult -ForegroundColor Green
-            }
-        }
-    }
+  }
 }
 
 # Staff 3
 # -------
 
-if (3 -le $Edition_staffCount){
-    Write-Host ""
-    Write-Host $i18n.Header_Staff_3 -ForegroundColor Blue
-    Write-Host "-------------"
+if (3 -le $Edition_staffCount) {
+  Write-Host ""
+  Write-Host $i18n.Header_Staff_3 -ForegroundColor Blue
+  Write-Host "-------------"
 
-    $Staff3_username = Read-Host -Prompt $i18n.Staff_Username
-    $Staff3_nickname = Read-Host -Prompt $i18n.Staff_Nickname
-    $Staff3_limitType = Read-Host -Prompt $i18n.Staff_Limit_Type
+  $Staff3_username = Read-Host -Prompt $i18n.Staff_Username
+  $Staff3_nickname = Read-Host -Prompt $i18n.Staff_Nickname
+  $Staff3_limitType = Read-Host -Prompt $i18n.Staff_Limit_Type
 
-    if ($null -eq $cardSlip.$Staff3_username) {
-        Write-Host $i18n.Invalid_Slip -ForegroundColor Red
+  if ($null -eq $cardSlip.$Staff3_username) {
+    Write-Host $i18n.Invalid_Slip -ForegroundColor Red
+  } else {
+    $Staff3_isAllowSlip = Read-Host -Prompt $i18n.Staff_Allows_Slip_Card
+    if (-not ($Staff3_isAllowSlip)) { $Staff3_isAllowSlip = "y" }
+  }
+
+  if (-not ($Staff3_limitType)) { $Staff3_limitType = "role" }
+
+  if ($Staff3_limitType -eq "role") {
+    $Staff3_limitStaff = Read-Host -Prompt $i18n.Staff_Limit_Staff
+    $Staff3_limitMember = Read-Host -Prompt $i18n.Staff_Limit_Member
+  } else {
+    $Staff3_limitAny = Read-Host -Prompt $i18n.Staff_Limit_Any
+  }
+
+  $Staff3_totalCards = Read-Host -Prompt $i18n.Staff_Limit_Total
+  if ($Staff3_totalCards -gt 9) {
+    Write-Host $i18n.Invalid_Card_amount -ForegroundColor Red
+    $Staff3_totalCards = 9
+  }
+
+  # Card 1
+  Write-Host ""
+  $Staff3_cards1_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url,"(1)"
+
+  if ($Edition_isSingle -eq "n") {
+    # Search title on MAL
+    $Staff3_cards1_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
+
+    Find-MAL -SearchQuery $Staff3_cards1_titleQuery
+
+    # Get MAL ID
+    $Staff3_cards1_malId = Read-Host -Prompt $i18n.Prompt_MALId_Insert
+    if (-not ($Staff3_cards1_malId)) { $Staff3_cards1_malId = "0" }
+
+    # Manually assign url if MAL ID is 0
+    if ($Staff3_cards1_malId -eq "0") {
+      Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
+      $Staff3_cards1_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
+      $Staff3_cards1_titleResult = $Staff3_cards1_titleQuery
     } else {
-        $Staff3_isAllowSlip = Read-Host -Prompt $i18n.Staff_Allows_Slip_Card
-        if(-not($Staff3_isAllowSlip)) { $Staff3_isAllowSlip = "y" }
+      $Staff3_cards1_titleResult = if ($Locale_set -eq "romaji") {
+        Get-MALTitle -MALId $Staff3_cards1_malId
+      } elseif ($Locale_set -eq "english") {
+        Get-MALTitle -MALId $Staff3_cards1_malId -English
+      }
+      Write-Host $i18n.Selected_Card_Title,$Staff3_cards1_titleResult -ForegroundColor Green
     }
+  }
 
-    if (-not($Staff3_limitType)) { $Staff3_limitType = "role" }
-
-    if ($Staff3_limitType -eq "role") {
-        $Staff3_limitStaff = Read-Host -Prompt $i18n.Staff_Limit_Staff
-        $Staff3_limitMember = Read-Host -Prompt $i18n.Staff_Limit_Member
-    } else {
-        $Staff3_limitAny = Read-Host -Prompt $i18n.Staff_Limit_Any
-    }
-
-    $Staff3_totalCards = Read-Host -Prompt $i18n.Staff_Limit_Total
-    if ($Staff3_totalCards -gt 9) {
-        Write-Host $i18n.Invalid_Card_amount -ForegroundColor Red
-        $Staff3_totalCards = 9
-    }
-
-    # Card 1
+  if (2 -le $Staff3_totalCards) {
+    # Card 2
     Write-Host ""
-    $Staff3_cards1_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url, "(1)"
+    $Staff3_cards2_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url,"(2)"
 
-    if ( $Edition_isSingle -eq "n" ) {
-        # Search title on MAL
-        $Staff3_cards1_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
+    if ($Edition_isSingle -eq "n") {
+      # Search title on MAL
+      $Staff3_cards2_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
 
-        Find-MAL -SearchQuery $Staff3_cards1_titleQuery
+      Find-MAL -SearchQuery $Staff3_cards2_titleQuery
 
-        # Get MAL ID
-        $Staff3_cards1_malId = Read-Host -Prompt $i18n.Prompt_MALId_Insert
-        if (-not($Staff3_cards1_malId)) { $Staff3_cards1_malId = "0" }
+      # Get MAL ID
+      $Staff3_cards2_malId = Read-Host -Prompt $i18n.Prompt_MALId_Insert
+      if (-not ($Staff3_cards2_malId)) { $Staff3_cards2_malId = "0" }
 
-        # Manually assign url if MAL ID is 0
-        if ($Staff3_cards1_malId -eq "0") {
-            Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
-            $Staff3_cards1_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
-                $Staff3_cards1_titleResult = $Staff3_cards1_titleQuery
-        } else {
-            $Staff3_cards1_titleResult = if ($Locale_set -eq "romaji") {
-                Get-MALTitle -MALId $Staff3_cards1_malId
-            } elseif ($Locale_set -eq "english") {
-                Get-MALTitle -MALId $Staff3_cards1_malId -English
-            }
-            Write-Host $i18n.Selected_Card_Title, $Staff3_cards1_titleResult -ForegroundColor Green
+      # Manually assign url if MAL ID is 0
+      if ($Staff3_cards2_malId -eq "0") {
+        Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
+        $Staff3_cards2_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
+        $Staff3_cards2_titleResult = $Staff3_cards2_titleQuery
+      } else {
+        $Staff3_cards2_titleResult = if ($Locale_set -eq "romaji") {
+          Get-MALTitle -MALId $Staff3_cards2_malId
+        } elseif ($Locale_set -eq "english") {
+          Get-MALTitle -MALId $Staff3_cards2_malId -English
         }
+        Write-Host $i18n.Selected_Card_Title,$Staff3_cards2_titleResult -ForegroundColor Green
+      }
     }
+  }
 
-    if ( 2 -le $Staff3_totalCards ) {
-        # Card 2
-        Write-Host ""
-        $Staff3_cards2_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url, "(2)"
+  if (3 -le $Staff3_totalCards) {
+    # Card 3
+    Write-Host ""
+    $Staff3_cards3_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url,"(3)"
 
-        if ( $Edition_isSingle -eq "n" ) {
-            # Search title on MAL
-            $Staff3_cards2_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
+    if ($Edition_isSingle -eq "n") {
+      # Search title on MAL
+      $Staff3_cards3_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
 
-            Find-MAL -SearchQuery $Staff3_cards2_titleQuery
+      Find-MAL -SearchQuery $Staff3_cards3_titleQuery
 
-            # Get MAL ID
-            $Staff3_cards2_malId = Read-Host -Prompt $i18n.Prompt_MALId_Insert
-            if (-not($Staff3_cards2_malId)) { $Staff3_cards2_malId = "0" }
+      # Get MAL ID
+      $Staff3_cards3_malId = Read-Host -Prompt $i18n.Prompt_MALId_Insert
+      if (-not ($Staff3_cards3_malId)) { $Staff3_cards3_malId = "0" }
 
-            # Manually assign url if MAL ID is 0
-            if ($Staff3_cards2_malId -eq "0") {
-                Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
-                $Staff3_cards2_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
-                $Staff3_cards2_titleResult = $Staff3_cards2_titleQuery
-            } else {
-                $Staff3_cards2_titleResult = if ($Locale_set -eq "romaji") {
-                    Get-MALTitle -MALId $Staff3_cards2_malId
-                } elseif ($Locale_set -eq "english") {
-                    Get-MALTitle -MALId $Staff3_cards2_malId -English
-                }
-                Write-Host $i18n.Selected_Card_Title, $Staff3_cards2_titleResult -ForegroundColor Green
-            }
+      # Manually assign url if MAL ID is 0
+      if ($Staff3_cards3_malId -eq "0") {
+        Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
+        $Staff3_cards3_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
+        $Staff3_cards3_titleResult = $Staff3_cards3_titleQuery
+      } else {
+        $Staff3_cards3_titleResult = if ($Locale_set -eq "romaji") {
+          Get-MALTitle -MALId $Staff3_cards3_malId
+        } elseif ($Locale_set -eq "english") {
+          Get-MALTitle -MALId $Staff3_cards3_malId -English
         }
+        Write-Host $i18n.Selected_Card_Title,$Staff3_cards3_titleResult -ForegroundColor Green
+      }
     }
+  }
 
-    if ( 3 -le $Staff3_totalCards ) {
-        # Card 3
-        Write-Host ""
-        $Staff3_cards3_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url, "(3)"
+  if (4 -le $Staff3_totalCards) {
+    # Card 4
+    Write-Host ""
+    $Staff3_cards4_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url,"(4)"
 
-        if ( $Edition_isSingle -eq "n" ) {
-            # Search title on MAL
-            $Staff3_cards3_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
+    if ($Edition_isSingle -eq "n") {
+      # Search title on MAL
+      $Staff3_cards4_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
 
-            Find-MAL -SearchQuery $Staff3_cards3_titleQuery
+      Find-MAL -SearchQuery $Staff3_cards4_titleQuery
 
-            # Get MAL ID
-            $Staff3_cards3_malId = Read-Host -Prompt $i18n.Prompt_MALId_Insert
-            if (-not($Staff3_cards3_malId)) { $Staff3_cards3_malId = "0" }
+      # Get MAL ID
+      $Staff3_cards4_malId = Read-Host -Prompt $i18n.Prompt_MALId_Insert
+      if (-not ($Staff3_cards4_malId)) { $Staff3_cards4_malId = "0" }
 
-            # Manually assign url if MAL ID is 0
-            if ($Staff3_cards3_malId -eq "0") {
-                Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
-                $Staff3_cards3_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
-                $Staff3_cards3_titleResult = $Staff3_cards3_titleQuery
-            } else {
-                $Staff3_cards3_titleResult = if ($Locale_set -eq "romaji") {
-                    Get-MALTitle -MALId $Staff3_cards3_malId
-                } elseif ($Locale_set -eq "english") {
-                    Get-MALTitle -MALId $Staff3_cards3_malId -English
-                }
-                Write-Host $i18n.Selected_Card_Title, $Staff3_cards3_titleResult -ForegroundColor Green
-            }
+      # Manually assign url if MAL ID is 0
+      if ($Staff3_cards4_malId -eq "0") {
+        Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
+        $Staff3_cards4_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
+        $Staff3_cards4_titleResult = $Staff3_cards4_titleQuery
+      } else {
+        $Staff3_cards4_titleResult = if ($Locale_set -eq "romaji") {
+          Get-MALTitle -MALId $Staff3_cards4_malId
+        } elseif ($Locale_set -eq "english") {
+          Get-MALTitle -MALId $Staff3_cards4_malId -English
         }
+        Write-Host $i18n.Selected_Card_Title,$Staff3_cards4_titleResult -ForegroundColor Green
+      }
     }
+  }
 
-    if ( 4 -le $Staff3_totalCards ) {
-        # Card 4
-        Write-Host ""
-        $Staff3_cards4_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url, "(4)"
+  if (5 -le $Staff3_totalCards) {
+    # Card 5
+    Write-Host ""
+    $Staff3_cards5_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url,"(5)"
 
-        if ( $Edition_isSingle -eq "n" ) {
-            # Search title on MAL
-            $Staff3_cards4_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
+    if ($Edition_isSingle -eq "n") {
+      # Search title on MAL
+      $Staff3_cards5_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
 
-            Find-MAL -SearchQuery $Staff3_cards4_titleQuery
+      Find-MAL -SearchQuery $Staff3_cards5_titleQuery
 
-            # Get MAL ID
-            $Staff3_cards4_malId = Read-Host -Prompt $i18n.Prompt_MALId_Insert
-            if (-not($Staff3_cards4_malId)) { $Staff3_cards4_malId = "0" }
+      # Get MAL ID
+      $Staff3_cards5_malId = Read-Host -Prompt $i18n.Prompt_MALId_Insert
+      if (-not ($Staff3_cards5_malId)) { $Staff3_cards5_malId = "0" }
 
-            # Manually assign url if MAL ID is 0
-            if ($Staff3_cards4_malId -eq "0") {
-                Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
-                $Staff3_cards4_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
-                $Staff3_cards4_titleResult = $Staff3_cards4_titleQuery
-            } else {
-                $Staff3_cards4_titleResult = if ($Locale_set -eq "romaji") {
-                    Get-MALTitle -MALId $Staff3_cards4_malId
-                } elseif ($Locale_set -eq "english") {
-                    Get-MALTitle -MALId $Staff3_cards4_malId -English
-                }
-                Write-Host $i18n.Selected_Card_Title, $Staff3_cards4_titleResult -ForegroundColor Green
-            }
+      # Manually assign url if MAL ID is 0
+      if ($Staff3_cards5_malId -eq "0") {
+        Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
+        $Staff3_cards5_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
+        $Staff3_cards5_titleResult = $Staff3_cards5_titleQuery
+      } else {
+        $Staff3_cards5_titleResult = if ($Locale_set -eq "romaji") {
+          Get-MALTitle -MALId $Staff3_cards5_malId
+        } elseif ($Locale_set -eq "english") {
+          Get-MALTitle -MALId $Staff3_cards5_malId -English
         }
+        Write-Host $i18n.Selected_Card_Title,$Staff3_cards5_titleResult -ForegroundColor Green
+      }
     }
+  }
 
-    if ( 5 -le $Staff3_totalCards ) {
-        # Card 5
-        Write-Host ""
-        $Staff3_cards5_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url, "(5)"
+  if (6 -le $Staff3_totalCards) {
+    # Card 6
+    Write-Host ""
+    $Staff3_cards6_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url,"(6)"
 
-        if ( $Edition_isSingle -eq "n" ) {
-            # Search title on MAL
-            $Staff3_cards5_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
+    if ($Edition_isSingle -eq "n") {
+      # Search title on MAL
+      $Staff3_cards6_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
 
-            Find-MAL -SearchQuery $Staff3_cards5_titleQuery
+      Find-MAL -SearchQuery $Staff3_cards6_titleQuery
 
-            # Get MAL ID
-            $Staff3_cards5_malId = Read-Host -Prompt $i18n.Prompt_MALId_Insert
-            if (-not($Staff3_cards5_malId)) { $Staff3_cards5_malId = "0" }
+      # Get MAL ID
+      $Staff3_cards6_malId = Read-Host -Prompt $i18n.Prompt_MALId_Insert
+      if (-not ($Staff3_cards6_malId)) { $Staff3_cards6_malId = "0" }
 
-            # Manually assign url if MAL ID is 0
-            if ($Staff3_cards5_malId -eq "0") {
-                Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
-                $Staff3_cards5_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
-                $Staff3_cards5_titleResult = $Staff3_cards5_titleQuery
-            } else {
-                $Staff3_cards5_titleResult = if ($Locale_set -eq "romaji") {
-                    Get-MALTitle -MALId $Staff3_cards5_malId
-                } elseif ($Locale_set -eq "english") {
-                    Get-MALTitle -MALId $Staff3_cards5_malId -English
-                }
-                Write-Host $i18n.Selected_Card_Title, $Staff3_cards5_titleResult -ForegroundColor Green
-            }
+      # Manually assign url if MAL ID is 0
+      if ($Staff3_cards6_malId -eq "0") {
+        Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
+        $Staff3_cards6_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
+        $Staff3_cards6_titleResult = $Staff3_cards6_titleQuery
+      } else {
+        $Staff3_cards6_titleResult = if ($Locale_set -eq "romaji") {
+          Get-MALTitle -MALId $Staff3_cards6_malId
+        } elseif ($Locale_set -eq "english") {
+          Get-MALTitle -MALId $Staff3_cards6_malId -English
         }
+        Write-Host $i18n.Selected_Card_Title,$Staff3_cards6_titleResult -ForegroundColor Green
+      }
     }
+  }
 
-    if ( 6 -le $Staff3_totalCards ) {
-        # Card 6
-        Write-Host ""
-        $Staff3_cards6_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url, "(6)"
+  if (7 -le $Staff3_totalCards) {
+    # Card 7
+    Write-Host ""
+    $Staff3_cards7_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url,"(7)"
 
-        if ( $Edition_isSingle -eq "n" ) {
-            # Search title on MAL
-            $Staff3_cards6_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
+    if ($Edition_isSingle -eq "n") {
+      # Search title on MAL
+      $Staff3_cards7_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
 
-            Find-MAL -SearchQuery $Staff3_cards6_titleQuery
+      Find-MAL -SearchQuery $Staff3_cards7_titleQuery
 
-            # Get MAL ID
-            $Staff3_cards6_malId = Read-Host -Prompt $i18n.Prompt_MALId_Insert
-            if (-not($Staff3_cards6_malId)) { $Staff3_cards6_malId = "0" }
+      # Get MAL ID
+      $Staff3_cards7_malId = Read-Host -Prompt $i18n.Prompt_MALId_Insert
+      if (-not ($Staff3_cards7_malId)) { $Staff3_cards7_malId = "0" }
 
-            # Manually assign url if MAL ID is 0
-            if ($Staff3_cards6_malId -eq "0") {
-                Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
-                $Staff3_cards6_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
-                $Staff3_cards6_titleResult = $Staff3_cards6_titleQuery
-            } else {
-                $Staff3_cards6_titleResult = if ($Locale_set -eq "romaji") {
-                    Get-MALTitle -MALId $Staff3_cards6_malId
-                } elseif ($Locale_set -eq "english") {
-                    Get-MALTitle -MALId $Staff3_cards6_malId -English
-                }
-                Write-Host $i18n.Selected_Card_Title, $Staff3_cards6_titleResult -ForegroundColor Green
-            }
+      # Manually assign url if MAL ID is 0
+      if ($Staff3_cards7_malId -eq "0") {
+        Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
+        $Staff3_cards7_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
+        $Staff3_cards7_titleResult = $Staff3_cards7_titleQuery
+      } else {
+        $Staff3_cards7_titleResult = if ($Locale_set -eq "romaji") {
+          Get-MALTitle -MALId $Staff3_cards7_malId
+        } elseif ($Locale_set -eq "english") {
+          Get-MALTitle -MALId $Staff3_cards7_malId -English
         }
+        Write-Host $i18n.Selected_Card_Title,$Staff3_cards7_titleResult -ForegroundColor Green
+      }
     }
+  }
 
-    if ( 7 -le $Staff3_totalCards ) {
-        # Card 7
-        Write-Host ""
-        $Staff3_cards7_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url, "(7)"
+  if (8 -le $Staff3_totalCards) {
+    # Card 8
+    Write-Host ""
+    $Staff3_cards8_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url,"(8)"
 
-        if ( $Edition_isSingle -eq "n" ) {
-            # Search title on MAL
-            $Staff3_cards7_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
+    if ($Edition_isSingle -eq "n") {
+      # Search title on MAL
+      $Staff3_cards8_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
 
-            Find-MAL -SearchQuery $Staff3_cards7_titleQuery
+      Find-MAL -SearchQuery $Staff3_cards8_titleQuery
 
-            # Get MAL ID
-            $Staff3_cards7_malId = Read-Host -Prompt $i18n.Prompt_MALId_Insert
-            if (-not($Staff3_cards7_malId)) { $Staff3_cards7_malId = "0" }
+      # Get MAL ID
+      $Staff3_cards8_malId = Read-Host -Prompt $i18n.Prompt_MALId_Insert
+      if (-not ($Staff3_cards8_malId)) { $Staff3_cards8_malId = "0" }
 
-            # Manually assign url if MAL ID is 0
-            if ($Staff3_cards7_malId -eq "0") {
-                Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
-                $Staff3_cards7_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
-                $Staff3_cards7_titleResult = $Staff3_cards7_titleQuery
-            } else {
-                $Staff3_cards7_titleResult = if ($Locale_set -eq "romaji") {
-                    Get-MALTitle -MALId $Staff3_cards7_malId
-                } elseif ($Locale_set -eq "english") {
-                    Get-MALTitle -MALId $Staff3_cards7_malId -English
-                }
-                Write-Host $i18n.Selected_Card_Title, $Staff3_cards7_titleResult -ForegroundColor Green
-            }
+      # Manually assign url if MAL ID is 0
+      if ($Staff3_cards8_malId -eq "0") {
+        Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
+        $Staff3_cards8_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
+        $Staff3_cards8_titleResult = $Staff3_cards8_titleQuery
+      } else {
+        $Staff3_cards8_titleResult = if ($Locale_set -eq "romaji") {
+          Get-MALTitle -MALId $Staff3_cards8_malId
+        } elseif ($Locale_set -eq "english") {
+          Get-MALTitle -MALId $Staff3_cards8_malId -English
         }
+        Write-Host $i18n.Selected_Card_Title,$Staff3_cards8_titleResult -ForegroundColor Green
+      }
     }
+  }
 
-    if ( 8 -le $Staff3_totalCards ) {
-        # Card 8
-        Write-Host ""
-        $Staff3_cards8_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url, "(8)"
+  if (9 -le $Staff3_totalCards) {
+    # Card 9
+    Write-Host ""
+    $Staff3_cards9_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url,"(9)"
 
-        if ( $Edition_isSingle -eq "n" ) {
-            # Search title on MAL
-            $Staff3_cards8_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
+    if ($Edition_isSingle -eq "n") {
+      # Search title on MAL
+      $Staff3_cards9_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
 
-            Find-MAL -SearchQuery $Staff3_cards8_titleQuery
+      Find-MAL -SearchQuery $Staff3_cards9_titleQuery
 
-            # Get MAL ID
-            $Staff3_cards8_malId = Read-Host -Prompt $i18n.Prompt_MALId_Insert
-            if (-not($Staff3_cards8_malId)) { $Staff3_cards8_malId = "0" }
+      # Get MAL ID
+      $Staff3_cards9_malId = Read-Host -Prompt $i18n.Prompt_MALId_Insert
+      if (-not ($Staff3_cards9_malId)) { $Staff3_cards9_malId = "0" }
 
-            # Manually assign url if MAL ID is 0
-            if ($Staff3_cards8_malId -eq "0") {
-                Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
-                $Staff3_cards8_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
-                $Staff3_cards8_titleResult = $Staff3_cards8_titleQuery
-            } else {
-                $Staff3_cards8_titleResult = if ($Locale_set -eq "romaji") {
-                    Get-MALTitle -MALId $Staff3_cards8_malId
-                } elseif ($Locale_set -eq "english") {
-                    Get-MALTitle -MALId $Staff3_cards8_malId -English
-                }
-                Write-Host $i18n.Selected_Card_Title, $Staff3_cards8_titleResult -ForegroundColor Green
-            }
+      # Manually assign url if MAL ID is 0
+      if ($Staff3_cards9_malId -eq "0") {
+        Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
+        $Staff3_cards9_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
+        $Staff3_cards9_titleResult = $Staff3_cards9_titleQuery
+      } else {
+        $Staff3_cards9_titleResult = if ($Locale_set -eq "romaji") {
+          Get-MALTitle -MALId $Staff3_cards9_malId
+        } elseif ($Locale_set -eq "english") {
+          Get-MALTitle -MALId $Staff3_cards9_malId -English
         }
+        Write-Host $i18n.Selected_Card_Title,$Staff3_cards9_titleResult -ForegroundColor Green
+      }
     }
-
-    if ( 9 -le $Staff3_totalCards ) {
-        # Card 9
-        Write-Host ""
-        $Staff3_cards9_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url, "(9)"
-
-        if ( $Edition_isSingle -eq "n" ) {
-            # Search title on MAL
-            $Staff3_cards9_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
-
-            Find-MAL -SearchQuery $Staff3_cards9_titleQuery
-
-            # Get MAL ID
-            $Staff3_cards9_malId = Read-Host -Prompt $i18n.Prompt_MALId_Insert
-            if (-not($Staff3_cards9_malId)) { $Staff3_cards9_malId = "0" }
-
-            # Manually assign url if MAL ID is 0
-            if ($Staff3_cards9_malId -eq "0") {
-                Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
-                $Staff3_cards9_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
-                $Staff3_cards9_titleResult = $Staff3_cards9_titleQuery
-            } else {
-                $Staff3_cards9_titleResult = if ($Locale_set -eq "romaji") {
-                    Get-MALTitle -MALId $Staff3_cards9_malId
-                } elseif ($Locale_set -eq "english") {
-                    Get-MALTitle -MALId $Staff3_cards9_malId -English
-                }
-                Write-Host $i18n.Selected_Card_Title, $Staff3_cards9_titleResult -ForegroundColor Green
-            }
-        }
-    }
+  }
 }
 
 # Staff 4
 # -------
 
-if (4 -le $Edition_staffCount){
-    Write-Host ""
-    Write-Host $i18n.Header_Staff_4 -ForegroundColor Blue
-    Write-Host "-------------"
+if (4 -le $Edition_staffCount) {
+  Write-Host ""
+  Write-Host $i18n.Header_Staff_4 -ForegroundColor Blue
+  Write-Host "-------------"
 
-    $Staff4_username = Read-Host -Prompt $i18n.Staff_Username
-    $Staff4_nickname = Read-Host -Prompt $i18n.Staff_Nickname
-    $Staff4_limitType = Read-Host -Prompt $i18n.Staff_Limit_Type
+  $Staff4_username = Read-Host -Prompt $i18n.Staff_Username
+  $Staff4_nickname = Read-Host -Prompt $i18n.Staff_Nickname
+  $Staff4_limitType = Read-Host -Prompt $i18n.Staff_Limit_Type
 
-    if ($null -eq $cardSlip.$Staff4_username) {
-        Write-Host $i18n.Invalid_Slip -ForegroundColor Red
+  if ($null -eq $cardSlip.$Staff4_username) {
+    Write-Host $i18n.Invalid_Slip -ForegroundColor Red
+  } else {
+    $Staff4_isAllowSlip = Read-Host -Prompt $i18n.Staff_Allows_Slip_Card
+    if (-not ($Staff4_isAllowSlip)) { $Staff4_isAllowSlip = "y" }
+  }
+
+  if (-not ($Staff4_limitType)) { $Staff4_limitType = "role" }
+
+  if ($Staff4_limitType -eq "role") {
+    $Staff4_limitStaff = Read-Host -Prompt $i18n.Staff_Limit_Staff
+    $Staff4_limitMember = Read-Host -Prompt $i18n.Staff_Limit_Member
+  } else {
+    $Staff4_limitAny = Read-Host -Prompt $i18n.Staff_Limit_Any
+  }
+
+  $Staff4_totalCards = Read-Host -Prompt $i18n.Staff_Limit_Total
+  if ($Staff4_totalCards -gt 9) {
+    Write-Host $i18n.Invalid_Card_amount -ForegroundColor Red
+    $Staff4_totalCards = 9
+  }
+
+  # Card 1
+  Write-Host ""
+  $Staff4_cards1_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url,"(1)"
+
+  if ($Edition_isSingle -eq "n") {
+    # Search title on MAL
+    $Staff4_cards1_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
+
+    Find-MAL -SearchQuery $Staff4_cards1_titleQuery
+
+    # Get MAL ID
+    $Staff4_cards1_malId = Read-Host -Prompt $i18n.Prompt_MALId_Insert
+    if (-not ($Staff4_cards1_malId)) { $Staff4_cards1_malId = "0" }
+
+    # Manually assign url if MAL ID is 0
+    if ($Staff4_cards1_malId -eq "0") {
+      Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
+      $Staff4_cards1_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
+      $Staff4_cards1_titleResult = $Staff4_cards1_titleQuery
     } else {
-        $Staff4_isAllowSlip = Read-Host -Prompt $i18n.Staff_Allows_Slip_Card
-        if(-not($Staff4_isAllowSlip)) { $Staff4_isAllowSlip = "y" }
+      $Staff4_cards1_titleResult = if ($Locale_set -eq "romaji") {
+        Get-MALTitle -MALId $Staff4_cards1_malId
+      } elseif ($Locale_set -eq "english") {
+        Get-MALTitle -MALId $Staff4_cards1_malId -English
+      }
+      Write-Host $i18n.Selected_Card_Title,$Staff4_cards1_titleResult -ForegroundColor Green
     }
+  }
 
-    if (-not($Staff4_limitType)) { $Staff4_limitType = "role" }
-
-    if ($Staff4_limitType -eq "role") {
-        $Staff4_limitStaff = Read-Host -Prompt $i18n.Staff_Limit_Staff
-        $Staff4_limitMember = Read-Host -Prompt $i18n.Staff_Limit_Member
-    } else {
-        $Staff4_limitAny = Read-Host -Prompt $i18n.Staff_Limit_Any
-    }
-
-    $Staff4_totalCards = Read-Host -Prompt $i18n.Staff_Limit_Total
-    if ($Staff4_totalCards -gt 9) {
-        Write-Host $i18n.Invalid_Card_amount -ForegroundColor Red
-        $Staff4_totalCards = 9
-    }
-
-    # Card 1
+  if (2 -le $Staff4_totalCards) {
+    # Card 2
     Write-Host ""
-    $Staff4_cards1_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url, "(1)"
+    $Staff4_cards2_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url,"(2)"
 
-    if ( $Edition_isSingle -eq "n" ) {
-        # Search title on MAL
-        $Staff4_cards1_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
+    if ($Edition_isSingle -eq "n") {
+      # Search title on MAL
+      $Staff4_cards2_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
 
-        Find-MAL -SearchQuery $Staff4_cards1_titleQuery
+      Find-MAL -SearchQuery $Staff4_cards2_titleQuery
 
-        # Get MAL ID
-        $Staff4_cards1_malId = Read-Host -Prompt $i18n.Prompt_MALId_Insert
-        if (-not($Staff4_cards1_malId)) { $Staff4_cards1_malId = "0" }
+      # Get MAL ID
+      $Staff4_cards2_malId = Read-Host -Prompt $i18n.Prompt_MALId_Insert
+      if (-not ($Staff4_cards2_malId)) { $Staff4_cards2_malId = "0" }
 
-        # Manually assign url if MAL ID is 0
-        if ($Staff4_cards1_malId -eq "0") {
-            Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
-            $Staff4_cards1_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
-                $Staff4_cards1_titleResult = $Staff4_cards1_titleQuery
-        } else {
-            $Staff4_cards1_titleResult = if ($Locale_set -eq "romaji") {
-                Get-MALTitle -MALId $Staff4_cards1_malId
-            } elseif ($Locale_set -eq "english") {
-                Get-MALTitle -MALId $Staff4_cards1_malId -English
-            }
-            Write-Host $i18n.Selected_Card_Title, $Staff4_cards1_titleResult -ForegroundColor Green
+      # Manually assign url if MAL ID is 0
+      if ($Staff4_cards2_malId -eq "0") {
+        Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
+        $Staff4_cards2_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
+        $Staff4_cards2_titleResult = $Staff4_cards2_titleQuery
+      } else {
+        $Staff4_cards2_titleResult = if ($Locale_set -eq "romaji") {
+          Get-MALTitle -MALId $Staff4_cards2_malId
+        } elseif ($Locale_set -eq "english") {
+          Get-MALTitle -MALId $Staff4_cards2_malId -English
         }
+        Write-Host $i18n.Selected_Card_Title,$Staff4_cards2_titleResult -ForegroundColor Green
+      }
     }
+  }
 
-    if ( 2 -le $Staff4_totalCards ) {
-        # Card 2
-        Write-Host ""
-        $Staff4_cards2_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url, "(2)"
+  if (3 -le $Staff4_totalCards) {
+    # Card 3
+    Write-Host ""
+    $Staff4_cards3_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url,"(3)"
 
-        if ( $Edition_isSingle -eq "n" ) {
-            # Search title on MAL
-            $Staff4_cards2_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
+    if ($Edition_isSingle -eq "n") {
+      # Search title on MAL
+      $Staff4_cards3_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
 
-            Find-MAL -SearchQuery $Staff4_cards2_titleQuery
+      Find-MAL -SearchQuery $Staff4_cards3_titleQuery
 
-            # Get MAL ID
-            $Staff4_cards2_malId = Read-Host -Prompt $i18n.Prompt_MALId_Insert
-            if (-not($Staff4_cards2_malId)) { $Staff4_cards2_malId = "0" }
+      # Get MAL ID
+      $Staff4_cards3_malId = Read-Host -Prompt $i18n.Prompt_MALId_Insert
+      if (-not ($Staff4_cards3_malId)) { $Staff4_cards3_malId = "0" }
 
-            # Manually assign url if MAL ID is 0
-            if ($Staff4_cards2_malId -eq "0") {
-                Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
-                $Staff4_cards2_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
-                $Staff4_cards2_titleResult = $Staff4_cards2_titleQuery
-            } else {
-                $Staff4_cards2_titleResult = if ($Locale_set -eq "romaji") {
-                    Get-MALTitle -MALId $Staff4_cards2_malId
-                } elseif ($Locale_set -eq "english") {
-                    Get-MALTitle -MALId $Staff4_cards2_malId -English
-                }
-                Write-Host $i18n.Selected_Card_Title, $Staff4_cards2_titleResult -ForegroundColor Green
-            }
+      # Manually assign url if MAL ID is 0
+      if ($Staff4_cards3_malId -eq "0") {
+        Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
+        $Staff4_cards3_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
+        $Staff4_cards3_titleResult = $Staff4_cards3_titleQuery
+      } else {
+        $Staff4_cards3_titleResult = if ($Locale_set -eq "romaji") {
+          Get-MALTitle -MALId $Staff4_cards3_malId
+        } elseif ($Locale_set -eq "english") {
+          Get-MALTitle -MALId $Staff4_cards3_malId -English
         }
+        Write-Host $i18n.Selected_Card_Title,$Staff4_cards3_titleResult -ForegroundColor Green
+      }
     }
+  }
 
-    if ( 3 -le $Staff4_totalCards ) {
-        # Card 3
-        Write-Host ""
-        $Staff4_cards3_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url, "(3)"
+  if (4 -le $Staff4_totalCards) {
+    # Card 4
+    Write-Host ""
+    $Staff4_cards4_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url,"(4)"
 
-        if ( $Edition_isSingle -eq "n" ) {
-            # Search title on MAL
-            $Staff4_cards3_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
+    if ($Edition_isSingle -eq "n") {
+      # Search title on MAL
+      $Staff4_cards4_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
 
-            Find-MAL -SearchQuery $Staff4_cards3_titleQuery
+      Find-MAL -SearchQuery $Staff4_cards4_titleQuery
 
-            # Get MAL ID
-            $Staff4_cards3_malId = Read-Host -Prompt $i18n.Prompt_MALId_Insert
-            if (-not($Staff4_cards3_malId)) { $Staff4_cards3_malId = "0" }
+      # Get MAL ID
+      $Staff4_cards4_malId = Read-Host -Prompt $i18n.Prompt_MALId_Insert
+      if (-not ($Staff4_cards4_malId)) { $Staff4_cards4_malId = "0" }
 
-            # Manually assign url if MAL ID is 0
-            if ($Staff4_cards3_malId -eq "0") {
-                Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
-                $Staff4_cards3_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
-                $Staff4_cards3_titleResult = $Staff4_cards3_titleQuery
-            } else {
-                $Staff4_cards3_titleResult = if ($Locale_set -eq "romaji") {
-                    Get-MALTitle -MALId $Staff4_cards3_malId
-                } elseif ($Locale_set -eq "english") {
-                    Get-MALTitle -MALId $Staff4_cards3_malId -English
-                }
-                Write-Host $i18n.Selected_Card_Title, $Staff4_cards3_titleResult -ForegroundColor Green
-            }
+      # Manually assign url if MAL ID is 0
+      if ($Staff4_cards4_malId -eq "0") {
+        Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
+        $Staff4_cards4_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
+        $Staff4_cards4_titleResult = $Staff4_cards4_titleQuery
+      } else {
+        $Staff4_cards4_titleResult = if ($Locale_set -eq "romaji") {
+          Get-MALTitle -MALId $Staff4_cards4_malId
+        } elseif ($Locale_set -eq "english") {
+          Get-MALTitle -MALId $Staff4_cards4_malId -English
         }
+        Write-Host $i18n.Selected_Card_Title,$Staff4_cards4_titleResult -ForegroundColor Green
+      }
     }
+  }
 
-    if ( 4 -le $Staff4_totalCards ) {
-        # Card 4
-        Write-Host ""
-        $Staff4_cards4_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url, "(4)"
+  if (5 -le $Staff4_totalCards) {
+    # Card 5
+    Write-Host ""
+    $Staff4_cards5_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url,"(5)"
 
-        if ( $Edition_isSingle -eq "n" ) {
-            # Search title on MAL
-            $Staff4_cards4_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
+    if ($Edition_isSingle -eq "n") {
+      # Search title on MAL
+      $Staff4_cards5_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
 
-            Find-MAL -SearchQuery $Staff4_cards4_titleQuery
+      Find-MAL -SearchQuery $Staff4_cards5_titleQuery
 
-            # Get MAL ID
-            $Staff4_cards4_malId = Read-Host -Prompt $i18n.Prompt_MALId_Insert
-            if (-not($Staff4_cards4_malId)) { $Staff4_cards4_malId = "0" }
+      # Get MAL ID
+      $Staff4_cards5_malId = Read-Host -Prompt $i18n.Prompt_MALId_Insert
+      if (-not ($Staff4_cards5_malId)) { $Staff4_cards5_malId = "0" }
 
-            # Manually assign url if MAL ID is 0
-            if ($Staff4_cards4_malId -eq "0") {
-                Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
-                $Staff4_cards4_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
-                $Staff4_cards4_titleResult = $Staff4_cards4_titleQuery
-            } else {
-                $Staff4_cards4_titleResult = if ($Locale_set -eq "romaji") {
-                    Get-MALTitle -MALId $Staff4_cards4_malId
-                } elseif ($Locale_set -eq "english") {
-                    Get-MALTitle -MALId $Staff4_cards4_malId -English
-                }
-                Write-Host $i18n.Selected_Card_Title, $Staff4_cards4_titleResult -ForegroundColor Green
-            }
+      # Manually assign url if MAL ID is 0
+      if ($Staff4_cards5_malId -eq "0") {
+        Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
+        $Staff4_cards5_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
+        $Staff4_cards5_titleResult = $Staff4_cards5_titleQuery
+      } else {
+        $Staff4_cards5_titleResult = if ($Locale_set -eq "romaji") {
+          Get-MALTitle -MALId $Staff4_cards5_malId
+        } elseif ($Locale_set -eq "english") {
+          Get-MALTitle -MALId $Staff4_cards5_malId -English
         }
+        Write-Host $i18n.Selected_Card_Title,$Staff4_cards5_titleResult -ForegroundColor Green
+      }
     }
+  }
 
-    if ( 5 -le $Staff4_totalCards ) {
-        # Card 5
-        Write-Host ""
-        $Staff4_cards5_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url, "(5)"
+  if (6 -le $Staff4_totalCards) {
+    # Card 6
+    Write-Host ""
+    $Staff4_cards6_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url,"(6)"
 
-        if ( $Edition_isSingle -eq "n" ) {
-            # Search title on MAL
-            $Staff4_cards5_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
+    if ($Edition_isSingle -eq "n") {
+      # Search title on MAL
+      $Staff4_cards6_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
 
-            Find-MAL -SearchQuery $Staff4_cards5_titleQuery
+      Find-MAL -SearchQuery $Staff4_cards6_titleQuery
 
-            # Get MAL ID
-            $Staff4_cards5_malId = Read-Host -Prompt $i18n.Prompt_MALId_Insert
-            if (-not($Staff4_cards5_malId)) { $Staff4_cards5_malId = "0" }
+      # Get MAL ID
+      $Staff4_cards6_malId = Read-Host -Prompt $i18n.Prompt_MALId_Insert
+      if (-not ($Staff4_cards6_malId)) { $Staff4_cards6_malId = "0" }
 
-            # Manually assign url if MAL ID is 0
-            if ($Staff4_cards5_malId -eq "0") {
-                Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
-                $Staff4_cards5_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
-                $Staff4_cards5_titleResult = $Staff4_cards5_titleQuery
-            } else {
-                $Staff4_cards5_titleResult = if ($Locale_set -eq "romaji") {
-                    Get-MALTitle -MALId $Staff4_cards5_malId
-                } elseif ($Locale_set -eq "english") {
-                    Get-MALTitle -MALId $Staff4_cards5_malId -English
-                }
-                Write-Host $i18n.Selected_Card_Title, $Staff4_cards5_titleResult -ForegroundColor Green
-            }
+      # Manually assign url if MAL ID is 0
+      if ($Staff4_cards6_malId -eq "0") {
+        Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
+        $Staff4_cards6_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
+        $Staff4_cards6_titleResult = $Staff4_cards6_titleQuery
+      } else {
+        $Staff4_cards6_titleResult = if ($Locale_set -eq "romaji") {
+          Get-MALTitle -MALId $Staff4_cards6_malId
+        } elseif ($Locale_set -eq "english") {
+          Get-MALTitle -MALId $Staff4_cards6_malId -English
         }
+        Write-Host $i18n.Selected_Card_Title,$Staff4_cards6_titleResult -ForegroundColor Green
+      }
     }
+  }
 
-    if ( 6 -le $Staff4_totalCards ) {
-        # Card 6
-        Write-Host ""
-        $Staff4_cards6_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url, "(6)"
+  if (7 -le $Staff4_totalCards) {
+    # Card 7
+    Write-Host ""
+    $Staff4_cards7_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url,"(7)"
 
-        if ( $Edition_isSingle -eq "n" ) {
-            # Search title on MAL
-            $Staff4_cards6_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
+    if ($Edition_isSingle -eq "n") {
+      # Search title on MAL
+      $Staff4_cards7_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
 
-            Find-MAL -SearchQuery $Staff4_cards6_titleQuery
+      Find-MAL -SearchQuery $Staff4_cards7_titleQuery
 
-            # Get MAL ID
-            $Staff4_cards6_malId = Read-Host -Prompt $i18n.Prompt_MALId_Insert
-            if (-not($Staff4_cards6_malId)) { $Staff4_cards6_malId = "0" }
+      # Get MAL ID
+      $Staff4_cards7_malId = Read-Host -Prompt $i18n.Prompt_MALId_Insert
+      if (-not ($Staff4_cards7_malId)) { $Staff4_cards7_malId = "0" }
 
-            # Manually assign url if MAL ID is 0
-            if ($Staff4_cards6_malId -eq "0") {
-                Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
-                $Staff4_cards6_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
-                $Staff4_cards6_titleResult = $Staff4_cards6_titleQuery
-            } else {
-                $Staff4_cards6_titleResult = if ($Locale_set -eq "romaji") {
-                    Get-MALTitle -MALId $Staff4_cards6_malId
-                } elseif ($Locale_set -eq "english") {
-                    Get-MALTitle -MALId $Staff4_cards6_malId -English
-                }
-                Write-Host $i18n.Selected_Card_Title, $Staff4_cards6_titleResult -ForegroundColor Green
-            }
+      # Manually assign url if MAL ID is 0
+      if ($Staff4_cards7_malId -eq "0") {
+        Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
+        $Staff4_cards7_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
+        $Staff4_cards7_titleResult = $Staff4_cards7_titleQuery
+      } else {
+        $Staff4_cards7_titleResult = if ($Locale_set -eq "romaji") {
+          Get-MALTitle -MALId $Staff4_cards7_malId
+        } elseif ($Locale_set -eq "english") {
+          Get-MALTitle -MALId $Staff4_cards7_malId -English
         }
+        Write-Host $i18n.Selected_Card_Title,$Staff4_cards7_titleResult -ForegroundColor Green
+      }
     }
+  }
 
-    if ( 7 -le $Staff4_totalCards ) {
-        # Card 7
-        Write-Host ""
-        $Staff4_cards7_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url, "(7)"
+  if (8 -le $Staff4_totalCards) {
+    # Card 8
+    Write-Host ""
+    $Staff4_cards8_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url,"(8)"
 
-        if ( $Edition_isSingle -eq "n" ) {
-            # Search title on MAL
-            $Staff4_cards7_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
+    if ($Edition_isSingle -eq "n") {
+      # Search title on MAL
+      $Staff4_cards8_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
 
-            Find-MAL -SearchQuery $Staff4_cards7_titleQuery
+      Find-MAL -SearchQuery $Staff4_cards8_titleQuery
 
-            # Get MAL ID
-            $Staff4_cards7_malId = Read-Host -Prompt $i18n.Prompt_MALId_Insert
-            if (-not($Staff4_cards7_malId)) { $Staff4_cards7_malId = "0" }
+      # Get MAL ID
+      $Staff4_cards8_malId = Read-Host -Prompt $i18n.Prompt_MALId_Insert
+      if (-not ($Staff4_cards8_malId)) { $Staff4_cards8_malId = "0" }
 
-            # Manually assign url if MAL ID is 0
-            if ($Staff4_cards7_malId -eq "0") {
-                Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
-                $Staff4_cards7_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
-                $Staff4_cards7_titleResult = $Staff4_cards7_titleQuery
-            } else {
-                $Staff4_cards7_titleResult = if ($Locale_set -eq "romaji") {
-                    Get-MALTitle -MALId $Staff4_cards7_malId
-                } elseif ($Locale_set -eq "english") {
-                    Get-MALTitle -MALId $Staff4_cards7_malId -English
-                }
-                Write-Host $i18n.Selected_Card_Title, $Staff4_cards7_titleResult -ForegroundColor Green
-            }
+      # Manually assign url if MAL ID is 0
+      if ($Staff4_cards8_malId -eq "0") {
+        Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
+        $Staff4_cards8_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
+        $Staff4_cards8_titleResult = $Staff4_cards8_titleQuery
+      } else {
+        $Staff4_cards8_titleResult = if ($Locale_set -eq "romaji") {
+          Get-MALTitle -MALId $Staff4_cards8_malId
+        } elseif ($Locale_set -eq "english") {
+          Get-MALTitle -MALId $Staff4_cards8_malId -English
         }
+        Write-Host $i18n.Selected_Card_Title,$Staff4_cards8_titleResult -ForegroundColor Green
+      }
     }
+  }
 
-    if ( 8 -le $Staff4_totalCards ) {
-        # Card 8
-        Write-Host ""
-        $Staff4_cards8_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url, "(8)"
+  if (9 -le $Staff4_totalCards) {
+    # Card 9
+    Write-Host ""
+    $Staff4_cards9_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url,"(9)"
 
-        if ( $Edition_isSingle -eq "n" ) {
-            # Search title on MAL
-            $Staff4_cards8_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
+    if ($Edition_isSingle -eq "n") {
+      # Search title on MAL
+      $Staff4_cards9_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
 
-            Find-MAL -SearchQuery $Staff4_cards8_titleQuery
+      Find-MAL -SearchQuery $Staff4_cards9_titleQuery
 
-            # Get MAL ID
-            $Staff4_cards8_malId = Read-Host -Prompt $i18n.Prompt_MALId_Insert
-            if (-not($Staff4_cards8_malId)) { $Staff4_cards8_malId = "0" }
+      # Get MAL ID
+      $Staff4_cards9_malId = Read-Host -Prompt $i18n.Prompt_MALId_Insert
+      if (-not ($Staff4_cards9_malId)) { $Staff4_cards9_malId = "0" }
 
-            # Manually assign url if MAL ID is 0
-            if ($Staff4_cards8_malId -eq "0") {
-                Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
-                $Staff4_cards8_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
-                $Staff4_cards8_titleResult = $Staff4_cards8_titleQuery
-            } else {
-                $Staff4_cards8_titleResult = if ($Locale_set -eq "romaji") {
-                    Get-MALTitle -MALId $Staff4_cards8_malId
-                } elseif ($Locale_set -eq "english") {
-                    Get-MALTitle -MALId $Staff4_cards8_malId -English
-                }
-                Write-Host $i18n.Selected_Card_Title, $Staff4_cards8_titleResult -ForegroundColor Green
-            }
+      # Manually assign url if MAL ID is 0
+      if ($Staff4_cards9_malId -eq "0") {
+        Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
+        $Staff4_cards9_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
+        $Staff4_cards9_titleResult = $Staff4_cards9_titleQuery
+      } else {
+        $Staff4_cards9_titleResult = if ($Locale_set -eq "romaji") {
+          Get-MALTitle -MALId $Staff4_cards9_malId
+        } elseif ($Locale_set -eq "english") {
+          Get-MALTitle -MALId $Staff4_cards9_malId -English
         }
+        Write-Host $i18n.Selected_Card_Title,$Staff4_cards9_titleResult -ForegroundColor Green
+      }
     }
-
-    if ( 9 -le $Staff4_totalCards ) {
-        # Card 9
-        Write-Host ""
-        $Staff4_cards9_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url, "(9)"
-
-        if ( $Edition_isSingle -eq "n" ) {
-            # Search title on MAL
-            $Staff4_cards9_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
-
-            Find-MAL -SearchQuery $Staff4_cards9_titleQuery
-
-            # Get MAL ID
-            $Staff4_cards9_malId = Read-Host -Prompt $i18n.Prompt_MALId_Insert
-            if (-not($Staff4_cards9_malId)) { $Staff4_cards9_malId = "0" }
-
-            # Manually assign url if MAL ID is 0
-            if ($Staff4_cards9_malId -eq "0") {
-                Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
-                $Staff4_cards9_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
-                $Staff4_cards9_titleResult = $Staff4_cards9_titleQuery
-            } else {
-                $Staff4_cards9_titleResult = if ($Locale_set -eq "romaji") {
-                    Get-MALTitle -MALId $Staff4_cards9_malId
-                } elseif ($Locale_set -eq "english") {
-                    Get-MALTitle -MALId $Staff4_cards9_malId -English
-                }
-                Write-Host $i18n.Selected_Card_Title, $Staff4_cards9_titleResult -ForegroundColor Green
-            }
-        }
-    }
+  }
 }
 
 # Staff 5
 # -------
 
-if (5 -le $Edition_staffCount){
-    Write-Host ""
-    Write-Host $i18n.Header_Staff_5 -ForegroundColor Blue
-    Write-Host "-------------"
+if (5 -le $Edition_staffCount) {
+  Write-Host ""
+  Write-Host $i18n.Header_Staff_5 -ForegroundColor Blue
+  Write-Host "-------------"
 
-    $Staff5_username = Read-Host -Prompt $i18n.Staff_Username
-    $Staff5_nickname = Read-Host -Prompt $i18n.Staff_Nickname
-    $Staff5_limitType = Read-Host -Prompt $i18n.Staff_Limit_Type
+  $Staff5_username = Read-Host -Prompt $i18n.Staff_Username
+  $Staff5_nickname = Read-Host -Prompt $i18n.Staff_Nickname
+  $Staff5_limitType = Read-Host -Prompt $i18n.Staff_Limit_Type
 
-    if ($null -eq $cardSlip.$Staff5_username) {
-        Write-Host $i18n.Invalid_Slip -ForegroundColor Red
+  if ($null -eq $cardSlip.$Staff5_username) {
+    Write-Host $i18n.Invalid_Slip -ForegroundColor Red
+  } else {
+    $Staff5_isAllowSlip = Read-Host -Prompt $i18n.Staff_Allows_Slip_Card
+    if (-not ($Staff5_isAllowSlip)) { $Staff5_isAllowSlip = "y" }
+  }
+
+  if (-not ($Staff5_limitType)) { $Staff5_limitType = "role" }
+
+  if ($Staff5_limitType -eq "role") {
+    $Staff5_limitStaff = Read-Host -Prompt $i18n.Staff_Limit_Staff
+    $Staff5_limitMember = Read-Host -Prompt $i18n.Staff_Limit_Member
+  } else {
+    $Staff5_limitAny = Read-Host -Prompt $i18n.Staff_Limit_Any
+  }
+
+  $Staff5_totalCards = Read-Host -Prompt $i18n.Staff_Limit_Total
+  if ($Staff5_totalCards -gt 9) {
+    Write-Host $i18n.Invalid_Card_amount -ForegroundColor Red
+    $Staff5_totalCards = 9
+  }
+
+  # Card 1
+  Write-Host ""
+  $Staff5_cards1_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url,"(1)"
+
+  if ($Edition_isSingle -eq "n") {
+    # Search title on MAL
+    $Staff5_cards1_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
+
+    Find-MAL -SearchQuery $Staff5_cards1_titleQuery
+
+    # Get MAL ID
+    $Staff5_cards1_malId = Read-Host -Prompt $i18n.Prompt_MALId_Insert
+    if (-not ($Staff5_cards1_malId)) { $Staff5_cards1_malId = "0" }
+
+    # Manually assign url if MAL ID is 0
+    if ($Staff5_cards1_malId -eq "0") {
+      Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
+      $Staff5_cards1_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
+      $Staff5_cards1_titleResult = $Staff5_cards1_titleQuery
     } else {
-        $Staff5_isAllowSlip = Read-Host -Prompt $i18n.Staff_Allows_Slip_Card
-        if(-not($Staff5_isAllowSlip)) { $Staff5_isAllowSlip = "y" }
+      $Staff5_cards1_titleResult = if ($Locale_set -eq "romaji") {
+        Get-MALTitle -MALId $Staff5_cards1_malId
+      } elseif ($Locale_set -eq "english") {
+        Get-MALTitle -MALId $Staff5_cards1_malId -English
+      }
+      Write-Host $i18n.Selected_Card_Title,$Staff5_cards1_titleResult -ForegroundColor Green
     }
+  }
 
-    if (-not($Staff5_limitType)) { $Staff5_limitType = "role" }
-
-    if ($Staff5_limitType -eq "role") {
-        $Staff5_limitStaff = Read-Host -Prompt $i18n.Staff_Limit_Staff
-        $Staff5_limitMember = Read-Host -Prompt $i18n.Staff_Limit_Member
-    } else {
-        $Staff5_limitAny = Read-Host -Prompt $i18n.Staff_Limit_Any
-    }
-
-    $Staff5_totalCards = Read-Host -Prompt $i18n.Staff_Limit_Total
-    if ($Staff5_totalCards -gt 9) {
-        Write-Host $i18n.Invalid_Card_amount -ForegroundColor Red
-        $Staff5_totalCards = 9
-    }
-
-    # Card 1
+  if (2 -le $Staff5_totalCards) {
+    # Card 2
     Write-Host ""
-    $Staff5_cards1_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url, "(1)"
+    $Staff5_cards2_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url,"(2)"
 
-    if ( $Edition_isSingle -eq "n" ) {
-        # Search title on MAL
-        $Staff5_cards1_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
+    if ($Edition_isSingle -eq "n") {
+      # Search title on MAL
+      $Staff5_cards2_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
 
-        Find-MAL -SearchQuery $Staff5_cards1_titleQuery
+      Find-MAL -SearchQuery $Staff5_cards2_titleQuery
 
-        # Get MAL ID
-        $Staff5_cards1_malId = Read-Host -Prompt $i18n.Prompt_MALId_Insert
-        if (-not($Staff5_cards1_malId)) { $Staff5_cards1_malId = "0" }
+      # Get MAL ID
+      $Staff5_cards2_malId = Read-Host -Prompt $i18n.Prompt_MALId_Insert
+      if (-not ($Staff5_cards2_malId)) { $Staff5_cards2_malId = "0" }
 
-        # Manually assign url if MAL ID is 0
-        if ($Staff5_cards1_malId -eq "0") {
-            Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
-            $Staff5_cards1_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
-                $Staff5_cards1_titleResult = $Staff5_cards1_titleQuery
-        } else {
-            $Staff5_cards1_titleResult = if ($Locale_set -eq "romaji") {
-                Get-MALTitle -MALId $Staff5_cards1_malId
-            } elseif ($Locale_set -eq "english") {
-                Get-MALTitle -MALId $Staff5_cards1_malId -English
-            }
-            Write-Host $i18n.Selected_Card_Title, $Staff5_cards1_titleResult -ForegroundColor Green
+      # Manually assign url if MAL ID is 0
+      if ($Staff5_cards2_malId -eq "0") {
+        Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
+        $Staff5_cards2_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
+        $Staff5_cards2_titleResult = $Staff5_cards2_titleQuery
+      } else {
+        $Staff5_cards2_titleResult = if ($Locale_set -eq "romaji") {
+          Get-MALTitle -MALId $Staff5_cards2_malId
+        } elseif ($Locale_set -eq "english") {
+          Get-MALTitle -MALId $Staff5_cards2_malId -English
         }
+        Write-Host $i18n.Selected_Card_Title,$Staff5_cards2_titleResult -ForegroundColor Green
+      }
     }
+  }
 
-    if ( 2 -le $Staff5_totalCards ) {
-        # Card 2
-        Write-Host ""
-        $Staff5_cards2_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url, "(2)"
+  if (3 -le $Staff5_totalCards) {
+    # Card 3
+    Write-Host ""
+    $Staff5_cards3_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url,"(3)"
 
-        if ( $Edition_isSingle -eq "n" ) {
-            # Search title on MAL
-            $Staff5_cards2_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
+    if ($Edition_isSingle -eq "n") {
+      # Search title on MAL
+      $Staff5_cards3_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
 
-            Find-MAL -SearchQuery $Staff5_cards2_titleQuery
+      Find-MAL -SearchQuery $Staff5_cards3_titleQuery
 
-            # Get MAL ID
-            $Staff5_cards2_malId = Read-Host -Prompt $i18n.Prompt_MALId_Insert
-            if (-not($Staff5_cards2_malId)) { $Staff5_cards2_malId = "0" }
+      # Get MAL ID
+      $Staff5_cards3_malId = Read-Host -Prompt $i18n.Prompt_MALId_Insert
+      if (-not ($Staff5_cards3_malId)) { $Staff5_cards3_malId = "0" }
 
-            # Manually assign url if MAL ID is 0
-            if ($Staff5_cards2_malId -eq "0") {
-                Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
-                $Staff5_cards2_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
-                $Staff5_cards2_titleResult = $Staff5_cards2_titleQuery
-            } else {
-                $Staff5_cards2_titleResult = if ($Locale_set -eq "romaji") {
-                    Get-MALTitle -MALId $Staff5_cards2_malId
-                } elseif ($Locale_set -eq "english") {
-                    Get-MALTitle -MALId $Staff5_cards2_malId -English
-                }
-                Write-Host $i18n.Selected_Card_Title, $Staff5_cards2_titleResult -ForegroundColor Green
-            }
+      # Manually assign url if MAL ID is 0
+      if ($Staff5_cards3_malId -eq "0") {
+        Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
+        $Staff5_cards3_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
+        $Staff5_cards3_titleResult = $Staff5_cards3_titleQuery
+      } else {
+        $Staff5_cards3_titleResult = if ($Locale_set -eq "romaji") {
+          Get-MALTitle -MALId $Staff5_cards3_malId
+        } elseif ($Locale_set -eq "english") {
+          Get-MALTitle -MALId $Staff5_cards3_malId -English
         }
+        Write-Host $i18n.Selected_Card_Title,$Staff5_cards3_titleResult -ForegroundColor Green
+      }
     }
+  }
 
-    if ( 3 -le $Staff5_totalCards ) {
-        # Card 3
-        Write-Host ""
-        $Staff5_cards3_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url, "(3)"
+  if (4 -le $Staff5_totalCards) {
+    # Card 4
+    Write-Host ""
+    $Staff5_cards4_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url,"(4)"
 
-        if ( $Edition_isSingle -eq "n" ) {
-            # Search title on MAL
-            $Staff5_cards3_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
+    if ($Edition_isSingle -eq "n") {
+      # Search title on MAL
+      $Staff5_cards4_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
 
-            Find-MAL -SearchQuery $Staff5_cards3_titleQuery
+      Find-MAL -SearchQuery $Staff5_cards4_titleQuery
 
-            # Get MAL ID
-            $Staff5_cards3_malId = Read-Host -Prompt $i18n.Prompt_MALId_Insert
-            if (-not($Staff5_cards3_malId)) { $Staff5_cards3_malId = "0" }
+      # Get MAL ID
+      $Staff5_cards4_malId = Read-Host -Prompt $i18n.Prompt_MALId_Insert
+      if (-not ($Staff5_cards4_malId)) { $Staff5_cards4_malId = "0" }
 
-            # Manually assign url if MAL ID is 0
-            if ($Staff5_cards3_malId -eq "0") {
-                Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
-                $Staff5_cards3_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
-                $Staff5_cards3_titleResult = $Staff5_cards3_titleQuery
-            } else {
-                $Staff5_cards3_titleResult = if ($Locale_set -eq "romaji") {
-                    Get-MALTitle -MALId $Staff5_cards3_malId
-                } elseif ($Locale_set -eq "english") {
-                    Get-MALTitle -MALId $Staff5_cards3_malId -English
-                }
-                Write-Host $i18n.Selected_Card_Title, $Staff5_cards3_titleResult -ForegroundColor Green
-            }
+      # Manually assign url if MAL ID is 0
+      if ($Staff5_cards4_malId -eq "0") {
+        Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
+        $Staff5_cards4_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
+        $Staff5_cards4_titleResult = $Staff5_cards4_titleQuery
+      } else {
+        $Staff5_cards4_titleResult = if ($Locale_set -eq "romaji") {
+          Get-MALTitle -MALId $Staff5_cards4_malId
+        } elseif ($Locale_set -eq "english") {
+          Get-MALTitle -MALId $Staff5_cards4_malId -English
         }
+        Write-Host $i18n.Selected_Card_Title,$Staff5_cards4_titleResult -ForegroundColor Green
+      }
     }
+  }
 
-    if ( 4 -le $Staff5_totalCards ) {
-        # Card 4
-        Write-Host ""
-        $Staff5_cards4_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url, "(4)"
+  if (5 -le $Staff5_totalCards) {
+    # Card 5
+    Write-Host ""
+    $Staff5_cards5_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url,"(5)"
 
-        if ( $Edition_isSingle -eq "n" ) {
-            # Search title on MAL
-            $Staff5_cards4_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
+    if ($Edition_isSingle -eq "n") {
+      # Search title on MAL
+      $Staff5_cards5_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
 
-            Find-MAL -SearchQuery $Staff5_cards4_titleQuery
+      Find-MAL -SearchQuery $Staff5_cards5_titleQuery
 
-            # Get MAL ID
-            $Staff5_cards4_malId = Read-Host -Prompt $i18n.Prompt_MALId_Insert
-            if (-not($Staff5_cards4_malId)) { $Staff5_cards4_malId = "0" }
+      # Get MAL ID
+      $Staff5_cards5_malId = Read-Host -Prompt $i18n.Prompt_MALId_Insert
+      if (-not ($Staff5_cards5_malId)) { $Staff5_cards5_malId = "0" }
 
-            # Manually assign url if MAL ID is 0
-            if ($Staff5_cards4_malId -eq "0") {
-                Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
-                $Staff5_cards4_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
-                $Staff5_cards4_titleResult = $Staff5_cards4_titleQuery
-            } else {
-                $Staff5_cards4_titleResult = if ($Locale_set -eq "romaji") {
-                    Get-MALTitle -MALId $Staff5_cards4_malId
-                } elseif ($Locale_set -eq "english") {
-                    Get-MALTitle -MALId $Staff5_cards4_malId -English
-                }
-                Write-Host $i18n.Selected_Card_Title, $Staff5_cards4_titleResult -ForegroundColor Green
-            }
+      # Manually assign url if MAL ID is 0
+      if ($Staff5_cards5_malId -eq "0") {
+        Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
+        $Staff5_cards5_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
+        $Staff5_cards5_titleResult = $Staff5_cards5_titleQuery
+      } else {
+        $Staff5_cards5_titleResult = if ($Locale_set -eq "romaji") {
+          Get-MALTitle -MALId $Staff5_cards5_malId
+        } elseif ($Locale_set -eq "english") {
+          Get-MALTitle -MALId $Staff5_cards5_malId -English
         }
+        Write-Host $i18n.Selected_Card_Title,$Staff5_cards5_titleResult -ForegroundColor Green
+      }
     }
+  }
 
-    if ( 5 -le $Staff5_totalCards ) {
-        # Card 5
-        Write-Host ""
-        $Staff5_cards5_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url, "(5)"
+  if (6 -le $Staff5_totalCards) {
+    # Card 6
+    Write-Host ""
+    $Staff5_cards6_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url,"(6)"
 
-        if ( $Edition_isSingle -eq "n" ) {
-            # Search title on MAL
-            $Staff5_cards5_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
+    if ($Edition_isSingle -eq "n") {
+      # Search title on MAL
+      $Staff5_cards6_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
 
-            Find-MAL -SearchQuery $Staff5_cards5_titleQuery
+      Find-MAL -SearchQuery $Staff5_cards6_titleQuery
 
-            # Get MAL ID
-            $Staff5_cards5_malId = Read-Host -Prompt $i18n.Prompt_MALId_Insert
-            if (-not($Staff5_cards5_malId)) { $Staff5_cards5_malId = "0" }
+      # Get MAL ID
+      $Staff5_cards6_malId = Read-Host -Prompt $i18n.Prompt_MALId_Insert
+      if (-not ($Staff5_cards6_malId)) { $Staff5_cards6_malId = "0" }
 
-            # Manually assign url if MAL ID is 0
-            if ($Staff5_cards5_malId -eq "0") {
-                Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
-                $Staff5_cards5_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
-                $Staff5_cards5_titleResult = $Staff5_cards5_titleQuery
-            } else {
-                $Staff5_cards5_titleResult = if ($Locale_set -eq "romaji") {
-                    Get-MALTitle -MALId $Staff5_cards5_malId
-                } elseif ($Locale_set -eq "english") {
-                    Get-MALTitle -MALId $Staff5_cards5_malId -English
-                }
-                Write-Host $i18n.Selected_Card_Title, $Staff5_cards5_titleResult -ForegroundColor Green
-            }
+      # Manually assign url if MAL ID is 0
+      if ($Staff5_cards6_malId -eq "0") {
+        Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
+        $Staff5_cards6_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
+        $Staff5_cards6_titleResult = $Staff5_cards6_titleQuery
+      } else {
+        $Staff5_cards6_titleResult = if ($Locale_set -eq "romaji") {
+          Get-MALTitle -MALId $Staff5_cards6_malId
+        } elseif ($Locale_set -eq "english") {
+          Get-MALTitle -MALId $Staff5_cards6_malId -English
         }
+        Write-Host $i18n.Selected_Card_Title,$Staff5_cards6_titleResult -ForegroundColor Green
+      }
     }
+  }
 
-    if ( 6 -le $Staff5_totalCards ) {
-        # Card 6
-        Write-Host ""
-        $Staff5_cards6_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url, "(6)"
+  if (7 -le $Staff5_totalCards) {
+    # Card 7
+    Write-Host ""
+    $Staff5_cards7_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url,"(7)"
 
-        if ( $Edition_isSingle -eq "n" ) {
-            # Search title on MAL
-            $Staff5_cards6_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
+    if ($Edition_isSingle -eq "n") {
+      # Search title on MAL
+      $Staff5_cards7_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
 
-            Find-MAL -SearchQuery $Staff5_cards6_titleQuery
+      Find-MAL -SearchQuery $Staff5_cards7_titleQuery
 
-            # Get MAL ID
-            $Staff5_cards6_malId = Read-Host -Prompt $i18n.Prompt_MALId_Insert
-            if (-not($Staff5_cards6_malId)) { $Staff5_cards6_malId = "0" }
+      # Get MAL ID
+      $Staff5_cards7_malId = Read-Host -Prompt $i18n.Prompt_MALId_Insert
+      if (-not ($Staff5_cards7_malId)) { $Staff5_cards7_malId = "0" }
 
-            # Manually assign url if MAL ID is 0
-            if ($Staff5_cards6_malId -eq "0") {
-                Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
-                $Staff5_cards6_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
-                $Staff5_cards6_titleResult = $Staff5_cards6_titleQuery
-            } else {
-                $Staff5_cards6_titleResult = if ($Locale_set -eq "romaji") {
-                    Get-MALTitle -MALId $Staff5_cards6_malId
-                } elseif ($Locale_set -eq "english") {
-                    Get-MALTitle -MALId $Staff5_cards6_malId -English
-                }
-                Write-Host $i18n.Selected_Card_Title, $Staff5_cards6_titleResult -ForegroundColor Green
-            }
+      # Manually assign url if MAL ID is 0
+      if ($Staff5_cards7_malId -eq "0") {
+        Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
+        $Staff5_cards7_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
+        $Staff5_cards7_titleResult = $Staff5_cards7_titleQuery
+      } else {
+        $Staff5_cards7_titleResult = if ($Locale_set -eq "romaji") {
+          Get-MALTitle -MALId $Staff5_cards7_malId
+        } elseif ($Locale_set -eq "english") {
+          Get-MALTitle -MALId $Staff5_cards7_malId -English
         }
+        Write-Host $i18n.Selected_Card_Title,$Staff5_cards7_titleResult -ForegroundColor Green
+      }
     }
+  }
 
-    if ( 7 -le $Staff5_totalCards ) {
-        # Card 7
-        Write-Host ""
-        $Staff5_cards7_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url, "(7)"
+  if (8 -le $Staff5_totalCards) {
+    # Card 8
+    Write-Host ""
+    $Staff5_cards8_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url,"(8)"
 
-        if ( $Edition_isSingle -eq "n" ) {
-            # Search title on MAL
-            $Staff5_cards7_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
+    if ($Edition_isSingle -eq "n") {
+      # Search title on MAL
+      $Staff5_cards8_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
 
-            Find-MAL -SearchQuery $Staff5_cards7_titleQuery
+      Find-MAL -SearchQuery $Staff5_cards8_titleQuery
 
-            # Get MAL ID
-            $Staff5_cards7_malId = Read-Host -Prompt $i18n.Prompt_MALId_Insert
-            if (-not($Staff5_cards7_malId)) { $Staff5_cards7_malId = "0" }
+      # Get MAL ID
+      $Staff5_cards8_malId = Read-Host -Prompt $i18n.Prompt_MALId_Insert
+      if (-not ($Staff5_cards8_malId)) { $Staff5_cards8_malId = "0" }
 
-            # Manually assign url if MAL ID is 0
-            if ($Staff5_cards7_malId -eq "0") {
-                Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
-                $Staff5_cards7_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
-                $Staff5_cards7_titleResult = $Staff5_cards7_titleQuery
-            } else {
-                $Staff5_cards7_titleResult = if ($Locale_set -eq "romaji") {
-                    Get-MALTitle -MALId $Staff5_cards7_malId
-                } elseif ($Locale_set -eq "english") {
-                    Get-MALTitle -MALId $Staff5_cards7_malId -English
-                }
-                Write-Host $i18n.Selected_Card_Title, $Staff5_cards7_titleResult -ForegroundColor Green
-            }
+      # Manually assign url if MAL ID is 0
+      if ($Staff5_cards8_malId -eq "0") {
+        Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
+        $Staff5_cards8_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
+        $Staff5_cards8_titleResult = $Staff5_cards8_titleQuery
+      } else {
+        $Staff5_cards8_titleResult = if ($Locale_set -eq "romaji") {
+          Get-MALTitle -MALId $Staff5_cards8_malId
+        } elseif ($Locale_set -eq "english") {
+          Get-MALTitle -MALId $Staff5_cards8_malId -English
         }
+        Write-Host $i18n.Selected_Card_Title,$Staff5_cards8_titleResult -ForegroundColor Green
+      }
     }
+  }
 
-    if ( 8 -le $Staff5_totalCards ) {
-        # Card 8
-        Write-Host ""
-        $Staff5_cards8_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url, "(8)"
+  if (9 -le $Staff5_totalCards) {
+    # Card 9
+    Write-Host ""
+    $Staff5_cards9_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url,"(9)"
 
-        if ( $Edition_isSingle -eq "n" ) {
-            # Search title on MAL
-            $Staff5_cards8_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
+    if ($Edition_isSingle -eq "n") {
+      # Search title on MAL
+      $Staff5_cards9_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
 
-            Find-MAL -SearchQuery $Staff5_cards8_titleQuery
+      Find-MAL -SearchQuery $Staff5_cards9_titleQuery
 
-            # Get MAL ID
-            $Staff5_cards8_malId = Read-Host -Prompt $i18n.Prompt_MALId_Insert
-            if (-not($Staff5_cards8_malId)) { $Staff5_cards8_malId = "0" }
+      # Get MAL ID
+      $Staff5_cards9_malId = Read-Host -Prompt $i18n.Prompt_MALId_Insert
+      if (-not ($Staff5_cards9_malId)) { $Staff5_cards9_malId = "0" }
 
-            # Manually assign url if MAL ID is 0
-            if ($Staff5_cards8_malId -eq "0") {
-                Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
-                $Staff5_cards8_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
-                $Staff5_cards8_titleResult = $Staff5_cards8_titleQuery
-            } else {
-                $Staff5_cards8_titleResult = if ($Locale_set -eq "romaji") {
-                    Get-MALTitle -MALId $Staff5_cards8_malId
-                } elseif ($Locale_set -eq "english") {
-                    Get-MALTitle -MALId $Staff5_cards8_malId -English
-                }
-                Write-Host $i18n.Selected_Card_Title, $Staff5_cards8_titleResult -ForegroundColor Green
-            }
+      # Manually assign url if MAL ID is 0
+      if ($Staff5_cards9_malId -eq "0") {
+        Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
+        $Staff5_cards9_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
+        $Staff5_cards9_titleResult = $Staff5_cards9_titleQuery
+      } else {
+        $Staff5_cards9_titleResult = if ($Locale_set -eq "romaji") {
+          Get-MALTitle -MALId $Staff5_cards9_malId
+        } elseif ($Locale_set -eq "english") {
+          Get-MALTitle -MALId $Staff5_cards9_malId -English
         }
+        Write-Host $i18n.Selected_Card_Title,$Staff5_cards9_titleResult -ForegroundColor Green
+      }
     }
-
-    if ( 9 -le $Staff5_totalCards ) {
-        # Card 9
-        Write-Host ""
-        $Staff5_cards9_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url, "(9)"
-
-        if ( $Edition_isSingle -eq "n" ) {
-            # Search title on MAL
-            $Staff5_cards9_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
-
-            Find-MAL -SearchQuery $Staff5_cards9_titleQuery
-
-            # Get MAL ID
-            $Staff5_cards9_malId = Read-Host -Prompt $i18n.Prompt_MALId_Insert
-            if (-not($Staff5_cards9_malId)) { $Staff5_cards9_malId = "0" }
-
-            # Manually assign url if MAL ID is 0
-            if ($Staff5_cards9_malId -eq "0") {
-                Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
-                $Staff5_cards9_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
-                $Staff5_cards9_titleResult = $Staff5_cards9_titleQuery
-            } else {
-                $Staff5_cards9_titleResult = if ($Locale_set -eq "romaji") {
-                    Get-MALTitle -MALId $Staff5_cards9_malId
-                } elseif ($Locale_set -eq "english") {
-                    Get-MALTitle -MALId $Staff5_cards9_malId -English
-                }
-                Write-Host $i18n.Selected_Card_Title, $Staff5_cards9_titleResult -ForegroundColor Green
-            }
-        }
-    }
+  }
 }
 
 # ===============
@@ -2010,7 +2010,7 @@ Write-Host $result
 $result > ./Generated.bbcode
 
 Write-Host "=============" -ForegroundColor Yellow
-Write-Host $i18n.Attention_File_Created_1, "`"$((Get-Location).Path)/Generated.bbcode`"", $i18n.Attention_File_Created_2 -ForegroundColor Blue -Separator " "
+Write-Host $i18n.Attention_File_Created_1,"`"$((Get-Location).Path)/Generated.bbcode`"",$i18n.Attention_File_Created_2 -ForegroundColor Blue -Separator " "
 Read-Host -Prompt $i18n.Prompt_Move_Section
 
 # Post GFX Reqeust Field
