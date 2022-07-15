@@ -8,6 +8,7 @@ insert_final_newline = true
 # Fix false negative response due to emoji
 [**.{ps1,psd1,psm1}]
 charset = utf-8-bom
+tab_width = 2
 
 [**.md]
 tab_width = 2
