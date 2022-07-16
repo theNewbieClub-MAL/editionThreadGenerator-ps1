@@ -15,6 +15,7 @@ $gfxDeputy = "Annie_Law"
 # =================================
 
 Import-Module "./Modules/jikanmoe.psm1"
+Import-Module "./Modules/Placeholders.psm1"
 
 $cardSlip = Import-PowerShellDataFile -Path './Resources/slipCards.psd1'
 
@@ -117,8 +118,9 @@ Write-Host $i18n.Question_Locale_success,$Locale_set -ForegroundColor Green
 # Banner
 $Banner_imageUrl = Read-Host -Prompt $i18n.Question_Banner_Uri
 if (-not ($Banner_imageUrl)) {
-  $Banner_imageUrl = ""
-  $Banner_creator = ""
+  $Banner_randomized = Get-RandomBanner
+  $Banner_imageUrl = "https://etgps1.thenewbieclub.my.id/Resources/Banners/$($Banner_randomized)"
+  $Banner_creator = "$(Get-WorkStaff -FileName $Banner_randomized)"
   if ($Edition_isSingle -eq "n") {
     $Banner_malId = "0"
     $Banner_customUrl = "https://github.com/theNewbieClub-MAL/editionThreadGenerator-ps1"
@@ -192,7 +194,7 @@ $Staff1_username = Read-Host -Prompt $i18n.Staff_Username
 $Staff1_nickname = Read-Host -Prompt $i18n.Staff_Nickname
 $Staff1_limitType = Read-Host -Prompt $i18n.Staff_Limit_Type
 
-if ($null -eq $cardSlip.$Staff1_username) {
+if (-not ($cardSlip.$Staff1_username)) {
   Write-Host $i18n.Invalid_Slip -ForegroundColor Red
 } else {
   $Staff1_isAllowSlip = Read-Host -Prompt $i18n.Staff_Allows_Slip_Card
@@ -218,7 +220,13 @@ if ($Staff1_totalCards -gt 9) {
 Write-Host ""
 $Staff1_cards1_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url,"(1)"
 
-if ($Edition_isSingle -eq "n") {
+if (-not ($Staff1_cards1_imageUri)) {
+  $St1_cd1_rand = Get-RandomCard
+  $Staff1_cards1_imageUri = "https://etgps1.thenewbieclub.my.id/Resources/Cards/$($St1_cd1_rand)"
+  $Staff1_cards1_malId = "0"
+  $Staff1_cards1_customUrl = "https://github.com/theNewbieClub-MAL/editionThreadGenerator-ps1"
+  $Staff1_cards1_titleResult = "Placeholder"
+} elseif (($Edition_isSingle -eq "n") -and ("" -ne $Staff1_cards1_imageUri)) {
   # Search title on MAL
   $Staff1_cards1_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
 
@@ -248,7 +256,13 @@ if (2 -le $Staff1_totalCards) {
   Write-Host ""
   $Staff1_cards2_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url,"(2)"
 
-  if ($Edition_isSingle -eq "n") {
+  if (-not ($Staff1_cards2_imageUri)) {
+    $St1_cd2_rand = Get-RandomCard
+    $Staff1_cards2_imageUri = "https://etgps1.thenewbieclub.my.id/Resources/Cards/$($St1_cd2_rand)"
+    $Staff1_cards2_malId = "0"
+    $Staff1_cards2_customUrl = "https://github.com/theNewbieClub-MAL/editionThreadGenerator-ps1"
+    $Staff1_cards2_titleResult = "Placeholder"
+  } elseif (($Edition_isSingle -eq "n") -and ("" -ne $Staff1_cards2_imageUri)) {
     # Search title on MAL
     $Staff1_cards2_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
 
@@ -279,7 +293,13 @@ if (3 -le $Staff1_totalCards) {
   Write-Host ""
   $Staff1_cards3_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url,"(3)"
 
-  if ($Edition_isSingle -eq "n") {
+  if (-not ($Staff1_cards3_imageUri)) {
+    $St1_cd3_rand = Get-RandomCard
+    $Staff1_cards3_imageUri = "https://etgps1.thenewbieclub.my.id/Resources/Cards/$($St1_cd3_rand)"
+    $Staff1_cards3_malId = "0"
+    $Staff1_cards3_customUrl = "https://github.com/theNewbieClub-MAL/editionThreadGenerator-ps1"
+    $Staff1_cards3_titleResult = "Placeholder"
+  } elseif (($Edition_isSingle -eq "n") -and ("" -ne $Staff1_cards3_imageUri)) {
     # Search title on MAL
     $Staff1_cards3_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
 
@@ -310,7 +330,13 @@ if (4 -le $Staff1_totalCards) {
   Write-Host ""
   $Staff1_cards4_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url,"(4)"
 
-  if ($Edition_isSingle -eq "n") {
+  if (-not ($Staff1_cards4_imageUri)) {
+    $St1_cd4_rand = Get-RandomCard
+    $Staff1_cards4_imageUri = "https://etgps1.thenewbieclub.my.id/Resources/Cards/$($St1_cd4_rand)"
+    $Staff1_cards4_malId = "0"
+    $Staff1_cards4_customUrl = "https://github.com/theNewbieClub-MAL/editionThreadGenerator-ps1"
+    $Staff1_cards4_titleResult = "Placeholder"
+  } elseif (($Edition_isSingle -eq "n") -and ("" -ne $Staff1_cards4_imageUri)) {
     # Search title on MAL
     $Staff1_cards4_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
 
@@ -341,7 +367,13 @@ if (5 -le $Staff1_totalCards) {
   Write-Host ""
   $Staff1_cards5_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url,"(5)"
 
-  if ($Edition_isSingle -eq "n") {
+  if (-not ($Staff1_cards5_imageUri)) {
+    $St1_cd5_rand = Get-RandomCard
+    $Staff1_cards5_imageUri = "https://etgps1.thenewbieclub.my.id/Resources/Cards/$($St1_cd5_rand)"
+    $Staff1_cards5_malId = "0"
+    $Staff1_cards5_customUrl = "https://github.com/theNewbieClub-MAL/editionThreadGenerator-ps1"
+    $Staff1_cards5_titleResult = "Placeholder"
+  } elseif (($Edition_isSingle -eq "n") -and ("" -ne $Staff1_cards5_imageUri)) {
     # Search title on MAL
     $Staff1_cards5_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
 
@@ -372,7 +404,13 @@ if (6 -le $Staff1_totalCards) {
   Write-Host ""
   $Staff1_cards6_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url,"(6)"
 
-  if ($Edition_isSingle -eq "n") {
+  if (-not ($Staff1_cards6_imageUri)) {
+    $St1_cd6_rand = Get-RandomCard
+    $Staff1_cards6_imageUri = "https://etgps1.thenewbieclub.my.id/Resources/Cards/$($St1_cd6_rand)"
+    $Staff1_cards6_malId = "0"
+    $Staff1_cards6_customUrl = "https://github.com/theNewbieClub-MAL/editionThreadGenerator-ps1"
+    $Staff1_cards6_titleResult = "Placeholder"
+  } elseif (($Edition_isSingle -eq "n") -and ("" -ne $Staff1_cards6_imageUri)) {
     # Search title on MAL
     $Staff1_cards6_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
 
@@ -403,7 +441,13 @@ if (7 -le $Staff1_totalCards) {
   Write-Host ""
   $Staff1_cards7_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url,"(7)"
 
-  if ($Edition_isSingle -eq "n") {
+  if (-not ($Staff1_cards7_imageUri)) {
+    $St1_cd7_rand = Get-RandomCard
+    $Staff1_cards7_imageUri = "https://etgps1.thenewbieclub.my.id/Resources/Cards/$($St1_cd7_rand)"
+    $Staff1_cards7_malId = "0"
+    $Staff1_cards7_customUrl = "https://github.com/theNewbieClub-MAL/editionThreadGenerator-ps1"
+    $Staff1_cards7_titleResult = "Placeholder"
+  } elseif (($Edition_isSingle -eq "n") -and ("" -ne $Staff1_cards7_imageUri)) {
     # Search title on MAL
     $Staff1_cards7_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
 
@@ -434,7 +478,13 @@ if (8 -le $Staff1_totalCards) {
   Write-Host ""
   $Staff1_cards8_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url,"(8)"
 
-  if ($Edition_isSingle -eq "n") {
+  if (-not ($Staff1_cards8_imageUri)) {
+    $St1_cd8_rand = Get-RandomCards
+    $Staff1_cards8_imageUri = "https://etgps1.thenewbieclub.my.id/Resources/Cards/$($St1_cd8_rand)"
+    $Staff1_cards8_malId = "0"
+    $Staff1_cards8_customUrl = "https://github.com/theNewbieClub-MAL/editionThreadGenerator-ps1"
+    $Staff1_cards8_titleResult = "Placeholder"
+  } elseif (($Edition_isSingle -eq "n") -and ("" -ne $Staff1_cards8_imageUri)) {
     # Search title on MAL
     $Staff1_cards8_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
 
@@ -465,7 +515,13 @@ if (9 -le $Staff1_totalCards) {
   Write-Host ""
   $Staff1_cards9_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url,"(9)"
 
-  if ($Edition_isSingle -eq "n") {
+  if (-not ($Staff1_cards9_imageUri)) {
+    $St1_cd9_rand = Get-RandomCard
+    $Staff1_cards9_imageUri = "https://etgps1.thenewbieclub.my.id/Resources/Cards/$($St1_cd9_rand)"
+    $Staff1_cards9_malId = "0"
+    $Staff1_cards9_customUrl = "https://github.com/theNewbieClub-MAL/editionThreadGenerator-ps1"
+    $Staff1_cards9_titleResult = "Placeholder"
+  } elseif (($Edition_isSingle -eq "n") -and ("" -ne $Staff1_cards9_imageUri)) {
     # Search title on MAL
     $Staff1_cards9_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
 
@@ -503,7 +559,7 @@ if (2 -le $Edition_staffCount) {
   $Staff2_nickname = Read-Host -Prompt $i18n.Staff_Nickname
   $Staff2_limitType = Read-Host -Prompt $i18n.Staff_Limit_Type
 
-  if ($null -eq $cardSlip.$Staff2_username) {
+  if (-not ($cardSlip.$Staff2_username)) {
     Write-Host $i18n.Invalid_Slip -ForegroundColor Red
   } else {
     $Staff2_isAllowSlip = Read-Host -Prompt $i18n.Staff_Allows_Slip_Card
@@ -529,7 +585,13 @@ if (2 -le $Edition_staffCount) {
   Write-Host ""
   $Staff2_cards1_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url,"(1)"
 
-  if ($Edition_isSingle -eq "n") {
+  if (-not ($Staff2_cards1_imageUri)) {
+    $St2_cd1_rand = Get-RandomCard
+    $Staff2_cards1_imageUri = "https://etgps1.thenewbieclub.my.id/Resources/Cards/$($St2_cd1_rand)"
+    $Staff2_cards1_malId = "0"
+    $Staff2_cards1_customUrl = "https://github.com/theNewbieClub-MAL/editionThreadGenerator-ps1"
+    $Staff2_cards1_titleResult = "Placeholder"
+  } elseif (($Edition_isSingle -eq "n") -and ("" -ne $Staff2_cards1_imageUri)) {
     # Search title on MAL
     $Staff2_cards1_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
 
@@ -559,7 +621,13 @@ if (2 -le $Edition_staffCount) {
     Write-Host ""
     $Staff2_cards2_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url,"(2)"
 
-    if ($Edition_isSingle -eq "n") {
+    if (-not ($Staff2_cards2_imageUri)) {
+      $St2_cd2_rand = Get-RandomCard
+      $Staff2_cards2_imageUri = "https://etgps1.thenewbieclub.my.id/Resources/Cards/$($St2_cd2_rand)"
+      $Staff2_cards2_malId = "0"
+      $Staff2_cards2_customUrl = "https://github.com/theNewbieClub-MAL/editionThreadGenerator-ps1"
+      $Staff2_cards2_titleResult = "Placeholder"
+    } elseif (($Edition_isSingle -eq "n") -and ("" -ne $Staff2_cards2_imageUri)) {
       # Search title on MAL
       $Staff2_cards2_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
 
@@ -590,7 +658,13 @@ if (2 -le $Edition_staffCount) {
     Write-Host ""
     $Staff2_cards3_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url,"(3)"
 
-    if ($Edition_isSingle -eq "n") {
+    if (-not ($Staff2_cards3_imageUri)) {
+      $St2_cd3_rand = Get-RandomCard
+      $Staff2_cards3_imageUri = "https://etgps1.thenewbieclub.my.id/Resources/Cards/$($St2_cd3_rand)"
+      $Staff2_cards3_malId = "0"
+      $Staff2_cards3_customUrl = "https://github.com/theNewbieClub-MAL/editionThreadGenerator-ps1"
+      $Staff2_cards3_titleResult = "Placeholder"
+    } elseif (($Edition_isSingle -eq "n") -and ("" -ne $Staff2_cards3_imageUri)) {
       # Search title on MAL
       $Staff2_cards3_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
 
@@ -621,7 +695,13 @@ if (2 -le $Edition_staffCount) {
     Write-Host ""
     $Staff2_cards4_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url,"(4)"
 
-    if ($Edition_isSingle -eq "n") {
+    if (-not ($Staff2_cards4_imageUri)) {
+      $St2_cd4_rand = Get-RandomCard
+      $Staff2_cards4_imageUri = "https://etgps1.thenewbieclub.my.id/Resources/Cards/$($St2_cd4_rand)"
+      $Staff2_cards4_malId = "0"
+      $Staff2_cards4_customUrl = "https://github.com/theNewbieClub-MAL/editionThreadGenerator-ps1"
+      $Staff2_cards4_titleResult = "Placeholder"
+    } elseif (($Edition_isSingle -eq "n") -and ("" -ne $Staff2_cards4_imageUri)) {
       # Search title on MAL
       $Staff2_cards4_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
 
@@ -652,7 +732,13 @@ if (2 -le $Edition_staffCount) {
     Write-Host ""
     $Staff2_cards5_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url,"(5)"
 
-    if ($Edition_isSingle -eq "n") {
+    if (-not ($Staff2_cards5_imageUri)) {
+      $St2_cd5_rand = Get-RandomCard
+      $Staff2_cards5_imageUri = "https://etgps1.thenewbieclub.my.id/Resources/Cards/$($St2_cd5_rand)"
+      $Staff2_cards5_malId = "0"
+      $Staff2_cards5_customUrl = "https://github.com/theNewbieClub-MAL/editionThreadGenerator-ps1"
+      $Staff2_cards5_titleResult = "Placeholder"
+    } elseif (($Edition_isSingle -eq "n") -and ("" -ne $Staff2_cards5_imageUri)) {
       # Search title on MAL
       $Staff2_cards5_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
 
@@ -683,7 +769,13 @@ if (2 -le $Edition_staffCount) {
     Write-Host ""
     $Staff2_cards6_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url,"(6)"
 
-    if ($Edition_isSingle -eq "n") {
+    if (-not ($Staff2_cards6_imageUri)) {
+      $St2_cd6_rand = Get-RandomCard
+      $Staff2_cards6_imageUri = "https://etgps1.thenewbieclub.my.id/Resources/Cards/$($St2_cd6_rand)"
+      $Staff2_cards6_malId = "0"
+      $Staff2_cards6_customUrl = "https://github.com/theNewbieClub-MAL/editionThreadGenerator-ps1"
+      $Staff2_cards6_titleResult = "Placeholder"
+    } elseif (($Edition_isSingle -eq "n") -and ("" -ne $Staff2_cards6_imageUri)) {
       # Search title on MAL
       $Staff2_cards6_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
 
@@ -714,7 +806,13 @@ if (2 -le $Edition_staffCount) {
     Write-Host ""
     $Staff2_cards7_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url,"(7)"
 
-    if ($Edition_isSingle -eq "n") {
+    if (-not ($Staff2_cards7_imageUri)) {
+      $St2_cd7_rand = Get-RandomCard
+      $Staff2_cards7_imageUri = "https://etgps1.thenewbieclub.my.id/Resources/Cards/$($St2_cd7_rand)"
+      $Staff2_cards7_malId = "0"
+      $Staff2_cards7_customUrl = "https://github.com/theNewbieClub-MAL/editionThreadGenerator-ps1"
+      $Staff2_cards7_titleResult = "Placeholder"
+    } elseif (($Edition_isSingle -eq "n") -and ("" -ne $Staff2_cards7_imageUri)) {
       # Search title on MAL
       $Staff2_cards7_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
 
@@ -745,7 +843,13 @@ if (2 -le $Edition_staffCount) {
     Write-Host ""
     $Staff2_cards8_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url,"(8)"
 
-    if ($Edition_isSingle -eq "n") {
+    if (-not ($Staff2_cards8_imageUri)) {
+      $St2_cd8_rand = Get-RandomCard
+      $Staff2_cards8_imageUri = "https://etgps1.thenewbieclub.my.id/Resources/Cards/$($St2_cd8_rand)"
+      $Staff2_cards8_malId = "0"
+      $Staff2_cards8_customUrl = "https://github.com/theNewbieClub-MAL/editionThreadGenerator-ps1"
+      $Staff2_cards8_titleResult = "Placeholder"
+    } elseif (($Edition_isSingle -eq "n") -and ("" -ne $Staff2_cards8_imageUri)) {
       # Search title on MAL
       $Staff2_cards8_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
 
@@ -776,7 +880,13 @@ if (2 -le $Edition_staffCount) {
     Write-Host ""
     $Staff2_cards9_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url,"(9)"
 
-    if ($Edition_isSingle -eq "n") {
+    if (-not ($Staff2_cards9_imageUri)) {
+      $St2_cd9_rand = Get-RandomCard
+      $Staff2_cards9_imageUri = "https://etgps1.thenewbieclub.my.id/Resources/Cards/$($St2_cd9_rand)"
+      $Staff2_cards9_malId = "0"
+      $Staff2_cards9_customUrl = "https://github.com/theNewbieClub-MAL/editionThreadGenerator-ps1"
+      $Staff2_cards9_titleResult = "Placeholder"
+    } elseif (($Edition_isSingle -eq "n") -and ("" -ne $Staff2_cards9_imageUri)) {
       # Search title on MAL
       $Staff2_cards9_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
 
@@ -815,7 +925,7 @@ if (3 -le $Edition_staffCount) {
   $Staff3_nickname = Read-Host -Prompt $i18n.Staff_Nickname
   $Staff3_limitType = Read-Host -Prompt $i18n.Staff_Limit_Type
 
-  if ($null -eq $cardSlip.$Staff3_username) {
+  if (-not ($cardSlip.$Staff3_username)) {
     Write-Host $i18n.Invalid_Slip -ForegroundColor Red
   } else {
     $Staff3_isAllowSlip = Read-Host -Prompt $i18n.Staff_Allows_Slip_Card
@@ -841,7 +951,13 @@ if (3 -le $Edition_staffCount) {
   Write-Host ""
   $Staff3_cards1_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url,"(1)"
 
-  if ($Edition_isSingle -eq "n") {
+  if (-not ($Staff3_cards1_imageUri)) {
+    $St3_cd1_rand = Get-RandomCard
+    $Staff3_cards1_imageUri = "https://etgps1.thenewbieclub.my.id/Resources/Cards/$($St3_cd1_rand)"
+    $Staff3_cards1_malId = "0"
+    $Staff3_cards1_customUrl = "https://github.com/theNewbieClub-MAL/editionThreadGenerator-ps1"
+    $Staff3_cards1_titleResult = "Placeholder"
+  } elseif (($Edition_isSingle -eq "n") -and ("" -ne $Staff3_cards1_imageUri)) {
     # Search title on MAL
     $Staff3_cards1_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
 
@@ -871,7 +987,13 @@ if (3 -le $Edition_staffCount) {
     Write-Host ""
     $Staff3_cards2_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url,"(2)"
 
-    if ($Edition_isSingle -eq "n") {
+    if (-not ($Staff3_cards2_imageUri)) {
+      $St3_cd2_rand = Get-RandomCard
+      $Staff3_cards2_imageUri = "https://etgps1.thenewbieclub.my.id/Resources/Cards/$($St3_cd2_rand)"
+      $Staff3_cards2_malId = "0"
+      $Staff3_cards2_customUrl = "https://github.com/theNewbieClub-MAL/editionThreadGenerator-ps1"
+      $Staff3_cards2_titleResult = "Placeholder"
+    } elseif (($Edition_isSingle -eq "n") -and ("" -ne $Staff3_cards2_imageUri)) {
       # Search title on MAL
       $Staff3_cards2_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
 
@@ -902,7 +1024,13 @@ if (3 -le $Edition_staffCount) {
     Write-Host ""
     $Staff3_cards3_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url,"(3)"
 
-    if ($Edition_isSingle -eq "n") {
+    if (-not ($Staff3_cards3_imageUri)) {
+      $St3_cd3_rand = Get-RandomCard
+      $Staff3_cards3_imageUri = "https://etgps1.thenewbieclub.my.id/Resources/Cards/$($St3_cd3_rand)"
+      $Staff3_cards3_malId = "0"
+      $Staff3_cards3_customUrl = "https://github.com/theNewbieClub-MAL/editionThreadGenerator-ps1"
+      $Staff3_cards3_titleResult = "Placeholder"
+    } elseif (($Edition_isSingle -eq "n") -and ("" -ne $Staff3_cards3_imageUri)) {
       # Search title on MAL
       $Staff3_cards3_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
 
@@ -933,7 +1061,13 @@ if (3 -le $Edition_staffCount) {
     Write-Host ""
     $Staff3_cards4_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url,"(4)"
 
-    if ($Edition_isSingle -eq "n") {
+    if (-not ($Staff3_cards4_imageUri)) {
+      $St3_cd4_rand = Get-RandomCard
+      $Staff3_cards4_imageUri = "https://etgps1.thenewbieclub.my.id/Resources/Cards/$($St3_cd4_rand)"
+      $Staff3_cards4_malId = "0"
+      $Staff3_cards4_customUrl = "https://github.com/theNewbieClub-MAL/editionThreadGenerator-ps1"
+      $Staff3_cards4_titleResult = "Placeholder"
+    } elseif (($Edition_isSingle -eq "n") -and ("" -ne $Staff3_cards4_imageUri)) {
       # Search title on MAL
       $Staff3_cards4_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
 
@@ -964,7 +1098,13 @@ if (3 -le $Edition_staffCount) {
     Write-Host ""
     $Staff3_cards5_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url,"(5)"
 
-    if ($Edition_isSingle -eq "n") {
+    if (-not ($Staff3_cards5_imageUri)) {
+      $St3_cd5_rand = Get-RandomCard
+      $Staff3_cards5_imageUri = "https://etgps1.thenewbieclub.my.id/Resources/Cards/$($St3_cd5_rand)"
+      $Staff3_cards5_malId = "0"
+      $Staff3_cards5_customUrl = "https://github.com/theNewbieClub-MAL/editionThreadGenerator-ps1"
+      $Staff3_cards5_titleResult = "Placeholder"
+    } elseif (($Edition_isSingle -eq "n") -and ("" -ne $Staff3_cards5_imageUri)) {
       # Search title on MAL
       $Staff3_cards5_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
 
@@ -995,7 +1135,13 @@ if (3 -le $Edition_staffCount) {
     Write-Host ""
     $Staff3_cards6_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url,"(6)"
 
-    if ($Edition_isSingle -eq "n") {
+    if (-not ($Staff3_cards6_imageUri)) {
+      $St3_cd6_rand = Get-RandomCard
+      $Staff3_cards6_imageUri = "https://etgps1.thenewbieclub.my.id/Resources/Cards/$($St3_cd6_rand)"
+      $Staff3_cards6_malId = "0"
+      $Staff3_cards6_customUrl = "https://github.com/theNewbieClub-MAL/editionThreadGenerator-ps1"
+      $Staff3_cards6_titleResult = "Placeholder"
+    } elseif (($Edition_isSingle -eq "n") -and ("" -ne $Staff3_cards6_imageUri)) {
       # Search title on MAL
       $Staff3_cards6_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
 
@@ -1026,7 +1172,13 @@ if (3 -le $Edition_staffCount) {
     Write-Host ""
     $Staff3_cards7_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url,"(7)"
 
-    if ($Edition_isSingle -eq "n") {
+    if (-not ($Staff3_cards7_imageUri)) {
+      $St3_cd7_rand = Get-RandomCard
+      $Staff3_cards7_imageUri = "https://etgps1.thenewbieclub.my.id/Resources/Cards/$($St3_cd7_rand)"
+      $Staff3_cards7_malId = "0"
+      $Staff3_cards7_customUrl = "https://github.com/theNewbieClub-MAL/editionThreadGenerator-ps1"
+      $Staff3_cards7_titleResult = "Placeholder"
+    } elseif (($Edition_isSingle -eq "n") -and ("" -ne $Staff3_cards7_imageUri)) {
       # Search title on MAL
       $Staff3_cards7_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
 
@@ -1057,7 +1209,13 @@ if (3 -le $Edition_staffCount) {
     Write-Host ""
     $Staff3_cards8_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url,"(8)"
 
-    if ($Edition_isSingle -eq "n") {
+    if (-not ($Staff3_cards8_imageUri)) {
+      $St3_cd8_rand = Get-RandomCard
+      $Staff3_cards8_imageUri = "https://etgps1.thenewbieclub.my.id/Resources/Cards/$($St3_cd8_rand)"
+      $Staff3_cards8_malId = "0"
+      $Staff3_cards8_customUrl = "https://github.com/theNewbieClub-MAL/editionThreadGenerator-ps1"
+      $Staff3_cards8_titleResult = "Placeholder"
+    } elseif (($Edition_isSingle -eq "n") -and ("" -ne $Staff3_cards8_imageUri)) {
       # Search title on MAL
       $Staff3_cards8_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
 
@@ -1088,7 +1246,13 @@ if (3 -le $Edition_staffCount) {
     Write-Host ""
     $Staff3_cards9_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url,"(9)"
 
-    if ($Edition_isSingle -eq "n") {
+    if (-not ($Staff3_cards9_imageUri)) {
+      $St3_cd9_rand = Get-RandomCard
+      $Staff3_cards9_imageUri = "https://etgps1.thenewbieclub.my.id/Resources/Cards/$($St3_cd9_rand)"
+      $Staff3_cards9_malId = "0"
+      $Staff3_cards9_customUrl = "https://github.com/theNewbieClub-MAL/editionThreadGenerator-ps1"
+      $Staff3_cards9_titleResult = "Placeholder"
+    } elseif (($Edition_isSingle -eq "n") -and ("" -ne $Staff3_cards9_imageUri)) {
       # Search title on MAL
       $Staff3_cards9_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
 
@@ -1127,7 +1291,7 @@ if (4 -le $Edition_staffCount) {
   $Staff4_nickname = Read-Host -Prompt $i18n.Staff_Nickname
   $Staff4_limitType = Read-Host -Prompt $i18n.Staff_Limit_Type
 
-  if ($null -eq $cardSlip.$Staff4_username) {
+  if (-not ($cardSlip.$Staff4_username)) {
     Write-Host $i18n.Invalid_Slip -ForegroundColor Red
   } else {
     $Staff4_isAllowSlip = Read-Host -Prompt $i18n.Staff_Allows_Slip_Card
@@ -1153,7 +1317,13 @@ if (4 -le $Edition_staffCount) {
   Write-Host ""
   $Staff4_cards1_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url,"(1)"
 
-  if ($Edition_isSingle -eq "n") {
+  if (-not ($Staff4_cards1_imageUri)) {
+    $St4_cd1_rand = Get-RandomCard
+    $Staff4_cards1_imageUri = "https://etgps1.thenewbieclub.my.id/Resources/Cards/$($St4_cd1_rand)"
+    $Staff4_cards1_malId = "0"
+    $Staff4_cards1_customUrl = "https://github.com/theNewbieClub-MAL/editionThreadGenerator-ps1"
+    $Staff4_cards1_titleResult = "Placeholder"
+  } elseif (($Edition_isSingle -eq "n") -and ("" -ne $Staff4_cards1_imageUri)) {
     # Search title on MAL
     $Staff4_cards1_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
 
@@ -1183,7 +1353,13 @@ if (4 -le $Edition_staffCount) {
     Write-Host ""
     $Staff4_cards2_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url,"(2)"
 
-    if ($Edition_isSingle -eq "n") {
+    if (-not ($Staff4_cards2_imageUri)) {
+      $St4_cd2_rand = Get-RandomCard
+      $Staff4_cards2_imageUri = "https://etgps1.thenewbieclub.my.id/Resources/Cards/$($St4_cd2_rand)"
+      $Staff4_cards2_malId = "0"
+      $Staff4_cards2_customUrl = "https://github.com/theNewbieClub-MAL/editionThreadGenerator-ps1"
+      $Staff4_cards2_titleResult = "Placeholder"
+    } elseif (($Edition_isSingle -eq "n") -and ("" -ne $Staff4_cards2_imageUri)) {
       # Search title on MAL
       $Staff4_cards2_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
 
@@ -1214,7 +1390,13 @@ if (4 -le $Edition_staffCount) {
     Write-Host ""
     $Staff4_cards3_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url,"(3)"
 
-    if ($Edition_isSingle -eq "n") {
+    if (-not ($Staff4_cards3_imageUri)) {
+      $St4_cd3_rand = Get-RandomCard
+      $Staff4_cards3_imageUri = "https://etgps1.thenewbieclub.my.id/Resources/Cards/$($St4_cd3_rand)"
+      $Staff4_cards3_malId = "0"
+      $Staff4_cards3_customUrl = "https://github.com/theNewbieClub-MAL/editionThreadGenerator-ps1"
+      $Staff4_cards3_titleResult = "Placeholder"
+    } elseif (($Edition_isSingle -eq "n") -and ("" -ne $Staff4_cards3_imageUri)) {
       # Search title on MAL
       $Staff4_cards3_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
 
@@ -1245,7 +1427,13 @@ if (4 -le $Edition_staffCount) {
     Write-Host ""
     $Staff4_cards4_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url,"(4)"
 
-    if ($Edition_isSingle -eq "n") {
+    if (-not ($Staff4_cards4_imageUri)) {
+      $St4_cd4_rand = Get-RandomCard
+      $Staff4_cards4_imageUri = "https://etgps1.thenewbieclub.my.id/Resources/Cards/$($St4_cd4_rand)"
+      $Staff4_cards4_malId = "0"
+      $Staff4_cards4_customUrl = "https://github.com/theNewbieClub-MAL/editionThreadGenerator-ps1"
+      $Staff4_cards4_titleResult = "Placeholder"
+    } elseif (($Edition_isSingle -eq "n") -and ("" -ne $Staff4_cards4_imageUri)) {
       # Search title on MAL
       $Staff4_cards4_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
 
@@ -1276,7 +1464,13 @@ if (4 -le $Edition_staffCount) {
     Write-Host ""
     $Staff4_cards5_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url,"(5)"
 
-    if ($Edition_isSingle -eq "n") {
+    if (-not ($Staff4_cards5_imageUri)) {
+      $St4_cd5_rand = Get-RandomCard
+      $Staff4_cards5_imageUri = "https://etgps1.thenewbieclub.my.id/Resources/Cards/$($St4_cd5_rand)"
+      $Staff4_cards5_malId = "0"
+      $Staff4_cards5_customUrl = "https://github.com/theNewbieClub-MAL/editionThreadGenerator-ps1"
+      $Staff4_cards5_titleResult = "Placeholder"
+    } elseif (($Edition_isSingle -eq "n") -and ("" -ne $Staff4_cards5_imageUri)) {
       # Search title on MAL
       $Staff4_cards5_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
 
@@ -1307,7 +1501,13 @@ if (4 -le $Edition_staffCount) {
     Write-Host ""
     $Staff4_cards6_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url,"(6)"
 
-    if ($Edition_isSingle -eq "n") {
+    if (-not ($Staff4_cards6_imageUri)) {
+      $St4_cd6_rand = Get-RandomCard
+      $Staff4_cards6_imageUri = "https://etgps1.thenewbieclub.my.id/Resources/Cards/$($St4_cd6_rand)"
+      $Staff4_cards6_malId = "0"
+      $Staff4_cards6_customUrl = "https://github.com/theNewbieClub-MAL/editionThreadGenerator-ps1"
+      $Staff4_cards6_titleResult = "Placeholder"
+    } elseif (($Edition_isSingle -eq "n") -and ("" -ne $Staff4_cards6_imageUri)) {
       # Search title on MAL
       $Staff4_cards6_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
 
@@ -1338,7 +1538,13 @@ if (4 -le $Edition_staffCount) {
     Write-Host ""
     $Staff4_cards7_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url,"(7)"
 
-    if ($Edition_isSingle -eq "n") {
+    if (-not ($Staff4_cards7_imageUri)) {
+      $St4_cd7_rand = Get-RandomCard
+      $Staff4_cards7_imageUri = "https://etgps1.thenewbieclub.my.id/Resources/Cards/$($St4_cd7_rand)"
+      $Staff4_cards7_malId = "0"
+      $Staff4_cards7_customUrl = "https://github.com/theNewbieClub-MAL/editionThreadGenerator-ps1"
+      $Staff4_cards7_titleResult = "Placeholder"
+    } elseif (($Edition_isSingle -eq "n") -and ("" -ne $Staff4_cards7_imageUri)) {
       # Search title on MAL
       $Staff4_cards7_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
 
@@ -1369,7 +1575,13 @@ if (4 -le $Edition_staffCount) {
     Write-Host ""
     $Staff4_cards8_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url,"(8)"
 
-    if ($Edition_isSingle -eq "n") {
+    if (-not ($Staff4_cards8_imageUri)) {
+      $St4_cd8_rand = Get-RandomCard
+      $Staff4_cards8_imageUri = "https://etgps1.thenewbieclub.my.id/Resources/Cards/$($St4_cd8_rand)"
+      $Staff4_cards8_malId = "0"
+      $Staff4_cards8_customUrl = "https://github.com/theNewbieClub-MAL/editionThreadGenerator-ps1"
+      $Staff4_cards8_titleResult = "Placeholder"
+    } elseif (($Edition_isSingle -eq "n") -and ("" -ne $Staff4_cards8_imageUri)) {
       # Search title on MAL
       $Staff4_cards8_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
 
@@ -1400,7 +1612,13 @@ if (4 -le $Edition_staffCount) {
     Write-Host ""
     $Staff4_cards9_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url,"(9)"
 
-    if ($Edition_isSingle -eq "n") {
+    if (-not ($Staff4_cards9_imageUri)) {
+      $St4_cd9_rand = Get-RandomCard
+      $Staff4_cards9_imageUri = "https://etgps1.thenewbieclub.my.id/Resources/Cards/$($St4_cd9_rand)"
+      $Staff4_cards9_malId = "0"
+      $Staff4_cards9_customUrl = "https://github.com/theNewbieClub-MAL/editionThreadGenerator-ps1"
+      $Staff4_cards9_titleResult = "Placeholder"
+    } elseif (($Edition_isSingle -eq "n") -and ("" -ne $Staff4_cards9_imageUri)) {
       # Search title on MAL
       $Staff4_cards9_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
 
@@ -1439,7 +1657,7 @@ if (5 -le $Edition_staffCount) {
   $Staff5_nickname = Read-Host -Prompt $i18n.Staff_Nickname
   $Staff5_limitType = Read-Host -Prompt $i18n.Staff_Limit_Type
 
-  if ($null -eq $cardSlip.$Staff5_username) {
+  if (-not ($cardSlip.$Staff5_username)) {
     Write-Host $i18n.Invalid_Slip -ForegroundColor Red
   } else {
     $Staff5_isAllowSlip = Read-Host -Prompt $i18n.Staff_Allows_Slip_Card
@@ -1465,7 +1683,13 @@ if (5 -le $Edition_staffCount) {
   Write-Host ""
   $Staff5_cards1_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url,"(1)"
 
-  if ($Edition_isSingle -eq "n") {
+  if (-not ($Staff5_cards1_imageUri)) {
+    $St5_cd1_rand = Get-RandomCard
+    $Staff5_cards1_imageUri = "https://etgps1.thenewbieclub.my.id/Resources/Cards/$($St5_cd1_rand)"
+    $Staff5_cards1_malId = "0"
+    $Staff5_cards1_customUrl = "https://github.com/theNewbieClub-MAL/editionThreadGenerator-ps1"
+    $Staff5_cards1_titleResult = "Placeholder"
+  } elseif (($Edition_isSingle -eq "n") -and ("" -ne $Staff5_cards1_imageUri)) {
     # Search title on MAL
     $Staff5_cards1_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
 
@@ -1495,7 +1719,13 @@ if (5 -le $Edition_staffCount) {
     Write-Host ""
     $Staff5_cards2_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url,"(2)"
 
-    if ($Edition_isSingle -eq "n") {
+    if (-not ($Staff5_cards2_imageUri)) {
+      $St5_cd2_rand = Get-RandomCard
+      $Staff5_cards2_imageUri = "https://etgps1.thenewbieclub.my.id/Resources/Cards/$($St5_cd2_rand)"
+      $Staff5_cards2_malId = "0"
+      $Staff5_cards2_customUrl = "https://github.com/theNewbieClub-MAL/editionThreadGenerator-ps1"
+      $Staff5_cards2_titleResult = "Placeholder"
+    } elseif (($Edition_isSingle -eq "n") -and ("" -ne $Staff5_cards2_imageUri)) {
       # Search title on MAL
       $Staff5_cards2_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
 
@@ -1526,7 +1756,13 @@ if (5 -le $Edition_staffCount) {
     Write-Host ""
     $Staff5_cards3_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url,"(3)"
 
-    if ($Edition_isSingle -eq "n") {
+    if (-not ($Staff5_cards3_imageUri)) {
+      $St5_cd3_rand = Get-RandomCard
+      $Staff5_cards3_imageUri = "https://etgps1.thenewbieclub.my.id/Resources/Cards/$($St5_cd3_rand)"
+      $Staff5_cards3_malId = "0"
+      $Staff5_cards3_customUrl = "https://github.com/theNewbieClub-MAL/editionThreadGenerator-ps1"
+      $Staff5_cards3_titleResult = "Placeholder"
+    } elseif (($Edition_isSingle -eq "n") -and ("" -ne $Staff5_cards3_imageUri)) {
       # Search title on MAL
       $Staff5_cards3_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
 
@@ -1557,7 +1793,13 @@ if (5 -le $Edition_staffCount) {
     Write-Host ""
     $Staff5_cards4_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url,"(4)"
 
-    if ($Edition_isSingle -eq "n") {
+    if (-not ($Staff5_cards4_imageUri)) {
+      $St5_cd4_rand = Get-RandomCard
+      $Staff5_cards4_imageUri = "https://etgps1.thenewbieclub.my.id/Resources/Cards/$($St5_cd4_rand)"
+      $Staff5_cards4_malId = "0"
+      $Staff5_cards4_customUrl = "https://github.com/theNewbieClub-MAL/editionThreadGenerator-ps1"
+      $Staff5_cards4_titleResult = "Placeholder"
+    } elseif (($Edition_isSingle -eq "n") -and ("" -ne $Staff5_cards4_imageUri)) {
       # Search title on MAL
       $Staff5_cards4_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
 
@@ -1588,7 +1830,13 @@ if (5 -le $Edition_staffCount) {
     Write-Host ""
     $Staff5_cards5_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url,"(5)"
 
-    if ($Edition_isSingle -eq "n") {
+    if (-not ($Staff5_cards5_imageUri)) {
+      $St5_cd5_rand = Get-RandomCard
+      $Staff5_cards5_imageUri = "https://etgps1.thenewbieclub.my.id/Resources/Cards/$($St5_cd5_rand)"
+      $Staff5_cards5_malId = "0"
+      $Staff5_cards5_customUrl = "https://github.com/theNewbieClub-MAL/editionThreadGenerator-ps1"
+      $Staff5_cards5_titleResult = "Placeholder"
+    } elseif (($Edition_isSingle -eq "n") -and ("" -ne $Staff5_cards5_imageUri)) {
       # Search title on MAL
       $Staff5_cards5_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
 
@@ -1619,7 +1867,13 @@ if (5 -le $Edition_staffCount) {
     Write-Host ""
     $Staff5_cards6_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url,"(6)"
 
-    if ($Edition_isSingle -eq "n") {
+    if (-not ($Staff5_cards6_imageUri)) {
+      $St5_cd6_rand = Get-RandomCard
+      $Staff5_cards6_imageUri = "https://etgps1.thenewbieclub.my.id/Resources/Cards/$($St5_cd6_rand)"
+      $Staff5_cards6_malId = "0"
+      $Staff5_cards6_customUrl = "https://github.com/theNewbieClub-MAL/editionThreadGenerator-ps1"
+      $Staff5_cards6_titleResult = "Placeholder"
+    } elseif (($Edition_isSingle -eq "n") -and ("" -ne $Staff5_cards6_imageUri)) {
       # Search title on MAL
       $Staff5_cards6_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
 
@@ -1650,7 +1904,13 @@ if (5 -le $Edition_staffCount) {
     Write-Host ""
     $Staff5_cards7_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url,"(7)"
 
-    if ($Edition_isSingle -eq "n") {
+    if (-not ($Staff5_cards7_imageUri)) {
+      $St5_cd7_rand = Get-RandomCard
+      $Staff5_cards7_imageUri = "https://etgps1.thenewbieclub.my.id/Resources/Cards/$($St5_cd7_rand)"
+      $Staff5_cards7_malId = "0"
+      $Staff5_cards7_customUrl = "https://github.com/theNewbieClub-MAL/editionThreadGenerator-ps1"
+      $Staff5_cards7_titleResult = "Placeholder"
+    } elseif (($Edition_isSingle -eq "n") -and ("" -ne $Staff5_cards7_imageUri)) {
       # Search title on MAL
       $Staff5_cards7_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
 
@@ -1681,7 +1941,13 @@ if (5 -le $Edition_staffCount) {
     Write-Host ""
     $Staff5_cards8_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url,"(8)"
 
-    if ($Edition_isSingle -eq "n") {
+    if (-not ($Staff5_cards8_imageUri)) {
+      $St5_cd8_rand = Get-RandomCard
+      $Staff5_cards8_imageUri = "https://etgps1.thenewbieclub.my.id/Resources/Cards/$($St5_cd8_rand)"
+      $Staff5_cards8_malId = "0"
+      $Staff5_cards8_customUrl = "https://github.com/theNewbieClub-MAL/editionThreadGenerator-ps1"
+      $Staff5_cards8_titleResult = "Placeholder"
+    } elseif (($Edition_isSingle -eq "n") -and ("" -ne $Staff5_cards8_imageUri)) {
       # Search title on MAL
       $Staff5_cards8_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
 
@@ -1712,7 +1978,13 @@ if (5 -le $Edition_staffCount) {
     Write-Host ""
     $Staff5_cards9_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url,"(9)"
 
-    if ($Edition_isSingle -eq "n") {
+    if (-not ($Staff5_cards9_imageUri)) {
+      $St5_cd9_rand = Get-RandomCard
+      $Staff5_cards9_imageUri = "https://etgps1.thenewbieclub.my.id/Resources/Cards/$($St5_cd9_rand)"
+      $Staff5_cards9_malId = "0"
+      $Staff5_cards9_customUrl = "https://github.com/theNewbieClub-MAL/editionThreadGenerator-ps1"
+      $Staff5_cards9_titleResult = "Placeholder"
+    } elseif (($Edition_isSingle -eq "n") -and ("" -ne $Staff5_cards9_imageUri)) {
       # Search title on MAL
       $Staff5_cards9_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
 
@@ -1776,7 +2048,7 @@ Ignore if you're using 3rd party app with auto recolor text support.[/b][/size][
 "@})
 [quote][b]Opened on[/b]: [color=black]$($Edition_start)[/color] | [b]Close on[/b]: [color=black]$($Edition_end)[/color][/quote][/center][size=120]
 　[size=230]💬 [b]Introduction[/b][/size]
-[quote][list][color=black][center][img]$($Intro_gif)[/img]$(if ($null -eq $Intro_textFormat) {} else {@"
+[quote][list][color=black][center][img]$($Intro_gif)[/img]$(if (-not ($Intro_textFormat)) {} else {@"
 
 [i]$($Intro_textFormat)[/i]
 "@})[/center][/color][/list][/quote]
