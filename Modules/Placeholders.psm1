@@ -8,7 +8,7 @@ function Get-RandomBanner {
     Write-Information $WarningMessage -ForegroundColor Red
   }
 
-  <#
+<#
     .SYNOPSIS
     Get Random Banner placeholder filename
 
@@ -41,7 +41,7 @@ function Get-RandomCard {
     Write-Information $WarningMessage -ForegroundColor Red
   }
 
-  <#
+<#
     .SYNOPSIS
     Get Random Card placeholder filename
 
@@ -70,7 +70,7 @@ function Get-WorkStaff {
   )
 
   Write-Output "$([regex]::Match($FileName, "^[\w\-_]{2,16}").Groups[0].Value)"
-  <#
+<#
     .SYNOPSIS
     Extract staff name from file with RegEx
 

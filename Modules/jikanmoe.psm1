@@ -10,7 +10,7 @@ function Find-MAL {
   $iwr = Invoke-WebRequest -Uri "https://api.jikan.moe/v4/anime?q=$($Encoded)&limit=20&sfw=false" -Method Get
   (ConvertFrom-Json ($iwr).content | Select-Object -Expand "data") | Select-Object mal_id,title,title_english | Format-Table
 
-  <#
+<#
     .SYNOPSIS
     Search for an anime on MyAnimeList.net
 
@@ -69,7 +69,7 @@ function Get-MALTitle {
     }
   }
 
-  <#
+<#
     .SYNOPSIS
     Get the title of an anime on MyAnimeList.net by ID.
 
