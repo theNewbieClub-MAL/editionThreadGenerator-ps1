@@ -1814,15 +1814,15 @@ $($Staff1_nickname): $( if ($Edition_staffCount -ge 2) { "`n$($Staff2_nickname):
 [quote][color=black][size=75]
 [img]https://i.imgur.com/Hi0NEHE.png[/img]
 [url=https://myanimelist.net/profile/un1corn_tnc][img align=left]https://i.imgur.com/Eo8fg86.png[/img][/url][size=20]
-[/size][b]Username:[/b] un1corn_tnc
-[b]Nickname:[/b] -
-[b]Role:[/b] Member
-[b]Deliver to:[/b] Profile Comment
+[/size][b]Username: [/b]un1corn_tnc
+[b]Nickname: [/b] -
+[b]Role: [/b]Member
+[b]Deliver to: [/b]Profile Comment
 [b][i]—Cards by—[/i][/b]
 $($Staff1_nickname): $( if ("y" -eq $Staff1_isAllowSlip) {"`[spoiler=slip`]`[img`]$($cardSlip.$Staff1_username)`[/img`]`[/spoiler`]"} )$( if ($Edition_staffCount -ge 2) { "`n$($Staff2_nickname): $( if ("y" -eq $Staff2_isAllowSlip) {"`[spoiler=slip`]`[img`]$($cardSlip.$Staff2_username)`[/img`]`[/spoiler`]"} )" } else {""} ) $( if ($Edition_staffCount -ge 3) { "`n$($Staff3_nickname): $( if ("y" -eq $Staff3_isAllowSlip) {"`[spoiler=slip`]`[img`]$($cardSlip.$Staff3_username)`[/img`]`[/spoiler`]"} )" } else {""} )$( if ($Edition_staffCount -ge 4) { "`n$($Staff4_nickname): $( if ("y" -eq $Staff4_isAllowSlip) {"`[spoiler=slip`]`[img`]$($cardSlip.$Staff4_username)`[/img`]`[/spoiler`]"} )" } else {""} )$( if ($Edition_staffCount -ge 5) { "`n$($Staff5_nickname): $( if ("y" -eq $Staff5_isAllowSlip) {"`[spoiler=slip`]`[img`]$($cardSlip.$Staff5_username)`[/img`]`[/spoiler`]"} )" } else {""} )
 ——
-[b]Comments:[/b] 
-[b]Edition Suggestion:[/b] $( if ( $Edition_staffCount -eq 5) { "`n" } else {""} ) $( if ( $Edition_staffCount -eq 4) { "`n`n" } else {""} ) $( if ( $Edition_staffCount -eq 3) { "`n`n`n" } else {""} ) $( if ( $Edition_staffCount -eq 2) { "`n`n`n`n" } else {""} ) $( if ( $Edition_staffCount -eq 1) { "`n`n`n`n`n" } else {""} )
+[b]Comments: [/b]
+[b]Edition Suggestion: [/b]$( if ( $Edition_staffCount -eq 5) { "`n" } else {""} ) $( if ( $Edition_staffCount -eq 4) { "`n`n" } else {""} ) $( if ( $Edition_staffCount -eq 3) { "`n`n`n" } else {""} ) $( if ( $Edition_staffCount -eq 2) { "`n`n`n`n" } else {""} ) $( if ( $Edition_staffCount -eq 1) { "`n`n`n`n`n" } else {""} )
 [/size][size=80][right][color=#1d439b]Report[/color] - [color=#1d439b]Quote[/color][/right][/size]
 [/color][/quote]
 　[size=230]💳 [b]Cards[/b][/size]
@@ -2026,13 +2026,13 @@ Write-Host @"
 [size=120][color=$($Thread_color)][i]For GFX staff who hasn't send the format yet, please DM me, and insert template to message using [[i][/i]code] tag.[/i][/color][/size]
 
 `[spoiler=requests`]
-[code][quote][b]Staff Nickname: [/b] 
-[b]Delivery: [/b] 
+[code][quote][b]Staff Nickname: [/b]
+[b]Delivery: [/b]
 [i]—Cards by—[/i]
 $($Staff1_nickname): $( if ($Edition_staffCount -ge 2) { "`n$($Staff2_nickname): " } else {""} ) $( if ($Edition_staffCount -ge 3) { "`n$($Staff3_nickname): " } else {""} )$( if ($Edition_staffCount -ge 4) { "`n$($Staff4_nickname): " } else {""} )$( if ($Edition_staffCount -ge 5) { "`n$($Staff5_nickname): " } else {""} )
 --
-[b]Comments: [/b] 
-[b]Edition Suggestion: [/b] 
+[b]Comments: [/b]
+[b]Edition Suggestion: [/b]
 [/quote][/code]
 
 `[/spoiler`]
