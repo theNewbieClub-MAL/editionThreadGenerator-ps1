@@ -17,6 +17,13 @@ buildInit_success
 
 *.bkup
 
+# ===============
+# Temporary files
+# ===============
+
+# PowerShell-Beautify
+*.pspp
+
 # ======
 # Editor
 # ======
