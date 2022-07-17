@@ -41,7 +41,7 @@ jobs:
           mv Resources/Headers/* Headers
 
           # Copy Slip Cards
-          mv "Resources/Slip Cards/*" SlipCards
+          mv Resources/Slips/* SlipCards
 
           # Delete Resources folder
           rm -rf Resources
