@@ -1,0 +1,51 @@
+name: Move Files to another branch
+on:
+  push:
+    paths:
+      - "Resources/**/*"
+jobs:
+  moveFilesToAnotherBranch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Move files to another branch
+        run: |
+          # Add metadata about committer
+          git config user.name "{{ github.actor }}"
+          git config user.email "{{ github.actor }}@users.noreply.github.com"
+
+          # Checkout branch
+          git fetch
+          git checkout gh-pages
+
+          # Reserve files from /Resources/* and CNAME
+          git checkout main -- Resources/* CNAME .gitignore LICENSE .gitattributes .editorconfig
+
+          # Force copy dotfiles files
+          shopt -s dotglob
+
+          # Create directories if they don't exist
+          mkdir -p Banners
+          mkdir -p Cards
+          mkdir -p SlipCards
+          mkdir -p Headers
+
+          # Copy Banners Content
+          mv Resources/Banners/* Banners
+
+          # Copy Cards Content
+          mv Resources/Cards/* Cards
+
+          # Copy Headers Content
+          mv Resources/Headers/* Headers
+
+          # Copy Slip Cards
+          mv "Resources/Slip Cards/*" SlipCards
+
+          # Delete Resources folder
+          rm -rf Resources
+
+          # Commit changes
+          git add *
+          git commit -m "Move files to another branch"
+          git push origin gh-pages
