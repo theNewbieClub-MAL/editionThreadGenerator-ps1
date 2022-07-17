@@ -2084,8 +2084,8 @@ $($Staff1_nickname): $( if ($Edition_staffCount -ge 2) { "`n$($Staff2_nickname):
 [/color][/size][/quote]
 　[size=230]🔍 [b]Example/Result[/b][/size]
 [quote][color=black][size=75]
-[img]https://i.imgur.com/Hi0NEHE.png[/img]
-[url=https://myanimelist.net/profile/un1corn_tnc][img align=left]https://i.imgur.com/Eo8fg86.png[/img][/url][size=20]
+[img]https://etgps1.thenewbieclub.my.id/Headers/heading.png[/img]
+[url=https://myanimelist.net/profile/un1corn_tnc][img align=left]https://etgps1.thenewbieclub.my.id/Headers/profile.png[/img][/url][size=20]
 [/size][b]Username: [/b]un1corn_tnc
 [b]Nickname: [/b] -
 [b]Role: [/b]Member
