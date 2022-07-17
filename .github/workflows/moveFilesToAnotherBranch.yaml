@@ -1,5 +1,6 @@
 name: Move Files to another branch
 on:
+  workflow_dispatch:
   push:
     paths:
       - "Resources/**/*"
