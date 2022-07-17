@@ -12,8 +12,8 @@ jobs:
       - name: Move files to another branch
         run: |
           # Add metadata about committer
-          git config user.name "{{ github.actor }}"
-          git config user.email "{{ github.actor }}@users.noreply.github.com"
+          git config --global user.name "${GITHUB_ACTOR}"
+          git config --global user.email "${GITHUB_ACTOR}@users.noreply.github.com"
 
           # Checkout branch
           git fetch
@@ -44,7 +44,7 @@ jobs:
           mv Resources/Slips/* SlipCards
 
           # Delete Resources folder
-          rm -rf Resources
+          rm -rfv Resources
 
           # Commit changes
           git add *
