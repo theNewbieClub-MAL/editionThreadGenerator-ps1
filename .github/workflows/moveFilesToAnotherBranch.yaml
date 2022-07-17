@@ -4,6 +4,8 @@ on:
   push:
     paths:
       - "Resources/**/*"
+    branches:
+      - main
 jobs:
   moveFilesToAnotherBranch:
     runs-on: ubuntu-latest
