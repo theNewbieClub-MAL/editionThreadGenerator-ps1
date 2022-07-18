@@ -1,4 +1,4 @@
-#!/usr/bin/env pwsh
+﻿#!/usr/bin/env pwsh
 
 # ===============
 # Script Metadata
@@ -2111,22 +2111,22 @@ $( if ($Staff1_limitType -eq "role") {@"
 "@} {})
 
 `[spoiler=cards`]
-|| 1 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff1_cards1_malId -eq 0) {$Staff1_cards1_customUrl} else {"https://myanimelist.net/anime/$($Staff1_cards1_malId)"})]$($Staff1_cards1_titleResult)[/url]"})$(if($Staff1_cards2_imageUri) {"|| ~~~~~~ || 2 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff1_cards2_malId -eq 0) {$Staff1_cards2_customUrl} else {"https://myanimelist.net/anime/$($Staff1_cards2_malId)"})]$($Staff1_cards2_titleResult)[/url] ||"})"})
+|| 1 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff1_cards1_malId -eq 0) {$Staff1_cards1_customUrl} else {"https://myanimelist.net/anime/$($Staff1_cards1_malId)"})]$($Staff1_cards1_titleResult)[/url]"})$(if($Staff1_cards2_imageUri) {"|| ~~~~~~ || 2 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff1_cards2_malId -eq 0) {$Staff1_cards2_customUrl} else {"https://myanimelist.net/anime/$($Staff1_cards2_malId)"})]$($Staff1_cards2_titleResult)[/url] ||"})"} else {" ||"} )
 [img]$($Staff1_cards1_imageUri)[/img]$(if($Staff1_cards2_imageUri) {" [img]$($Staff1_cards2_imageUri)[/img]"})$(if($Staff1_cards3_imageUri) {@"
 
-|| 3 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff1_cards3_malId -eq 0) {$Staff1_cards3_customUrl} else {"https://myanimelist.net/anime/$($Staff1_cards3_malId)"})]$($Staff1_cards3_titleResult)[/url]"})$(if($Staff1_cards4_imageUri) {"|| ~~~~~~ || 4 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff1_cards4_malId -eq 0) {$Staff1_cards4_customUrl} else {"https://myanimelist.net/anime/$($Staff1_cards4_malId)"})]$($Staff1_cards4_titleResult)[/url] ||"})"})
+|| 3 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff1_cards3_malId -eq 0) {$Staff1_cards3_customUrl} else {"https://myanimelist.net/anime/$($Staff1_cards3_malId)"})]$($Staff1_cards3_titleResult)[/url]"})$(if($Staff1_cards4_imageUri) {"|| ~~~~~~ || 4 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff1_cards4_malId -eq 0) {$Staff1_cards4_customUrl} else {"https://myanimelist.net/anime/$($Staff1_cards4_malId)"})]$($Staff1_cards4_titleResult)[/url] ||"})"} else {" ||"} )
 [img]$($Staff1_cards3_imageUri)[/img]$(if($Staff1_cards4_imageUri) {" [img]$($Staff1_cards4_imageUri)[/img]"})
 "@})$(if($Staff1_cards5_imageUri) {@"
 
-|| 5 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff1_cards5_malId -eq 0) {$Staff1_cards5_customUrl} else {"https://myanimelist.net/anime/$($Staff1_cards5_malId)"})]$($Staff1_cards5_titleResult)[/url]"})$(if($Staff1_cards6_imageUri) {"|| ~~~~~~ || 6 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff1_cards6_malId -eq 0) {$Staff1_cards6_customUrl} else {"https://myanimelist.net/anime/$($Staff1_cards6_malId)"})]$($Staff1_cards6_titleResult)[/url] ||"})"})
+|| 5 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff1_cards5_malId -eq 0) {$Staff1_cards5_customUrl} else {"https://myanimelist.net/anime/$($Staff1_cards5_malId)"})]$($Staff1_cards5_titleResult)[/url]"})$(if($Staff1_cards6_imageUri) {"|| ~~~~~~ || 6 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff1_cards6_malId -eq 0) {$Staff1_cards6_customUrl} else {"https://myanimelist.net/anime/$($Staff1_cards6_malId)"})]$($Staff1_cards6_titleResult)[/url] ||"})"} else {" ||"} )
 [img]$($Staff1_cards5_imageUri)[/img]$(if($Staff1_cards6_imageUri) {" [img]$($Staff1_cards6_imageUri)[/img]"})
 "@})$(if($Staff1_cards7_imageUri) {@"
 
-|| 7 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff1_cards7_malId -eq 0) {$Staff1_cards7_customUrl} else {"https://myanimelist.net/anime/$($Staff1_cards7_malId)"})]$($Staff1_cards7_titleResult)[/url]"})$(if($Staff1_cards8_imageUri) {"|| ~~~~~~ || 8 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff1_cards8_malId -eq 0) {$Staff1_cards8_customUrl} else {"https://myanimelist.net/anime/$($Staff1_cards8_malId)"})]$($Staff1_cards8_titleResult)[/url] ||"})"})
+|| 7 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff1_cards7_malId -eq 0) {$Staff1_cards7_customUrl} else {"https://myanimelist.net/anime/$($Staff1_cards7_malId)"})]$($Staff1_cards7_titleResult)[/url]"})$(if($Staff1_cards8_imageUri) {"|| ~~~~~~ || 8 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff1_cards8_malId -eq 0) {$Staff1_cards8_customUrl} else {"https://myanimelist.net/anime/$($Staff1_cards8_malId)"})]$($Staff1_cards8_titleResult)[/url] ||"})"} else {" ||"} )
 [img]$($Staff1_cards7_imageUri)[/img]$(if($Staff1_cards8_imageUri) {" [img]$($Staff1_cards8_imageUri)[/img]"})
 "@})$(if($Staff1_cards9_imageUri) {@"
 
-|| 9 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff1_cards9_malId -eq 0) {$Staff1_cards9_customUrl} else {"https://myanimelist.net/anime/$($Staff1_cards9_malId)"})]$($Staff1_cards9_titleResult)[/url] ||"})
+|| 9 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff1_cards9_malId -eq 0) {$Staff1_cards9_customUrl} else {"https://myanimelist.net/anime/$($Staff1_cards9_malId)"})]$($Staff1_cards9_titleResult)[/url] ||"} else {" ||"} )
 [img]$($Staff1_cards9_imageUri)[/img]
 "@})
 `[/spoiler`]
@@ -2173,22 +2173,22 @@ $( if ($Staff3_limitType -eq "role") {@"
 "@} {})
 
 `[spoiler=cards`]
-|| 1 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff3_cards1_malId -eq 0) {$Staff3_cards1_customUrl} else {"https://myanimelist.net/anime/$($Staff3_cards1_malId)"})]$($Staff3_cards1_titleResult)[/url]"})$(if($Staff3_cards2_imageUri) {"|| ~~~~~~ || 2 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff3_cards2_malId -eq 0) {$Staff3_cards2_customUrl} else {"https://myanimelist.net/anime/$($Staff3_cards2_malId)"})]$($Staff3_cards2_titleResult)[/url] ||"})"})
+|| 1 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff3_cards1_malId -eq 0) {$Staff3_cards1_customUrl} else {"https://myanimelist.net/anime/$($Staff3_cards1_malId)"})]$($Staff3_cards1_titleResult)[/url]"})$(if($Staff3_cards2_imageUri) {"|| ~~~~~~ || 2 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff3_cards2_malId -eq 0) {$Staff3_cards2_customUrl} else {"https://myanimelist.net/anime/$($Staff3_cards2_malId)"})]$($Staff3_cards2_titleResult)[/url] ||"})"} else {" ||"} )
 [img]$($Staff3_cards1_imageUri)[/img]$(if($Staff3_cards2_imageUri) {" [img]$($Staff3_cards2_imageUri)[/img]"})$(if($Staff3_cards3_imageUri) {@"
 
-|| 3 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff3_cards3_malId -eq 0) {$Staff3_cards3_customUrl} else {"https://myanimelist.net/anime/$($Staff3_cards3_malId)"})]$($Staff3_cards3_titleResult)[/url]"})$(if($Staff3_cards4_imageUri) {"|| ~~~~~~ || 4 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff3_cards4_malId -eq 0) {$Staff3_cards4_customUrl} else {"https://myanimelist.net/anime/$($Staff3_cards4_malId)"})]$($Staff3_cards4_titleResult)[/url] ||"})"})
+|| 3 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff3_cards3_malId -eq 0) {$Staff3_cards3_customUrl} else {"https://myanimelist.net/anime/$($Staff3_cards3_malId)"})]$($Staff3_cards3_titleResult)[/url]"})$(if($Staff3_cards4_imageUri) {"|| ~~~~~~ || 4 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff3_cards4_malId -eq 0) {$Staff3_cards4_customUrl} else {"https://myanimelist.net/anime/$($Staff3_cards4_malId)"})]$($Staff3_cards4_titleResult)[/url] ||"})"} else {" ||"} )
 [img]$($Staff3_cards3_imageUri)[/img]$(if($Staff3_cards4_imageUri) {" [img]$($Staff3_cards4_imageUri)[/img]"})
 "@})$(if($Staff3_cards5_imageUri) {@"
 
-|| 5 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff3_cards5_malId -eq 0) {$Staff3_cards5_customUrl} else {"https://myanimelist.net/anime/$($Staff3_cards5_malId)"})]$($Staff3_cards5_titleResult)[/url]"})$(if($Staff3_cards6_imageUri) {"|| ~~~~~~ || 6 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff3_cards6_malId -eq 0) {$Staff3_cards6_customUrl} else {"https://myanimelist.net/anime/$($Staff3_cards6_malId)"})]$($Staff3_cards6_titleResult)[/url] ||"})"})
+|| 5 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff3_cards5_malId -eq 0) {$Staff3_cards5_customUrl} else {"https://myanimelist.net/anime/$($Staff3_cards5_malId)"})]$($Staff3_cards5_titleResult)[/url]"})$(if($Staff3_cards6_imageUri) {"|| ~~~~~~ || 6 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff3_cards6_malId -eq 0) {$Staff3_cards6_customUrl} else {"https://myanimelist.net/anime/$($Staff3_cards6_malId)"})]$($Staff3_cards6_titleResult)[/url] ||"})"} else {" ||"} )
 [img]$($Staff3_cards5_imageUri)[/img]$(if($Staff3_cards6_imageUri) {" [img]$($Staff3_cards6_imageUri)[/img]"})
 "@})$(if($Staff3_cards7_imageUri) {@"
 
-|| 7 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff3_cards7_malId -eq 0) {$Staff3_cards7_customUrl} else {"https://myanimelist.net/anime/$($Staff3_cards7_malId)"})]$($Staff3_cards7_titleResult)[/url]"})$(if($Staff3_cards8_imageUri) {"|| ~~~~~~ || 8 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff3_cards8_malId -eq 0) {$Staff3_cards8_customUrl} else {"https://myanimelist.net/anime/$($Staff3_cards8_malId)"})]$($Staff3_cards8_titleResult)[/url] ||"})"})
+|| 7 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff3_cards7_malId -eq 0) {$Staff3_cards7_customUrl} else {"https://myanimelist.net/anime/$($Staff3_cards7_malId)"})]$($Staff3_cards7_titleResult)[/url]"})$(if($Staff3_cards8_imageUri) {"|| ~~~~~~ || 8 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff3_cards8_malId -eq 0) {$Staff3_cards8_customUrl} else {"https://myanimelist.net/anime/$($Staff3_cards8_malId)"})]$($Staff3_cards8_titleResult)[/url] ||"})"} else {" ||"} )
 [img]$($Staff3_cards7_imageUri)[/img]$(if($Staff3_cards8_imageUri) {" [img]$($Staff3_cards8_imageUri)[/img]"})
 "@})$(if($Staff3_cards9_imageUri) {@"
 
-|| 9 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff3_cards9_malId -eq 0) {$Staff3_cards9_customUrl} else {"https://myanimelist.net/anime/$($Staff3_cards9_malId)"})]$($Staff3_cards9_titleResult)[/url] ||"})
+|| 9 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff3_cards9_malId -eq 0) {$Staff3_cards9_customUrl} else {"https://myanimelist.net/anime/$($Staff3_cards9_malId)"})]$($Staff3_cards9_titleResult)[/url] ||"} else {" ||"} )
 [img]$($Staff3_cards9_imageUri)[/img]
 "@})
 `[/spoiler`]
@@ -2235,22 +2235,22 @@ $( if ($Staff5_limitType -eq "role") {@"
 "@} {})
 
 `[spoiler=cards`]
-|| 1 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff5_cards1_malId -eq 0) {$Staff5_cards1_customUrl} else {"https://myanimelist.net/anime/$($Staff5_cards1_malId)"})]$($Staff5_cards1_titleResult)[/url]"})$(if($Staff5_cards2_imageUri) {"|| ~~~~~~ || 2 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff5_cards2_malId -eq 0) {$Staff5_cards2_customUrl} else {"https://myanimelist.net/anime/$($Staff5_cards2_malId)"})]$($Staff5_cards2_titleResult)[/url] ||"})"})
+|| 1 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff5_cards1_malId -eq 0) {$Staff5_cards1_customUrl} else {"https://myanimelist.net/anime/$($Staff5_cards1_malId)"})]$($Staff5_cards1_titleResult)[/url]"})$(if($Staff5_cards2_imageUri) {"|| ~~~~~~ || 2 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff5_cards2_malId -eq 0) {$Staff5_cards2_customUrl} else {"https://myanimelist.net/anime/$($Staff5_cards2_malId)"})]$($Staff5_cards2_titleResult)[/url] ||"})"} else {" ||"} )
 [img]$($Staff5_cards1_imageUri)[/img]$(if($Staff5_cards2_imageUri) {" [img]$($Staff5_cards2_imageUri)[/img]"})$(if($Staff5_cards3_imageUri) {@"
 
-|| 3 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff5_cards3_malId -eq 0) {$Staff5_cards3_customUrl} else {"https://myanimelist.net/anime/$($Staff5_cards3_malId)"})]$($Staff5_cards3_titleResult)[/url]"})$(if($Staff5_cards4_imageUri) {"|| ~~~~~~ || 4 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff5_cards4_malId -eq 0) {$Staff5_cards4_customUrl} else {"https://myanimelist.net/anime/$($Staff5_cards4_malId)"})]$($Staff5_cards4_titleResult)[/url] ||"})"})
+|| 3 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff5_cards3_malId -eq 0) {$Staff5_cards3_customUrl} else {"https://myanimelist.net/anime/$($Staff5_cards3_malId)"})]$($Staff5_cards3_titleResult)[/url]"})$(if($Staff5_cards4_imageUri) {"|| ~~~~~~ || 4 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff5_cards4_malId -eq 0) {$Staff5_cards4_customUrl} else {"https://myanimelist.net/anime/$($Staff5_cards4_malId)"})]$($Staff5_cards4_titleResult)[/url] ||"})"} else {" ||"} )
 [img]$($Staff5_cards3_imageUri)[/img]$(if($Staff5_cards4_imageUri) {" [img]$($Staff5_cards4_imageUri)[/img]"})
 "@})$(if($Staff5_cards5_imageUri) {@"
 
-|| 5 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff5_cards5_malId -eq 0) {$Staff5_cards5_customUrl} else {"https://myanimelist.net/anime/$($Staff5_cards5_malId)"})]$($Staff5_cards5_titleResult)[/url]"})$(if($Staff5_cards6_imageUri) {"|| ~~~~~~ || 6 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff5_cards6_malId -eq 0) {$Staff5_cards6_customUrl} else {"https://myanimelist.net/anime/$($Staff5_cards6_malId)"})]$($Staff5_cards6_titleResult)[/url] ||"})"})
+|| 5 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff5_cards5_malId -eq 0) {$Staff5_cards5_customUrl} else {"https://myanimelist.net/anime/$($Staff5_cards5_malId)"})]$($Staff5_cards5_titleResult)[/url]"})$(if($Staff5_cards6_imageUri) {"|| ~~~~~~ || 6 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff5_cards6_malId -eq 0) {$Staff5_cards6_customUrl} else {"https://myanimelist.net/anime/$($Staff5_cards6_malId)"})]$($Staff5_cards6_titleResult)[/url] ||"})"} else {" ||"} )
 [img]$($Staff5_cards5_imageUri)[/img]$(if($Staff5_cards6_imageUri) {" [img]$($Staff5_cards6_imageUri)[/img]"})
 "@})$(if($Staff5_cards7_imageUri) {@"
 
-|| 7 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff5_cards7_malId -eq 0) {$Staff5_cards7_customUrl} else {"https://myanimelist.net/anime/$($Staff5_cards7_malId)"})]$($Staff5_cards7_titleResult)[/url]"})$(if($Staff5_cards8_imageUri) {"|| ~~~~~~ || 8 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff5_cards8_malId -eq 0) {$Staff5_cards8_customUrl} else {"https://myanimelist.net/anime/$($Staff5_cards8_malId)"})]$($Staff5_cards8_titleResult)[/url] ||"})"})
+|| 7 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff5_cards7_malId -eq 0) {$Staff5_cards7_customUrl} else {"https://myanimelist.net/anime/$($Staff5_cards7_malId)"})]$($Staff5_cards7_titleResult)[/url]"})$(if($Staff5_cards8_imageUri) {"|| ~~~~~~ || 8 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff5_cards8_malId -eq 0) {$Staff5_cards8_customUrl} else {"https://myanimelist.net/anime/$($Staff5_cards8_malId)"})]$($Staff5_cards8_titleResult)[/url] ||"})"} else {" ||"} )
 [img]$($Staff5_cards7_imageUri)[/img]$(if($Staff5_cards8_imageUri) {" [img]$($Staff5_cards8_imageUri)[/img]"})
 "@})$(if($Staff5_cards9_imageUri) {@"
 
-|| 9 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff5_cards9_malId -eq 0) {$Staff5_cards9_customUrl} else {"https://myanimelist.net/anime/$($Staff5_cards9_malId)"})]$($Staff5_cards9_titleResult)[/url] ||"})
+|| 9 $( if ($Edition_isSingle -eq "y") {"||"} else {"| [url=$(if($Staff5_cards9_malId -eq 0) {$Staff5_cards9_customUrl} else {"https://myanimelist.net/anime/$($Staff5_cards9_malId)"})]$($Staff5_cards9_titleResult)[/url] ||"} else {" ||"} )
 [img]$($Staff5_cards9_imageUri)[/img]
 "@})
 `[/spoiler`]
