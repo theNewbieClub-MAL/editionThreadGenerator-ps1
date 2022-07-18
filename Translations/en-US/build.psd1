@@ -1,6 +1,7 @@
 #culture="en-US"
 ConvertFrom-StringData @'
   General_Success                     = Exit script with 0
+  General_Answer                      = Answer
 
   InitLocale_General_echo_1           = System automatically set the language for the script to
   InitLocale_General_echo_2           = .

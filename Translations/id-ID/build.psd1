@@ -1,6 +1,7 @@
 #culture="id-ID"
 ConvertFrom-StringData @'
   General_Success                     = Keluar dari skrip dengan kode 0
+  General_Answer                      = Jawaban
 
   InitLocale_General_echo_1           = Sistem otomatis atur bahasa skrip ke
   InitLocale_General_echo_2           = .

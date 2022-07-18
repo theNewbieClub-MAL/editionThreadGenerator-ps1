@@ -1,6 +1,7 @@
 #culture="ms-MY"
 ConvertFrom-StringData @'
   General_Success                     = Keluar dari skrip dengan kod 0
+  General_Answer                      = Jawapan
 
   InitLocale_General_echo_1           = Sistem menetapkan bahasa skrip secara automatik ke
   InitLocale_General_echo_2           = .
