@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env pwsh
+#!/usr/bin/env pwsh
 
 # ===============
 # Script Metadata
@@ -78,8 +78,10 @@ Write-Host "=============" -ForegroundColor Blue
 
 # Title
 $Edition_title = Read-Host -Prompt $i18n.Question_Edition_Title
+if (-not ($Edition_title)) { $Edition_title = "CHANGE TITLE BEFORE PUBLICATION" }
+
 $Edition_emoji = Read-Host -Prompt $i18n.Question_Edition_Emoji
-if (-not ($Edition_emoji)) { $Edition_emoji = "😄" }
+if (-not ($Edition_emoji)) { $Edition_emoji = "⚠️" }
 
 # Is the editon only covers one title of media?
 $Edition_isSingle = Read-Host -Prompt $i18n.Question_Edition_IsSingle
