@@ -4,6 +4,11 @@ on:
   push:
     paths:
       - "Resources/**/*"
+      - CNAME
+      - LICENSE
+      - .editorconfig
+      - .gitignore
+      - .gitattributes
     branches:
       - main
 jobs:
