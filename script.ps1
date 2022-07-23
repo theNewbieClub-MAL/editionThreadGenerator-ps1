@@ -4,7 +4,7 @@
 # Script Metadata
 # ===============
 
-$version = "0.2.2"
+$version = "0.2.3"
 
 # MAL Usernames, without @
 $gfxAdmin = "nattadasu"
@@ -2299,15 +2299,28 @@ Write-Host @"
 [size=120]　[size=230][color=$($Thread_color)]💬 [b]GFX and Deliverer Staff Request[/b][/color][/size][/size][quote][center]
 [size=120][color=$($Thread_color)][i]For GFX staff who hasn't send the format yet, please DM me, and insert template to message using [[i][/i]code] tag.[/i][/color][/size]
 
-`[spoiler=requests`]
-[code][quote][b]Staff Nickname: [/b]
+`[spoiler=requests`]`[spoiler=template`]
+[b]If send via MyAnimeList DM:[/b]
+[code][[i][/i]quote][[i][/i]b]Staff Nickname: [[i][/i]/b]
+[[i][/i]b]Delivery: [[i][/i]/b]
+[[i][/i]i]—Cards by—[[i][/i]/i]
+$($Staff1_nickname): $( if ($Edition_staffCount -ge 2) { "`n$($Staff2_nickname): " } else {""} ) $( if ($Edition_staffCount -ge 3) { "`n$($Staff3_nickname): " } else {""} )$( if ($Edition_staffCount -ge 4) { "`n$($Staff4_nickname): " } else {""} )$( if ($Edition_staffCount -ge 5) { "`n$($Staff5_nickname): " } else {""} )
+--
+[[i][/i]b]Comments: [[i][/i]/b]
+[[i][/i]b]Edition Suggestion: [[i][/i]/b]
+[[i][/i]/quote][/code]
+
+[b]If send via Discord DM:[/b]
+[code]```accesslog
+[quote][b]Staff Nickname: [/b]
 [b]Delivery: [/b]
 [i]—Cards by—[/i]
 $($Staff1_nickname): $( if ($Edition_staffCount -ge 2) { "`n$($Staff2_nickname): " } else {""} ) $( if ($Edition_staffCount -ge 3) { "`n$($Staff3_nickname): " } else {""} )$( if ($Edition_staffCount -ge 4) { "`n$($Staff4_nickname): " } else {""} )$( if ($Edition_staffCount -ge 5) { "`n$($Staff5_nickname): " } else {""} )
 --
 [b]Comments: [/b]
 [b]Edition Suggestion: [/b]
-[/quote][/code]
+[/quote]```[/code]
+[/spoiler]
 
 `[/spoiler`]
 [/center][/quote]
