@@ -4,7 +4,7 @@
 # Script Metadata
 # ===============
 
-$version = "0.2.3"
+$version = "0.2.4"
 
 # MAL Usernames, without @
 $gfxAdmin = "nattadasu"
@@ -2311,7 +2311,7 @@ $($Staff1_nickname): $( if ($Edition_staffCount -ge 2) { "`n$($Staff2_nickname):
 [[i][/i]/quote][/code]
 
 [b]If send via Discord DM:[/b]
-[code]```accesslog
+[code]``````accesslog
 [quote][b]Staff Nickname: [/b]
 [b]Delivery: [/b]
 [i]—Cards by—[/i]
@@ -2319,7 +2319,7 @@ $($Staff1_nickname): $( if ($Edition_staffCount -ge 2) { "`n$($Staff2_nickname):
 --
 [b]Comments: [/b]
 [b]Edition Suggestion: [/b]
-[/quote]```[/code]
+[/quote]``````[/code]
 [/spoiler]
 
 `[/spoiler`]
