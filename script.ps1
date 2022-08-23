@@ -4,7 +4,7 @@
 # Script Metadata
 # ===============
 
-$version = "0.2.4"
+$version = "0.2.5"
 
 # MAL Usernames, without @
 $gfxAdmin = "nattadasu"
@@ -94,8 +94,8 @@ if (-not ($Edition_count)) { $Edition_count = "100" }
 # Date input
 $Edition_startInput = Read-Host -Prompt "$($i18n.Question_Edition_Start) $(Get-Date -Format yyyy-MM-dd)$($i18n.Question_Edition_Default) $(Get-Date -Format yyyy-MM-dd)"
 if (-not ($Edition_startInput)) { $Edition_startInput = "$(Get-Date -Format yyyy-MM-dd)" }
-$Edition_endInput = Read-Host -Prompt "$($i18n.Question_Edition_End) $(Get-Date -Format yyyy-MM-dd)$($i18n.Question_Edition_Default) $(Get-Date (Get-Date $Edition_startInput).AddDays(3) -Format yyyy-MM-dd)"
-if (-not ($Edition_endInput)) { $Edition_endInput = "$(Get-Date (Get-Date $Edition_startInput).AddDays(3) -Format yyyy-MM-dd)" }
+$Edition_endInput = Read-Host -Prompt "$($i18n.Question_Edition_End) $(Get-Date -Format yyyy-MM-dd)$($i18n.Question_Edition_Default) $(Get-Date (Get-Date $Edition_startInput).AddDays(4) -Format yyyy-MM-dd)"
+if (-not ($Edition_endInput)) { $Edition_endInput = "$(Get-Date (Get-Date $Edition_startInput).AddDays(4) -Format yyyy-MM-dd)" }
 $Edition_start = Get-Date $Edition_startInput -Format "MMMM d, yyyy"
 $Edition_end = Get-Date $Edition_endInput -Format "MMMM d, yyyy"
 
@@ -2093,7 +2093,7 @@ $($Staff1_nickname): $( if ($Edition_staffCount -ge 2) { "`n$($Staff2_nickname):
 [b]Role: [/b]Member
 [b]Deliver to: [/b]Profile Comment
 [b][i]—Cards by—[/i][/b]
-$($Staff1_nickname): $( if ("y" -eq $Staff1_isAllowSlip) {"`[spoiler=slip`]`[img`]$($cardSlip.$Staff1_username)`[/img`]`[/spoiler`]"} )$( if ($Edition_staffCount -ge 2) { "`n$($Staff2_nickname): $( if ("y" -eq $Staff2_isAllowSlip) {"`[spoiler=slip`]`[img`]$($cardSlip.$Staff2_username)`[/img`]`[/spoiler`]"} )" } else {""} ) $( if ($Edition_staffCount -ge 3) { "`n$($Staff3_nickname): $( if ("y" -eq $Staff3_isAllowSlip) {"`[spoiler=slip`]`[img`]$($cardSlip.$Staff3_username)`[/img`]`[/spoiler`]"} )" } else {""} )$( if ($Edition_staffCount -ge 4) { "`n$($Staff4_nickname): $( if ("y" -eq $Staff4_isAllowSlip) {"`[spoiler=slip`]`[img`]$($cardSlip.$Staff4_username)`[/img`]`[/spoiler`]"} )" } else {""} )$( if ($Edition_staffCount -ge 5) { "`n$($Staff5_nickname): $( if ("y" -eq $Staff5_isAllowSlip) {"`[spoiler=slip`]`[img`]$($cardSlip.$Staff5_username)`[/img`]`[/spoiler`]"} )" } else {""} )
+$($Staff1_nickname): $( $Staff1_limits = if ($Staff1_limitMember) {$Staff1_limitMember} else {$Staff1_limitAny} ; if ($Staff1_limits -eq $Staff1_totalCards) {"ALL"} else { (Get-Random -Count $Staff1_limits -InputObject (1..$Staff1_totalCards) -Join ", " ) }) $( if ("y" -eq $Staff1_isAllowSlip) {"`[spoiler=slip`]`[img`]$($cardSlip.$Staff1_username)`[/img`]`[/spoiler`]"} )$( if ($Edition_staffCount -ge 2) { "`n$($Staff2_nickname): $( $Staff2_limits = if ($Staff2_limitMember) {$Staff2_limitMember} else {$Staff2_limitAny} ; if ($Staff2_limits -eq $Staff2_totalCards) {"ALL"} else { (Get-Random -Count $Staff2_limits -InputObject (1..$Staff2_totalCards) -Join ", " ) }) $( if ("y" -eq $Staff2_isAllowSlip) {"`[spoiler=slip`]`[img`]$($cardSlip.$Staff2_username)`[/img`]`[/spoiler`]"} )" } else {""} ) $( if ($Edition_staffCount -ge 3) { "`n$($Staff3_nickname): $( $Staff3_limits = if ($Staff3_limitMember) {$Staff3_limitMember} else {$Staff3_limitAny} ; if ($Staff3_limits -eq $Staff3_totalCards) {"ALL"} else { (Get-Random -Count $Staff3_limits -InputObject (1..$Staff3_totalCards) -Join ", " ) }) $( if ("y" -eq $Staff3_isAllowSlip) {"`[spoiler=slip`]`[img`]$($cardSlip.$Staff3_username)`[/img`]`[/spoiler`]"} )" } else {""} )$( if ($Edition_staffCount -ge 4) { "`n$($Staff4_nickname): $( $Staff4_limits = if ($Staff4_limitMember) {$Staff4_limitMember} else {$Staff4_limitAny} ; if ($Staff4_limits -eq $Staff4_totalCards) {"ALL"} else { (Get-Random -Count $Staff4_limits -InputObject (1..$Staff4_totalCards) -Join ", " ) }) $( if ("y" -eq $Staff4_isAllowSlip) {"`[spoiler=slip`]`[img`]$($cardSlip.$Staff4_username)`[/img`]`[/spoiler`]"} )" } else {""} )$( if ($Edition_staffCount -ge 5) { "`n$($Staff5_nickname): $( $Staff5_limits = if ($Staff5_limitMember) {$Staff5_limitMember} else {$Staff5_limitAny} ; if ($Staff5_limits -eq $Staff5_totalCards) {"ALL"} else { (Get-Random -Count $Staff5_limits -InputObject (1..$Staff5_totalCards) -Join ", " ) }) $( if ("y" -eq $Staff5_isAllowSlip) {"`[spoiler=slip`]`[img`]$($cardSlip.$Staff5_username)`[/img`]`[/spoiler`]"} )" } else {""} )
 ——
 [b]Comments: [/b]
 [b]Edition Suggestion: [/b]$( if ( $Edition_staffCount -eq 5) { "`n" } else {""} ) $( if ( $Edition_staffCount -eq 4) { "`n`n" } else {""} ) $( if ( $Edition_staffCount -eq 3) { "`n`n`n" } else {""} ) $( if ( $Edition_staffCount -eq 2) { "`n`n`n`n" } else {""} ) $( if ( $Edition_staffCount -eq 1) { "`n`n`n`n`n" } else {""} )
@@ -2277,7 +2277,7 @@ For internal use only:
 >>>MAX>>$($Edition_count)
 >>>LIM>>$( if ($Staff1_limitType -eq "role") {"$($Staff1_limitMember)|$($Staff1_limitStaff)"} else {$($Staff1_limitAny)});$( if ($Staff2_username) {if ($Staff2_limitType -eq "role") {"$($Staff2_limitMember)|$($Staff2_limitStaff)"} else {$($Staff2_limitAny)}} else {"0"});$( if ($Staff3_username) {if ($Staff3_limitType -eq "role") {"$($Staff3_limitMember)|$($Staff3_limitStaff)"} else {$($Staff3_limitAny)}} else {"0"});$( if ($Staff4_username) {if ($Staff4_limitType -eq "role") {"$($Staff4_limitMember)|$($Staff4_limitStaff)"} else {$($Staff4_limitAny)}} else {"0"});$( if ($Staff5_username) {if ($Staff5_limitType -eq "role") {"$($Staff5_limitMember)|$($Staff5_limitStaff)"} else {$($Staff5_limitAny)}} else {"0"})
 >>>AVA>>$($Staff1_totalCards);$( if ($Staff2_username) {$Staff2_totalCards} else {"0"});$( if ($Staff3_username) {$Staff3_totalCards} else {"0"});$( if ($Staff4_username) {$Staff4_totalCards} else {"0"});$( if ($Staff5_username) {$Staff5_totalCards} else {"0"})###
-@#Generated with [url=https://github.com/theNewbieClub-MAL/editionThreadGenerator-ps1]GitHub:theNewbieClub-MAL/editionThreadGenerator-ps1[/url]@[i][/i]v$($version) in Powershell on $([DateTime]::UtcNow.ToString('u').Replace(' ','T'))#@
+@#Generated with [url=https://github.com/theNewbieClub-MAL/editionThreadGenerator-ps1]GitHub:theNewbieClub-MAL/editionThreadGenerator-ps1[/url]@[i][/i]v$($version) in Powershell on [url=https://www.timeanddate.com/worldclock/converter.html?iso=$(Get-Date ([DateTime]::UtcNow.ToString('')) -Format "yyyyMMddThhmmss")&p1=1440]$([DateTime]::UtcNow.ToString('u').Replace(' ','T'))[/url]#@
 "@
 
 Write-Host $result
@@ -2297,10 +2297,12 @@ Write-Host "=============" -ForegroundColor Yellow
 
 Write-Host @"
 [size=120]　[size=230][color=$($Thread_color)]💬 [b]GFX and Deliverer Staff Request[/b][/color][/size][/size][quote][center]
-[size=120][color=$($Thread_color)][i]For GFX staff who hasn't send the format yet, please DM me, and insert template to message using [[i][/i]code] tag.[/i][/color][/size]
+[size=120][color=$($Thread_color)][i]For GFX staff who hasn't send the format yet, please DM me.[/i][/color][/size]
 
-`[spoiler=requests`]`[spoiler=template`]
+`[spoiler=requests`]
+`[spoiler=template`]
 [b]If send via MyAnimeList DM:[/b]
+[i]Note: Remove [[i][/i]i][[i][/i]/i] from the message if you want to send it as [[i][/i]code] tag[/i]
 [code][[i][/i]quote][[i][/i]b]Staff Nickname: [[i][/i]/b]
 [[i][/i]b]Delivery: [[i][/i]/b]
 [[i][/i]i]—Cards by—[[i][/i]/i]
