@@ -1,52 +1,73 @@
 ﻿#!/usr/bin/env pwsh
 
+# Load Common Parameters
+[CmdletBinding()]
+Param()
+
 # ===============
 # Script Metadata
 # ===============
 
-$version = "0.2.7"
+$version   = "1.0.0"         # Script Version
 
-# MAL Usernames, without @
-$gfxAdmin = "nattadasu"
-$gfxDeputy = "Annie_Law"
+$gfxAdmin  = "nattadasu"     # GFX Administator
+$gfxDeputy = "Annie_Law"     # GFX Deputy
 
 # =================================
 # Modules, Functions, and Variables
 # =================================
 
-Import-Module "./Modules/jikanmoe.psm1"
-Import-Module "./Modules/Placeholders.psm1"
+# Check if 3rd Party modules are installed
+
+$requires = @(
+  "powershell-yaml"
+)
+
+ForEach ($pkg in $requires) {
+  If (-Not (Get-Package -Name $pkg -ErrorAction SilentlyContinue)) {
+    Write-Error -Message "$pkg is not installed, automatically trying to install"
+    Install-Module -Name "$pkg" -Scope CurrentUser
+  } Else {
+    Write-Verbose "$pkg is installed"
+  }
+
+  Import-Module -Name $pkg
+}
+
+$moduleDir = (Get-ChildItem -Path "./Modules/").FullName
+ForEach ($file in $moduleDir) {
+  Import-Module "$($file)"
+  Write-Verbose -Message "$file is loaded"
+}
 
 $cardSlip = Import-PowerShellDataFile -Path './Resources/slipCards.psd1'
 
-# =====
-# Intro
-# =====
+# =================
+# Initialize Script
+# =================
 
+# MOTD
+# ----
 Clear-Host
-Write-Host "The Newbie Club: Card Edition Post Generator v.$($version)" -ForegroundColor Blue
-Write-Host "Licensed under MIT, 🐱 GitHub: https://github.com/theNewbieClub-MAL/editionThreadGenerator-ps1" -ForegroundColor Blue
-Write-Host ""
+Write-Verbose -Message "Loading MOTD"
+Write-Header -Message "The Newbie Club: Card Edition Post Generator v.$($version)" -ForegroundColor Blue
+Write-Host "Licensed under MIT, 🐱 GitHub: https://github.com/theNewbieClub-MAL/editionThreadGenerator-ps1`n" -ForegroundColor Blue
 
-# ===================
-# Import Localization
-# ===================
-
+# Locale Import
+# -------------
 $localeName = (Get-Culture).Name
 
 # Write a warning when user used locale that doesn't translated yet.
-if (-not (Test-Path -Path ./Translations/$localeName)) {
+If (-Not (Test-Path -Path ./Translations/$localeName)) {
   Write-Host "Uh-oh. We can not find the localization file for $($localeName) ($((Get-Culture).DisplayName)), so we temporarily replace it to English (US)" -ForegroundColor Red
-  Write-Host "You can change the locale in next prompt"
+  Write-Host "You can change the locale in next prompt`n"
   $localeName = "en-US"
-  Write-Host ""
 }
 
 Import-LocalizedData -BindingVariable i18n -UICulture $localeName -BaseDirectory ./Translations
 
-Write-Host $i18n.InitLocale_General_echo_1," ",$localeName," (",(Get-Culture -Name $localeName).DisplayName,")","$(if("." -eq $i18n.InitLocale_General_echo_2){"$($i18n.InitLocale_General_echo_2) "} else {" $($i18n.InitLocale_General_echo_2) "})",$i18n.InitLocale_General_prompt -ForegroundColor Yellow -Separator ""
-Write-Host ""
-Write-Host $i18n.InitLocale_List_echo
+Write-Host $i18n.InitLocale_General_echo_1," ",$localeName," (",(Get-Culture -Name $localeName).DisplayName,")","$(If("." -eq $i18n.InitLocale_General_echo_2){"$($i18n.InitLocale_General_echo_2) "} Else {" $($i18n.InitLocale_General_echo_2) "})",$i18n.InitLocale_General_prompt -ForegroundColor Yellow -Separator ""
+Write-Host "`n$($i18n.InitLocale_List_echo)"
 
 # Implement JSON Table instead listing from `Get-ChildItem`.
 $i18nIndex = Get-Content ./Translations/index.json
@@ -54,1980 +75,423 @@ $i18nIndex | ConvertFrom-Json | Format-Table @{ L = $i18n.LocaleTable_cultureCod
 
 $changeLocale = Read-Host -Prompt $i18n.InitLocale_Replace_Prompt
 
-if (-not ($changeLocale)) {
+If (-Not ($changeLocale)) {
   Import-LocalizedData -BindingVariable i18n -UICulture $localeName -BaseDirectory ./Translations
   $changeLocale = $localeName
-} elseif ("exit" -eq $changeLocale) {
+} ElseIf ("exit" -eq $changeLocale) {
   Clear-Host
-  exit
-} else {
+  Exit
+} Else {
   Import-LocalizedData -BindingVariable i18n -UICulture $changeLocale -BaseDirectory ./Translations
 }
 
 Write-Host $i18n.InitLocale_Replace_success,$changeLocale -ForegroundColor Green
 
-# ============================
-# Start Logic - By asking user
-# ============================
+# ==================
+# Start Script Logic
+# ==================
+Function Invoke-Card {
+  $yaml = "---"
+  Write-Verbose -Message "Start yaml variable"
 
-# General Information
-# -------------------
-Clear-Host
-Write-Host $i18n.Header_GeneralInfo -ForegroundColor Blue
-Write-Host "=============" -ForegroundColor Blue
+  # Append Metadata
+  $yaml += @"
+`ndocument:
+  scriptVersion: "$($version)"
+  gfxStaff:
+    admin: $($gfxAdmin)
+    deputy: $($gfxDeputy)
+"@
+  Write-Verbose -Message $yaml
 
-# Title
-$Edition_title = Read-Host -Prompt $i18n.Question_Edition_Title
-if (-not ($Edition_title)) { $Edition_title = "CHANGE TITLE BEFORE PUBLICATION" }
+  # General Information
+  # -------------------
+  Clear-Host
+  Write-Header -Message $i18n.Header_GeneralInfo -ForegroundColor Blue
 
-$Edition_emoji = Read-Host -Prompt $i18n.Question_Edition_Emoji
-if (-not ($Edition_emoji)) { $Edition_emoji = "⚠️" }
+  # Title
+  $Edition_title = Read-Host -Prompt $i18n.Question_Edition_Title
+  If (!($Edition_title)) { $Edition_title = "CHANGE TITLE BEFORE PUBLICATION" }
+  Write-Verbose -Message "Title set to $($Edition_title)"
 
-# Is the editon only covers one title of media?
-$Edition_isSingle = Read-Host -Prompt $i18n.Question_Edition_IsSingle
-if (-not ($Edition_isSingle)) { $Edition_isSingle = "n" }
+  $Edition_emoji = Read-Host -Prompt $i18n.Question_Edition_Emoji
+  If (!($Edition_emoji)) { $Edition_emoji = "⚠️" }
+  Write-Verbose -Message "Emoji set to $($Edition_emoji)"
 
-# Count
-$Edition_count = Read-Host -Prompt $i18n.Question_Edition_Count
-if (-not ($Edition_count)) { $Edition_count = "100" }
-
-# Date input
-$Edition_startInput = Read-Host -Prompt "$($i18n.Question_Edition_Start) $(Get-Date -Format yyyy-MM-dd)$($i18n.Question_Edition_Default) $(Get-Date -Format yyyy-MM-dd)"
-if (-not ($Edition_startInput)) { $Edition_startInput = "$(Get-Date -Format yyyy-MM-dd)" }
-$Edition_endInput = Read-Host -Prompt "$($i18n.Question_Edition_End) $(Get-Date -Format yyyy-MM-dd)$($i18n.Question_Edition_Default) $(Get-Date (Get-Date $Edition_startInput).AddDays(4) -Format yyyy-MM-dd)"
-if (-not ($Edition_endInput)) { $Edition_endInput = "$(Get-Date (Get-Date $Edition_startInput).AddDays(4) -Format yyyy-MM-dd)" }
-$Edition_start = Get-Date $Edition_startInput -Format "MMMM d, yyyy"
-$Edition_end = Get-Date $Edition_endInput -Format "MMMM d, yyyy"
-
-$Edition_staffCount = Read-Host -Prompt $i18n.Question_Edition_Staff
-if (-not ($Edition_staffCount)) { $Edition_staffCount = "1" } elseif ($Edition_staffCount -gt 5) {
-  Write-Host $i18n.Invalid_Staff_Amount -ForegroundColor Red
-  $Edition_staffCount = 5
-}
-
-# Customizations
-# --------------
-
-Write-Host ""
-Write-Host $i18n.Header_Customizations -ForegroundColor Blue
-Write-Host "=============" -ForegroundColor Blue
-
-# Set title locale
-$Locale_set = Read-Host -Prompt $i18n.Question_Locale_Set
-if (-not ($Locale_set)) { $Locale_set = "romaji" }
-Write-Host $i18n.Question_Locale_success,$Locale_set -ForegroundColor Green
-
-# Banner
-$Banner_imageUrl = Read-Host -Prompt $i18n.Question_Banner_Uri
-if (-not ($Banner_imageUrl)) {
-  $Banner_randomized = Get-RandomBanner
-  $Banner_imageUrl = "https://etgps1.thenewbieclub.my.id/Resources/Banners/$($Banner_randomized)"
-  $Banner_creator = "$(Get-WorkStaff -FileName $Banner_randomized)"
-  if ($Edition_isSingle -eq "n") {
-    $Banner_malId = "0"
-    $Banner_customUrl = "https://github.com/theNewbieClub-MAL/editionThreadGenerator-ps1"
-    $Banner_titleResult = "Placeholder"
+  # Is the editon only covers one title of media?
+  Do {
+    $Edition_isSingle = Read-Host -Prompt $i18n.Question_Edition_IsSingle
+    If (!($Edition_isSingle)) { $Edition_isSingle = "n" }
+  } While (-Not ($Edition_isSingle -match "^(y|n)$"))
+  If ($Edition_isSingle -eq "n") {
+    Write-Verbose -Message "Edition has multiple titles"
+  } Else {
+    Write-Verbose -Message "Edition only for one title"
   }
-} else {
-  $Banner_creator = Read-Host -Prompt $i18n.Question_Banner_Creator
-  if ($Edition_isSingle -eq "n") {
-    $Banner_titleQuery = Read-Host -Prompt $i18n.Question_Banner_Title
-    Find-MAL -SearchQuery $Banner_titleQuery
 
-    $Banner_malId = Read-Host -Prompt $i18n.Prompt_MALId_Insert
-    if (-not ($Banner_malId)) { $Banner_malId = "0" }
-    if ($Banner_malId -eq "0") {
-      Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
-      $Banner_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
-      $Banner_titleResult = $Banner_titleQuery
-    } else {
-      $Banner_titleResult = if ($Locale_set -eq "romaji") {
-        Get-MALTitle -MALId $Banner_malId
-      } elseif ($Locale_set -eq "english") {
-        Get-MALTitle -MALId $Banner_malId -English
-      }
-      Write-Host $i18n.Selected_Banner_Title,$Banner_titleResult -ForegroundColor Green
-    }
-  }
-}
+  # Allowed total requests
+  Do {
+    $Edition_count = Read-Host -Prompt $i18n.Question_Edition_Count
+    If (!($Edition_count)) { $Edition_count = "100" }
+  } Until ($Edition_count -ge 1)
+  Write-Verbose -Message "Edition only allows up to $($Edition_count) requests"
 
-# Set thread color
-$Thread_color = Read-Host -Prompt $i18n.Question_Color
-if (-not ($Thread_color)) { $Thread_color = "#000000" }
+  # Date input
+  Do {
+    $Edition_startInput = Read-Host -Prompt "$($i18n.Question_Edition_Start) $(Get-Date -Format yyyy-MM-dd)$($i18n.Question_Edition_Default) $(Get-Date -Format yyyy-MM-dd)"
+    If (!($Edition_startInput)) { $Edition_startInput = "$(Get-Date -Format yyyy-MM-dd)" }
+  } While (!($Edition_startInput -As [DateTime]))
+  Write-Verbose -Message "Start date set to $($Edition_startInput)"
 
-# Show dark mode warning
-$DarkMode_warn = Read-Host -Prompt $i18n.Question_DarkMode
-if (-not ($DarkMode_warn)) { $DarkMode_warn = "y" }
+  Do {
+    $Edition_endInput = Read-Host -Prompt "$($i18n.Question_Edition_End) $(Get-Date -Format yyyy-MM-dd)$($i18n.Question_Edition_Default) $(Get-Date (Get-Date $Edition_startInput).AddDays(4) -Format yyyy-MM-dd)"
+    If (!($Edition_endInput)) { $Edition_endInput = "$(Get-Date (Get-Date $Edition_startInput).AddDays(4) -Format yyyy-MM-dd)" }
+  } While (!($Edition_endInput -As [DateTime]))
+  Write-Verbose -Message "End date set to $($Edition_endInput)"
 
-# ============
-# Introduction
-# ============
-Write-Host ""
-Write-Host $i18n.Header_Intro -ForegroundColor Blue
-Write-Host "=============" -ForegroundColor Blue
+  # Ask total staff participating and validate if >= 1 & <= 5
+  Do {
+    $Edition_staffCount = Read-Host -Prompt $i18n.Question_Edition_Staff
+    If (!($Edition_staffCount)) { $Edition_staffCount = 1}
+  } Until ($Edition_staffCount -ge 1 -And $Edition_staffCount -le 5)
+  Write-Verbose -Message "Staff participated to this edition set to $($Edition_staffCount)"
 
-# GIF
-$Intro_gif = Read-Host -Prompt $i18n.Question_Intro_GifUrl
+  Write-Verbose -Message "Updating YAML variable"
+  $yaml += @"
+`nmetadata:
+  title: $($Edition_title)
+  emoji: $($Edition_emoji)
+  isSingle: $(If ($Edition_isSingle = "y") {"true"} Else {"false"})
+  allowedReply: $($Edition_count)
+  date:
+    start: $($Edition_startInput)
+    end: $($Edition_endInput)
+  staffCount: $($Edition_staffCount)
+"@
+  Write-Verbose -Message $yaml
 
-# Text
-$Intro_textRaw = Read-Host -Prompt $i18n.Question_Intro_Text
-$Intro_replaceParentheses = $Intro_textRaw -replace ("`{`{","`[color=$Thread_color`]") -replace ("`}`}","`[/color`]")
-$Intro_textFormat = $Intro_replaceParentheses.Replace("^@","`n")
-
-Write-Host $i18n.Generate_Intro_Success -ForegroundColor Green
-Write-Host $Intro_textFormat -ForegroundColor Green
-
-# ===========
-# Cards Input
-# ===========
-
-Write-Host ""
-Write-Host $i18n.Header_Cards -ForegroundColor Blue
-Write-Host "=============" -ForegroundColor Blue
-
-# Staff 1
-# -------
-
-Write-Host ""
-Write-Host $i18n.Header_Staff_1 -ForegroundColor Blue
-Write-Host "-------------"
-
-$Staff1_username = Read-Host -Prompt $i18n.Staff_Username
-$Staff1_nickname = Read-Host -Prompt $i18n.Staff_Nickname
-$Staff1_limitType = Read-Host -Prompt $i18n.Staff_Limit_Type
-
-if (-not ($cardSlip.$Staff1_username)) {
-  Write-Host $i18n.Invalid_Slip -ForegroundColor Red
-} else {
-  $Staff1_isAllowSlip = Read-Host -Prompt $i18n.Staff_Allows_Slip_Card
-  if (-not ($Staff1_isAllowSlip)) { $Staff1_isAllowSlip = "y" }
-}
-
-if (-not ($Staff1_limitType)) { $Staff1_limitType = "role" }
-
-if ($Staff1_limitType -eq "role") {
-  $Staff1_limitStaff = Read-Host -Prompt $i18n.Staff_Limit_Staff
-  $Staff1_limitMember = Read-Host -Prompt $i18n.Staff_Limit_Member
-} else {
-  $Staff1_limitAny = Read-Host -Prompt $i18n.Staff_Limit_Any
-}
-
-$Staff1_totalCards = Read-Host -Prompt $i18n.Staff_Limit_Total
-if ($Staff1_totalCards -gt 9) {
-  Write-Host $i18n.Invalid_Card_amount -ForegroundColor Red
-  $Staff1_totalCards = 9
-}
-
-# Card 1
-Write-Host ""
-$Staff1_cards1_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url,"(1)"
-
-if (-not ($Staff1_cards1_imageUri)) {
-  $St1_cd1_rand = Get-RandomCard
-  $Staff1_cards1_imageUri = "https://etgps1.thenewbieclub.my.id/Resources/Cards/$($St1_cd1_rand)"
-  $Staff1_cards1_malId = "0"
-  $Staff1_cards1_customUrl = "https://github.com/theNewbieClub-MAL/editionThreadGenerator-ps1"
-  $Staff1_cards1_titleResult = "Placeholder"
-} elseif (($Edition_isSingle -eq "n") -and ("" -ne $Staff1_cards1_imageUri)) {
-  # Search title on MAL
-  $Staff1_cards1_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
-
-  Find-MAL -SearchQuery $Staff1_cards1_titleQuery
-
-  # Get MAL ID
-  $Staff1_cards1_malId = Read-Host -Prompt $i18n.Prompt_MALId_Insert
-  if (-not ($Staff1_cards1_malId)) { $Staff1_cards1_malId = "0" }
-
-  # Manually assign url if MAL ID is 0
-  if ($Staff1_cards1_malId -eq "0") {
-    Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
-    $Staff1_cards1_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
-    $Staff1_cards1_titleResult = $Staff1_cards1_titleQuery
-  } else {
-    $Staff1_cards1_titleResult = if ($Locale_set -eq "romaji") {
-      Get-MALTitle -MALId $Staff1_cards1_malId
-    } elseif ($Locale_set -eq "english") {
-      Get-MALTitle -MALId $Staff1_cards1_malId -English
-    }
-    Write-Host $i18n.Selected_Card_Title,$Staff1_cards1_titleResult -ForegroundColor Green
-  }
-}
-
-if (2 -le $Staff1_totalCards) {
-  # Card 2
+  # Customizations
+  # --------------
   Write-Host ""
-  $Staff1_cards2_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url,"(2)"
+  Write-Header -Message "$($i18n.Header_Customizations)" -ForegroundColor Blue
 
-  if (-not ($Staff1_cards2_imageUri)) {
-    $St1_cd2_rand = Get-RandomCard
-    $Staff1_cards2_imageUri = "https://etgps1.thenewbieclub.my.id/Resources/Cards/$($St1_cd2_rand)"
-    $Staff1_cards2_malId = "0"
-    $Staff1_cards2_customUrl = "https://github.com/theNewbieClub-MAL/editionThreadGenerator-ps1"
-    $Staff1_cards2_titleResult = "Placeholder"
-  } elseif (($Edition_isSingle -eq "n") -and ("" -ne $Staff1_cards2_imageUri)) {
-    # Search title on MAL
-    $Staff1_cards2_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
+  If ($Edition_isSingle -eq "n") {
+    Do {
+      $Locale_set = Read-Host -Prompt $i18n.Question_Locale_Set
+      If (!($Locale_set)) { $Locale_set = "romaji" }
+    } While (!($Locale_set -Match '^(romaji|english)$'))
+  }
+  If (!($Locale_set)) { $Locale_set = "romaji" }
+  Write-Verbose -Message "Locale set to $($Locale_set)"
 
-    Find-MAL -SearchQuery $Staff1_cards2_titleQuery
+  # Banner
+  $Banner_imageUrl = Read-Host -Prompt $i18n.Question_Banner_Uri
+  If (!($Banner_imageUrl)) {
+    $Banner_randomized = Get-RandomBanner
+    $Banner_imageUrl = "https://etgps1.thenewbieclub.my.id/Resources/Banners/$($Banner_randomized)"
+    $Banner_creator = "$(Get-WorkStaff -FileName $Banner_randomized)"
+    If ($Edition_isSingle -eq "n") {
+      $Banner_malId = "0"
+      $Banner_customUrl = "https://github.com/theNewbieClub-MAL/editionThreadGenerator-ps1"
+      $Banner_titleResult = "Placeholder"
+    }
+    Write-Verbose -message "Banner is not set, automatically use placeholder instead"
+  } Else {
+    $Banner_creator = Read-Host -Prompt $i18n.Question_Banner_Creator
+    If ($Edition_isSingle -eq "n") {
+      $Banner_titleQuery = Read-Host -Prompt $i18n.Question_Banner_Title
+      Find-MAL -SearchQuery $Banner_titleQuery
 
-    # Get MAL ID
-    $Staff1_cards2_malId = Read-Host -Prompt $i18n.Prompt_MALId_Insert
-    if (-not ($Staff1_cards2_malId)) { $Staff1_cards2_malId = "0" }
-
-    # Manually assign url if MAL ID is 0
-    if ($Staff1_cards2_malId -eq "0") {
-      Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
-      $Staff1_cards2_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
-      $Staff1_cards2_titleResult = $Staff1_cards2_titleQuery
-    } else {
-      $Staff1_cards2_titleResult = if ($Locale_set -eq "romaji") {
-        Get-MALTitle -MALId $Staff1_cards2_malId
-      } elseif ($Locale_set -eq "english") {
-        Get-MALTitle -MALId $Staff1_cards2_malId -English
+      $Banner_malId = Read-Host -Prompt $i18n.Prompt_MALId_Insert
+      If (!($Banner_malId)) { $Banner_malId = "0" }
+      If ($Banner_malId -eq "0") {
+        Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
+        $Banner_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
+        $Banner_titleResult = $Banner_titleQuery
+      } Else {
+        $Banner_titleResult = If ($Locale_set -eq "romaji") {
+          Get-MALTitle -MALId $Banner_malId
+        } ElseIf ($Locale_set -eq "english") {
+          Get-MALTitle -MALId $Banner_malId -English
+        }
+        Write-Host $i18n.Selected_Banner_Title,$Banner_titleResult -ForegroundColor Green
       }
-      Write-Host $i18n.Selected_Card_Title,$Staff1_cards2_titleResult -ForegroundColor Green
     }
   }
+
+  # Set thread color
+  $Thread_color = Read-Host -Prompt $i18n.Question_Color
+  If (-Not ($Thread_color)) { $Thread_color = "#000000" }
+  Write-Verbose -Message "Thread color set to $($Thread_color)" 
+
+  # Show dark mode warning
+  $DarkMode_warn = Read-Host -Prompt $i18n.Question_DarkMode
+  If (-Not ($DarkMode_warn)) { $DarkMode_warn = "y" }
+  If ($DarkMode_warn -eq "y") {
+    Write-Verbose -Message "Dark mode warning is enabled"
+  } Else {
+    Write-Verbose -Message "Dark mode warning is disabled"
+  }
+
+  # Introduction Text
+  # -----------------
+
+  # GIF
+  $Intro_gif = Read-Host -Prompt $i18n.Question_Intro_GifUrl
+  Write-Verbose -Message "Intro GIF URL set to $($Intro_gif)"
+
+  # Text
+  $Intro_textRaw = Read-Host -Prompt $i18n.Question_Intro_Text
+  If (!($Intro_textRaw)) {
+    $Intro_replaceParentheses = $Intro_textRaw -replace ("`{`{","[color=$Thread_color]") -replace ("`}`}","[/color]")
+    $Intro_textFormat = $Intro_replaceParentheses.Replace("^@","`n")
+    Write-Verbose -Message "Intro text set to:$($Intro_textFormat)"
+
+    Write-Host $i18n.Generate_Intro_Success -ForegroundColor Green
+    Write-Host $Intro_textFormat -ForegroundColor Green
+  }
+
+  Write-Verbose -Message "Updating YAML variable"
+  $yaml += @"
+`ncustomizations:
+  titleLocale: $($Locale_set)
+  banner:
+    imageUrl: $($Banner_imageUrl)
+    creator: $($Banner_creator)
+    malId: $(If (!($Banner_malId)) {"0"} Else {$Banner_malId})
+    customUrl: $(If (!($Banner_customUrl)) {"null"} Else {$Banner_customUrl})
+    title: $(If ($Edition_isSingle -eq "y") {"null"} Else {$Banner_titleResult})
+  threadColor: "$($Thread_color)"
+  darkModeWarn: $(If ($DarkMode_warn = "y") {"true"} Else {"false"})
+  intro:
+    gifUrl: $( If (!($Intro_gif)) {"null"} Else {$Intro_gif})
+    text: $( If ($Intro_textRaw) {@"
+|
+      $($Intro_textFormat.Replace("`n","`n      "))
+"@} Else { "null" })
+staff:
+"@
+  Write-Verbose -Message $yaml
+
+  # =====
+  # Contributed Staff and Cards
+  # =====
+
+  # Staff Information
+  # -----------------
+
+  Write-Host ""
+  Write-Header -Message $i18n.Header_Cards -ForegroundColor Blue
+
+  For ($staff=1; $staff -le $Edition_staffCount; $staff++) {
+    # Add backward compatible header
+    Switch ($staff) {
+      1 { $staffHeader = $i18n.Header_Staff_1 }
+      2 { $staffHeader = $i18n.Header_Staff_2 }
+      3 { $staffHeader = $i18n.Header_Staff_3 }
+      4 { $staffHeader = $i18n.Header_Staff_4 }
+      5 { $staffHeader = $i18n.Header_Staff_5 }
+    }
+
+    Write-Host ""
+    Write-Header -Message $staffHeader -Separator "-"
+
+    Do {
+      $staffUsername = Read-Host -Prompt $i18n.Staff_Username
+    } Until ($staffUsername.Length -le 13) # Follows MyAnimeList specs
+    Write-Verbose -Mesage "Staff #$($staff) username set to $($staffUsername)"
+
+    $staffNickname = Read-Host -Prompt "$($i18n.Staff_Nickname) $($staffUsername)"
+    If (!($staffNickname)) {$staffNickname = $staffUsername}
+    Write-Verbose -Mesage "Staff #$($staff) nickname set to $($staffNickname)"
+
+    Do {
+      $limitType = Read-Host -Prompt $i18n.Staff_Limit_Type
+      If (!($limitType)) { $limitType = "role" }
+    } While (!($limitType -Match '^(role|any)$'))
+    Write-Verbose -Mesage "Staff #$($staff) limit type set to $($limitType)"
+
+    # Check slip card status
+    If (!($cardSlip.$staffUsername)) {
+      Write-Error -Message $i18n.Invalid_Slip -ErrorAction Continue
+      $isAllowSlip = "null"
+      Write-Verbose -Message "Staff #$($staff) does not offer slip"
+    } Else {
+      Do {
+        $isAllowSlip = Read-Host -Prompt $i18n.Staff_Allows_Slip_Card
+        If (!($isAllowSlip)) { $isAllowSlip = "y" }
+      } While (!($isAllowSlip -Match '^(y|n)$'))
+      If ($isAllowSlip -eq "y") {
+        Write-Verbose -Message "Staff #$($staff) allows slip card"
+      } Else {
+        Write-Verbose -Message "Staff #$($staff) does not allow slip card"
+      }
+    }
+
+    # Set card Limit
+    Do {
+      $totalCards = Read-Host -Prompt $i18n.Staff_Limit_Total
+      $totalCards = [Int]$totalCards
+    } Until (($totalCards -ge 1) -And ($totalCards -le 9))
+    Write-Verbose -Mesage "Staff #$($staff) total card limit set to $($totalCards)"
+
+    If ($limitType -eq "role") {
+      Do {
+        $memberLimit = Read-Host -Prompt $i18n.Staff_Limit_Member
+      } Until (($memberLimit -ge 1) -And ($memberLimit -le $totalCards))
+      Write-Verbose -Mesage "Staff #$($staff) member card limit set to $($memberLimit)"
+
+      Do {
+        $staffLimit = Read-Host -Prompt $i18n.Staff_Limit_Staff
+      } Until (($staffLimit -ge 1) -And ($staffLimit -le $totalCards))
+      $anyLimit = "null"
+      Write-Verbose -Mesage "Staff #$($staff) staff card limit set to $($staffLimit)"
+    } Else {
+      Do {
+        $anyLimit = Read-Host -Prompt $i18n.Staff_Limit_Any
+      } Until (($anyLimit -ge 1) -And ($anyLimit -le $totalCards))
+      $staffLimit = "null"
+      $memberLimit = "null"
+      Write-Verbose -Mesage "Staff #$($staff) any card limit set to $($anyLimit)"
+    }
+
+    $yaml += @"
+`n  - username: $($staffUsername)
+    nickname: $($staffNickname)
+    isSlipAllowed: $( If ($isAllowSlip -eq "y") { "true" } Else { "false" })
+    limitType: $($limitType)
+    totalCards: $($totalCards)
+    limits:
+      any: $($anyLimit)
+      member: $($memberLimit)
+      staff: $($staffLimit)
+    cards:
+"@
+
+    # Cards
+    # -----
+
+    For ($card=1; $card -le $totalCards; $card++) {
+      Write-Host ""
+      Write-Header -Message "$($i18n.Header_Card) ($($card))" -Separator "-" -ForegroundColor Yellow
+
+      $imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url, "($($card))"
+      If (!($imageUri)) {
+        $randomPlaceHolder = Get-RandomCard
+        $imageUri = "https://etgps1.thenewbieclub.my.id/Resources/Cards/$($randomPlaceHolder)"
+        $malId = "0"
+        $customUrl = "https://github.com/theNewbieClub-MAL/editionThreadGenerator-ps1"
+        $titleResult = "Placeholder"
+      }
+      Write-Verbose -Message "Staff #$($staff) card #$($card) image URL set to $($imageUri)"
+
+      # Lookup formatted title name for card source
+      If ($Edition_isSingle -eq 'n') {
+        Do {
+          $titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
+        } While (($titleQuery -eq '') -Or ($Null -eq $titleQuery))
+        
+        Find-MAL -SearchQuery $titleQuery
+        
+        # Get MAL ID
+
+        Do {
+          $malId = Read-Host -Prompt $i18n.Prompt_MALId_Insert
+          If (!($malId)) { $malId = "0" }
+        } While (!($malId -Match '^[\d]+$'))
+
+        If ($malId -eq "0") {
+          Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
+          $customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
+          $titleResult = $titleQuery
+        } Else {
+          $titleResult = If ($Locale_set -eq "romaji") {
+            Get-MALTitle -MALId $malId
+          } Else {
+            Get-MALTitle -MALId $malId -English
+          }
+          Write-Verbose "MAL:$($malID) - $($titleResult) is selected"
+        }
+      }
+
+      # Append Result
+
+      $yaml += @"
+`n      - imageUri: $($imageUri)
+        malId: $(If (($malId -eq '0') -Or ($malId -eq 0)) {"null"} Else {$malId})
+        customUrl: $(If (($malId -eq 0) -Or ($malId -eq 0)) {$customUrl} Else {"null"})
+        title: $(If ($Edition_isSingle -eq "n") {$titleResult} Else {$Edition_title})
+"@
+    }
+    Write-Verbose -Message "Updating staff #$($staff) card list"
+    Write-Verbose -Message $yaml
+  }
+
+  Write-Verbose -Message "Saving variables to savedata.yaml"
+  $yaml | Out-File -FilePath ./savedata.yaml
 }
 
-if (3 -le $Staff1_totalCards) {
-  # Card 3
-  Write-Host ""
-  $Staff1_cards3_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url,"(3)"
-
-  if (-not ($Staff1_cards3_imageUri)) {
-    $St1_cd3_rand = Get-RandomCard
-    $Staff1_cards3_imageUri = "https://etgps1.thenewbieclub.my.id/Resources/Cards/$($St1_cd3_rand)"
-    $Staff1_cards3_malId = "0"
-    $Staff1_cards3_customUrl = "https://github.com/theNewbieClub-MAL/editionThreadGenerator-ps1"
-    $Staff1_cards3_titleResult = "Placeholder"
-  } elseif (($Edition_isSingle -eq "n") -and ("" -ne $Staff1_cards3_imageUri)) {
-    # Search title on MAL
-    $Staff1_cards3_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
-
-    Find-MAL -SearchQuery $Staff1_cards3_titleQuery
-
-    # Get MAL ID
-    $Staff1_cards3_malId = Read-Host -Prompt $i18n.Prompt_MALId_Insert
-    if (-not ($Staff1_cards3_malId)) { $Staff1_cards3_malId = "0" }
-
-    # Manually assign url if MAL ID is 0
-    if ($Staff1_cards3_malId -eq "0") {
-      Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
-      $Staff1_cards3_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
-      $Staff1_cards3_titleResult = $Staff1_cards3_titleQuery
-    } else {
-      $Staff1_cards3_titleResult = if ($Locale_set -eq "romaji") {
-        Get-MALTitle -MALId $Staff1_cards3_malId
-      } elseif ($Locale_set -eq "english") {
-        Get-MALTitle -MALId $Staff1_cards3_malId -English
-      }
-      Write-Host $i18n.Selected_Card_Title,$Staff1_cards3_titleResult -ForegroundColor Green
-    }
-  }
-}
-
-if (4 -le $Staff1_totalCards) {
-  # Card 4
-  Write-Host ""
-  $Staff1_cards4_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url,"(4)"
-
-  if (-not ($Staff1_cards4_imageUri)) {
-    $St1_cd4_rand = Get-RandomCard
-    $Staff1_cards4_imageUri = "https://etgps1.thenewbieclub.my.id/Resources/Cards/$($St1_cd4_rand)"
-    $Staff1_cards4_malId = "0"
-    $Staff1_cards4_customUrl = "https://github.com/theNewbieClub-MAL/editionThreadGenerator-ps1"
-    $Staff1_cards4_titleResult = "Placeholder"
-  } elseif (($Edition_isSingle -eq "n") -and ("" -ne $Staff1_cards4_imageUri)) {
-    # Search title on MAL
-    $Staff1_cards4_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
-
-    Find-MAL -SearchQuery $Staff1_cards4_titleQuery
-
-    # Get MAL ID
-    $Staff1_cards4_malId = Read-Host -Prompt $i18n.Prompt_MALId_Insert
-    if (-not ($Staff1_cards4_malId)) { $Staff1_cards4_malId = "0" }
-
-    # Manually assign url if MAL ID is 0
-    if ($Staff1_cards4_malId -eq "0") {
-      Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
-      $Staff1_cards4_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
-      $Staff1_cards4_titleResult = $Staff1_cards4_titleQuery
-    } else {
-      $Staff1_cards4_titleResult = if ($Locale_set -eq "romaji") {
-        Get-MALTitle -MALId $Staff1_cards4_malId
-      } elseif ($Locale_set -eq "english") {
-        Get-MALTitle -MALId $Staff1_cards4_malId -English
-      }
-      Write-Host $i18n.Selected_Card_Title,$Staff1_cards4_titleResult -ForegroundColor Green
-    }
-  }
-}
-
-if (5 -le $Staff1_totalCards) {
-  # Card 5
-  Write-Host ""
-  $Staff1_cards5_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url,"(5)"
-
-  if (-not ($Staff1_cards5_imageUri)) {
-    $St1_cd5_rand = Get-RandomCard
-    $Staff1_cards5_imageUri = "https://etgps1.thenewbieclub.my.id/Resources/Cards/$($St1_cd5_rand)"
-    $Staff1_cards5_malId = "0"
-    $Staff1_cards5_customUrl = "https://github.com/theNewbieClub-MAL/editionThreadGenerator-ps1"
-    $Staff1_cards5_titleResult = "Placeholder"
-  } elseif (($Edition_isSingle -eq "n") -and ("" -ne $Staff1_cards5_imageUri)) {
-    # Search title on MAL
-    $Staff1_cards5_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
-
-    Find-MAL -SearchQuery $Staff1_cards5_titleQuery
-
-    # Get MAL ID
-    $Staff1_cards5_malId = Read-Host -Prompt $i18n.Prompt_MALId_Insert
-    if (-not ($Staff1_cards5_malId)) { $Staff1_cards5_malId = "0" }
-
-    # Manually assign url if MAL ID is 0
-    if ($Staff1_cards5_malId -eq "0") {
-      Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
-      $Staff1_cards5_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
-      $Staff1_cards5_titleResult = $Staff1_cards5_titleQuery
-    } else {
-      $Staff1_cards5_titleResult = if ($Locale_set -eq "romaji") {
-        Get-MALTitle -MALId $Staff1_cards5_malId
-      } elseif ($Locale_set -eq "english") {
-        Get-MALTitle -MALId $Staff1_cards5_malId -English
-      }
-      Write-Host $i18n.Selected_Card_Title,$Staff1_cards5_titleResult -ForegroundColor Green
-    }
-  }
-}
-
-if (6 -le $Staff1_totalCards) {
-  # Card 6
-  Write-Host ""
-  $Staff1_cards6_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url,"(6)"
-
-  if (-not ($Staff1_cards6_imageUri)) {
-    $St1_cd6_rand = Get-RandomCard
-    $Staff1_cards6_imageUri = "https://etgps1.thenewbieclub.my.id/Resources/Cards/$($St1_cd6_rand)"
-    $Staff1_cards6_malId = "0"
-    $Staff1_cards6_customUrl = "https://github.com/theNewbieClub-MAL/editionThreadGenerator-ps1"
-    $Staff1_cards6_titleResult = "Placeholder"
-  } elseif (($Edition_isSingle -eq "n") -and ("" -ne $Staff1_cards6_imageUri)) {
-    # Search title on MAL
-    $Staff1_cards6_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
-
-    Find-MAL -SearchQuery $Staff1_cards6_titleQuery
-
-    # Get MAL ID
-    $Staff1_cards6_malId = Read-Host -Prompt $i18n.Prompt_MALId_Insert
-    if (-not ($Staff1_cards6_malId)) { $Staff1_cards6_malId = "0" }
-
-    # Manually assign url if MAL ID is 0
-    if ($Staff1_cards6_malId -eq "0") {
-      Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
-      $Staff1_cards6_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
-      $Staff1_cards6_titleResult = $Staff1_cards6_titleQuery
-    } else {
-      $Staff1_cards6_titleResult = if ($Locale_set -eq "romaji") {
-        Get-MALTitle -MALId $Staff1_cards6_malId
-      } elseif ($Locale_set -eq "english") {
-        Get-MALTitle -MALId $Staff1_cards6_malId -English
-      }
-      Write-Host $i18n.Selected_Card_Title,$Staff1_cards6_titleResult -ForegroundColor Green
-    }
-  }
-}
-
-if (7 -le $Staff1_totalCards) {
-  # Card 7
-  Write-Host ""
-  $Staff1_cards7_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url,"(7)"
-
-  if (-not ($Staff1_cards7_imageUri)) {
-    $St1_cd7_rand = Get-RandomCard
-    $Staff1_cards7_imageUri = "https://etgps1.thenewbieclub.my.id/Resources/Cards/$($St1_cd7_rand)"
-    $Staff1_cards7_malId = "0"
-    $Staff1_cards7_customUrl = "https://github.com/theNewbieClub-MAL/editionThreadGenerator-ps1"
-    $Staff1_cards7_titleResult = "Placeholder"
-  } elseif (($Edition_isSingle -eq "n") -and ("" -ne $Staff1_cards7_imageUri)) {
-    # Search title on MAL
-    $Staff1_cards7_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
-
-    Find-MAL -SearchQuery $Staff1_cards7_titleQuery
-
-    # Get MAL ID
-    $Staff1_cards7_malId = Read-Host -Prompt $i18n.Prompt_MALId_Insert
-    if (-not ($Staff1_cards7_malId)) { $Staff1_cards7_malId = "0" }
-
-    # Manually assign url if MAL ID is 0
-    if ($Staff1_cards7_malId -eq "0") {
-      Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
-      $Staff1_cards7_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
-      $Staff1_cards7_titleResult = $Staff1_cards7_titleQuery
-    } else {
-      $Staff1_cards7_titleResult = if ($Locale_set -eq "romaji") {
-        Get-MALTitle -MALId $Staff1_cards7_malId
-      } elseif ($Locale_set -eq "english") {
-        Get-MALTitle -MALId $Staff1_cards7_malId -English
-      }
-      Write-Host $i18n.Selected_Card_Title,$Staff1_cards7_titleResult -ForegroundColor Green
-    }
-  }
-}
-
-if (8 -le $Staff1_totalCards) {
-  # Card 8
-  Write-Host ""
-  $Staff1_cards8_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url,"(8)"
-
-  if (-not ($Staff1_cards8_imageUri)) {
-    $St1_cd8_rand = Get-RandomCards
-    $Staff1_cards8_imageUri = "https://etgps1.thenewbieclub.my.id/Resources/Cards/$($St1_cd8_rand)"
-    $Staff1_cards8_malId = "0"
-    $Staff1_cards8_customUrl = "https://github.com/theNewbieClub-MAL/editionThreadGenerator-ps1"
-    $Staff1_cards8_titleResult = "Placeholder"
-  } elseif (($Edition_isSingle -eq "n") -and ("" -ne $Staff1_cards8_imageUri)) {
-    # Search title on MAL
-    $Staff1_cards8_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
-
-    Find-MAL -SearchQuery $Staff1_cards8_titleQuery
-
-    # Get MAL ID
-    $Staff1_cards8_malId = Read-Host -Prompt $i18n.Prompt_MALId_Insert
-    if (-not ($Staff1_cards8_malId)) { $Staff1_cards8_malId = "0" }
-
-    # Manually assign url if MAL ID is 0
-    if ($Staff1_cards8_malId -eq "0") {
-      Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
-      $Staff1_cards8_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
-      $Staff1_cards8_titleResult = $Staff1_cards8_titleQuery
-    } else {
-      $Staff1_cards8_titleResult = if ($Locale_set -eq "romaji") {
-        Get-MALTitle -MALId $Staff1_cards8_malId
-      } elseif ($Locale_set -eq "english") {
-        Get-MALTitle -MALId $Staff1_cards8_malId -English
-      }
-      Write-Host $i18n.Selected_Card_Title,$Staff1_cards8_titleResult -ForegroundColor Green
-    }
-  }
-}
-
-if (9 -le $Staff1_totalCards) {
-  # Card 9
-  Write-Host ""
-  $Staff1_cards9_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url,"(9)"
-
-  if (-not ($Staff1_cards9_imageUri)) {
-    $St1_cd9_rand = Get-RandomCard
-    $Staff1_cards9_imageUri = "https://etgps1.thenewbieclub.my.id/Resources/Cards/$($St1_cd9_rand)"
-    $Staff1_cards9_malId = "0"
-    $Staff1_cards9_customUrl = "https://github.com/theNewbieClub-MAL/editionThreadGenerator-ps1"
-    $Staff1_cards9_titleResult = "Placeholder"
-  } elseif (($Edition_isSingle -eq "n") -and ("" -ne $Staff1_cards9_imageUri)) {
-    # Search title on MAL
-    $Staff1_cards9_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
-
-    Find-MAL -SearchQuery $Staff1_cards9_titleQuery
-
-    # Get MAL ID
-    $Staff1_cards9_malId = Read-Host -Prompt $i18n.Prompt_MALId_Insert
-    if (-not ($Staff1_cards9_malId)) { $Staff1_cards9_malId = "0" }
-
-    # Manually assign url if MAL ID is 0
-    if ($Staff1_cards9_malId -eq "0") {
-      Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
-      $Staff1_cards9_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
-      $Staff1_cards9_titleResult = $Staff1_cards9_titleQuery
-    } else {
-      $Staff1_cards9_titleResult = if ($Locale_set -eq "romaji") {
-        Get-MALTitle -MALId $Staff1_cards9_malId
-      } elseif ($Locale_set -eq "english") {
-        Get-MALTitle -MALId $Staff1_cards9_malId -English
-      }
-      Write-Host $i18n.Selected_Card_Title,$Staff1_cards9_titleResult -ForegroundColor Green
-    }
-  }
-}
-
-# Staff 2
-# -------
-
-if (2 -le $Edition_staffCount) {
-  Write-Host ""
-  Write-Host $i18n.Header_Staff_2 -ForegroundColor Blue
-  Write-Host "-------------"
-
-  $Staff2_username = Read-Host -Prompt $i18n.Staff_Username
-  $Staff2_nickname = Read-Host -Prompt $i18n.Staff_Nickname
-  $Staff2_limitType = Read-Host -Prompt $i18n.Staff_Limit_Type
-
-  if (-not ($cardSlip.$Staff2_username)) {
-    Write-Host $i18n.Invalid_Slip -ForegroundColor Red
-  } else {
-    $Staff2_isAllowSlip = Read-Host -Prompt $i18n.Staff_Allows_Slip_Card
-    if (-not ($Staff2_isAllowSlip)) { $Staff2_isAllowSlip = "y" }
-  }
-
-  if (-not ($Staff2_limitType)) { $Staff2_limitType = "role" }
-
-  if ($Staff2_limitType -eq "role") {
-    $Staff2_limitStaff = Read-Host -Prompt $i18n.Staff_Limit_Staff
-    $Staff2_limitMember = Read-Host -Prompt $i18n.Staff_Limit_Member
-  } else {
-    $Staff2_limitAny = Read-Host -Prompt $i18n.Staff_Limit_Any
-  }
-
-  $Staff2_totalCards = Read-Host -Prompt $i18n.Staff_Limit_Total
-  if ($Staff2_totalCards -gt 9) {
-    Write-Host $i18n.Invalid_Card_amount -ForegroundColor Red
-    $Staff2_totalCards = 9
-  }
-
-  # Card 1
-  Write-Host ""
-  $Staff2_cards1_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url,"(1)"
-
-  if (-not ($Staff2_cards1_imageUri)) {
-    $St2_cd1_rand = Get-RandomCard
-    $Staff2_cards1_imageUri = "https://etgps1.thenewbieclub.my.id/Resources/Cards/$($St2_cd1_rand)"
-    $Staff2_cards1_malId = "0"
-    $Staff2_cards1_customUrl = "https://github.com/theNewbieClub-MAL/editionThreadGenerator-ps1"
-    $Staff2_cards1_titleResult = "Placeholder"
-  } elseif (($Edition_isSingle -eq "n") -and ("" -ne $Staff2_cards1_imageUri)) {
-    # Search title on MAL
-    $Staff2_cards1_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
-
-    Find-MAL -SearchQuery $Staff2_cards1_titleQuery
-
-    # Get MAL ID
-    $Staff2_cards1_malId = Read-Host -Prompt $i18n.Prompt_MALId_Insert
-    if (-not ($Staff2_cards1_malId)) { $Staff2_cards1_malId = "0" }
-
-    # Manually assign url if MAL ID is 0
-    if ($Staff2_cards1_malId -eq "0") {
-      Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
-      $Staff2_cards1_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
-      $Staff2_cards1_titleResult = $Staff2_cards1_titleQuery
-    } else {
-      $Staff2_cards1_titleResult = if ($Locale_set -eq "romaji") {
-        Get-MALTitle -MALId $Staff2_cards1_malId
-      } elseif ($Locale_set -eq "english") {
-        Get-MALTitle -MALId $Staff2_cards1_malId -English
-      }
-      Write-Host $i18n.Selected_Card_Title,$Staff2_cards1_titleResult -ForegroundColor Green
-    }
-  }
-
-  if (2 -le $Staff2_totalCards) {
-    # Card 2
-    Write-Host ""
-    $Staff2_cards2_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url,"(2)"
-
-    if (-not ($Staff2_cards2_imageUri)) {
-      $St2_cd2_rand = Get-RandomCard
-      $Staff2_cards2_imageUri = "https://etgps1.thenewbieclub.my.id/Resources/Cards/$($St2_cd2_rand)"
-      $Staff2_cards2_malId = "0"
-      $Staff2_cards2_customUrl = "https://github.com/theNewbieClub-MAL/editionThreadGenerator-ps1"
-      $Staff2_cards2_titleResult = "Placeholder"
-    } elseif (($Edition_isSingle -eq "n") -and ("" -ne $Staff2_cards2_imageUri)) {
-      # Search title on MAL
-      $Staff2_cards2_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
-
-      Find-MAL -SearchQuery $Staff2_cards2_titleQuery
-
-      # Get MAL ID
-      $Staff2_cards2_malId = Read-Host -Prompt $i18n.Prompt_MALId_Insert
-      if (-not ($Staff2_cards2_malId)) { $Staff2_cards2_malId = "0" }
-
-      # Manually assign url if MAL ID is 0
-      if ($Staff2_cards2_malId -eq "0") {
-        Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
-        $Staff2_cards2_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
-        $Staff2_cards2_titleResult = $Staff2_cards2_titleQuery
-      } else {
-        $Staff2_cards2_titleResult = if ($Locale_set -eq "romaji") {
-          Get-MALTitle -MALId $Staff2_cards2_malId
-        } elseif ($Locale_set -eq "english") {
-          Get-MALTitle -MALId $Staff2_cards2_malId -English
-        }
-        Write-Host $i18n.Selected_Card_Title,$Staff2_cards2_titleResult -ForegroundColor Green
-      }
-    }
-  }
-
-  if (3 -le $Staff2_totalCards) {
-    # Card 3
-    Write-Host ""
-    $Staff2_cards3_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url,"(3)"
-
-    if (-not ($Staff2_cards3_imageUri)) {
-      $St2_cd3_rand = Get-RandomCard
-      $Staff2_cards3_imageUri = "https://etgps1.thenewbieclub.my.id/Resources/Cards/$($St2_cd3_rand)"
-      $Staff2_cards3_malId = "0"
-      $Staff2_cards3_customUrl = "https://github.com/theNewbieClub-MAL/editionThreadGenerator-ps1"
-      $Staff2_cards3_titleResult = "Placeholder"
-    } elseif (($Edition_isSingle -eq "n") -and ("" -ne $Staff2_cards3_imageUri)) {
-      # Search title on MAL
-      $Staff2_cards3_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
-
-      Find-MAL -SearchQuery $Staff2_cards3_titleQuery
-
-      # Get MAL ID
-      $Staff2_cards3_malId = Read-Host -Prompt $i18n.Prompt_MALId_Insert
-      if (-not ($Staff2_cards3_malId)) { $Staff2_cards3_malId = "0" }
-
-      # Manually assign url if MAL ID is 0
-      if ($Staff2_cards3_malId -eq "0") {
-        Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
-        $Staff2_cards3_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
-        $Staff2_cards3_titleResult = $Staff2_cards3_titleQuery
-      } else {
-        $Staff2_cards3_titleResult = if ($Locale_set -eq "romaji") {
-          Get-MALTitle -MALId $Staff2_cards3_malId
-        } elseif ($Locale_set -eq "english") {
-          Get-MALTitle -MALId $Staff2_cards3_malId -English
-        }
-        Write-Host $i18n.Selected_Card_Title,$Staff2_cards3_titleResult -ForegroundColor Green
-      }
-    }
-  }
-
-  if (4 -le $Staff2_totalCards) {
-    # Card 4
-    Write-Host ""
-    $Staff2_cards4_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url,"(4)"
-
-    if (-not ($Staff2_cards4_imageUri)) {
-      $St2_cd4_rand = Get-RandomCard
-      $Staff2_cards4_imageUri = "https://etgps1.thenewbieclub.my.id/Resources/Cards/$($St2_cd4_rand)"
-      $Staff2_cards4_malId = "0"
-      $Staff2_cards4_customUrl = "https://github.com/theNewbieClub-MAL/editionThreadGenerator-ps1"
-      $Staff2_cards4_titleResult = "Placeholder"
-    } elseif (($Edition_isSingle -eq "n") -and ("" -ne $Staff2_cards4_imageUri)) {
-      # Search title on MAL
-      $Staff2_cards4_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
-
-      Find-MAL -SearchQuery $Staff2_cards4_titleQuery
-
-      # Get MAL ID
-      $Staff2_cards4_malId = Read-Host -Prompt $i18n.Prompt_MALId_Insert
-      if (-not ($Staff2_cards4_malId)) { $Staff2_cards4_malId = "0" }
-
-      # Manually assign url if MAL ID is 0
-      if ($Staff2_cards4_malId -eq "0") {
-        Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
-        $Staff2_cards4_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
-        $Staff2_cards4_titleResult = $Staff2_cards4_titleQuery
-      } else {
-        $Staff2_cards4_titleResult = if ($Locale_set -eq "romaji") {
-          Get-MALTitle -MALId $Staff2_cards4_malId
-        } elseif ($Locale_set -eq "english") {
-          Get-MALTitle -MALId $Staff2_cards4_malId -English
-        }
-        Write-Host $i18n.Selected_Card_Title,$Staff2_cards4_titleResult -ForegroundColor Green
-      }
-    }
-  }
-
-  if (5 -le $Staff2_totalCards) {
-    # Card 5
-    Write-Host ""
-    $Staff2_cards5_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url,"(5)"
-
-    if (-not ($Staff2_cards5_imageUri)) {
-      $St2_cd5_rand = Get-RandomCard
-      $Staff2_cards5_imageUri = "https://etgps1.thenewbieclub.my.id/Resources/Cards/$($St2_cd5_rand)"
-      $Staff2_cards5_malId = "0"
-      $Staff2_cards5_customUrl = "https://github.com/theNewbieClub-MAL/editionThreadGenerator-ps1"
-      $Staff2_cards5_titleResult = "Placeholder"
-    } elseif (($Edition_isSingle -eq "n") -and ("" -ne $Staff2_cards5_imageUri)) {
-      # Search title on MAL
-      $Staff2_cards5_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
-
-      Find-MAL -SearchQuery $Staff2_cards5_titleQuery
-
-      # Get MAL ID
-      $Staff2_cards5_malId = Read-Host -Prompt $i18n.Prompt_MALId_Insert
-      if (-not ($Staff2_cards5_malId)) { $Staff2_cards5_malId = "0" }
-
-      # Manually assign url if MAL ID is 0
-      if ($Staff2_cards5_malId -eq "0") {
-        Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
-        $Staff2_cards5_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
-        $Staff2_cards5_titleResult = $Staff2_cards5_titleQuery
-      } else {
-        $Staff2_cards5_titleResult = if ($Locale_set -eq "romaji") {
-          Get-MALTitle -MALId $Staff2_cards5_malId
-        } elseif ($Locale_set -eq "english") {
-          Get-MALTitle -MALId $Staff2_cards5_malId -English
-        }
-        Write-Host $i18n.Selected_Card_Title,$Staff2_cards5_titleResult -ForegroundColor Green
-      }
-    }
-  }
-
-  if (6 -le $Staff2_totalCards) {
-    # Card 6
-    Write-Host ""
-    $Staff2_cards6_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url,"(6)"
-
-    if (-not ($Staff2_cards6_imageUri)) {
-      $St2_cd6_rand = Get-RandomCard
-      $Staff2_cards6_imageUri = "https://etgps1.thenewbieclub.my.id/Resources/Cards/$($St2_cd6_rand)"
-      $Staff2_cards6_malId = "0"
-      $Staff2_cards6_customUrl = "https://github.com/theNewbieClub-MAL/editionThreadGenerator-ps1"
-      $Staff2_cards6_titleResult = "Placeholder"
-    } elseif (($Edition_isSingle -eq "n") -and ("" -ne $Staff2_cards6_imageUri)) {
-      # Search title on MAL
-      $Staff2_cards6_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
-
-      Find-MAL -SearchQuery $Staff2_cards6_titleQuery
-
-      # Get MAL ID
-      $Staff2_cards6_malId = Read-Host -Prompt $i18n.Prompt_MALId_Insert
-      if (-not ($Staff2_cards6_malId)) { $Staff2_cards6_malId = "0" }
-
-      # Manually assign url if MAL ID is 0
-      if ($Staff2_cards6_malId -eq "0") {
-        Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
-        $Staff2_cards6_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
-        $Staff2_cards6_titleResult = $Staff2_cards6_titleQuery
-      } else {
-        $Staff2_cards6_titleResult = if ($Locale_set -eq "romaji") {
-          Get-MALTitle -MALId $Staff2_cards6_malId
-        } elseif ($Locale_set -eq "english") {
-          Get-MALTitle -MALId $Staff2_cards6_malId -English
-        }
-        Write-Host $i18n.Selected_Card_Title,$Staff2_cards6_titleResult -ForegroundColor Green
-      }
-    }
-  }
-
-  if (7 -le $Staff2_totalCards) {
-    # Card 7
-    Write-Host ""
-    $Staff2_cards7_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url,"(7)"
-
-    if (-not ($Staff2_cards7_imageUri)) {
-      $St2_cd7_rand = Get-RandomCard
-      $Staff2_cards7_imageUri = "https://etgps1.thenewbieclub.my.id/Resources/Cards/$($St2_cd7_rand)"
-      $Staff2_cards7_malId = "0"
-      $Staff2_cards7_customUrl = "https://github.com/theNewbieClub-MAL/editionThreadGenerator-ps1"
-      $Staff2_cards7_titleResult = "Placeholder"
-    } elseif (($Edition_isSingle -eq "n") -and ("" -ne $Staff2_cards7_imageUri)) {
-      # Search title on MAL
-      $Staff2_cards7_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
-
-      Find-MAL -SearchQuery $Staff2_cards7_titleQuery
-
-      # Get MAL ID
-      $Staff2_cards7_malId = Read-Host -Prompt $i18n.Prompt_MALId_Insert
-      if (-not ($Staff2_cards7_malId)) { $Staff2_cards7_malId = "0" }
-
-      # Manually assign url if MAL ID is 0
-      if ($Staff2_cards7_malId -eq "0") {
-        Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
-        $Staff2_cards7_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
-        $Staff2_cards7_titleResult = $Staff2_cards7_titleQuery
-      } else {
-        $Staff2_cards7_titleResult = if ($Locale_set -eq "romaji") {
-          Get-MALTitle -MALId $Staff2_cards7_malId
-        } elseif ($Locale_set -eq "english") {
-          Get-MALTitle -MALId $Staff2_cards7_malId -English
-        }
-        Write-Host $i18n.Selected_Card_Title,$Staff2_cards7_titleResult -ForegroundColor Green
-      }
-    }
-  }
-
-  if (8 -le $Staff2_totalCards) {
-    # Card 8
-    Write-Host ""
-    $Staff2_cards8_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url,"(8)"
-
-    if (-not ($Staff2_cards8_imageUri)) {
-      $St2_cd8_rand = Get-RandomCard
-      $Staff2_cards8_imageUri = "https://etgps1.thenewbieclub.my.id/Resources/Cards/$($St2_cd8_rand)"
-      $Staff2_cards8_malId = "0"
-      $Staff2_cards8_customUrl = "https://github.com/theNewbieClub-MAL/editionThreadGenerator-ps1"
-      $Staff2_cards8_titleResult = "Placeholder"
-    } elseif (($Edition_isSingle -eq "n") -and ("" -ne $Staff2_cards8_imageUri)) {
-      # Search title on MAL
-      $Staff2_cards8_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
-
-      Find-MAL -SearchQuery $Staff2_cards8_titleQuery
-
-      # Get MAL ID
-      $Staff2_cards8_malId = Read-Host -Prompt $i18n.Prompt_MALId_Insert
-      if (-not ($Staff2_cards8_malId)) { $Staff2_cards8_malId = "0" }
-
-      # Manually assign url if MAL ID is 0
-      if ($Staff2_cards8_malId -eq "0") {
-        Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
-        $Staff2_cards8_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
-        $Staff2_cards8_titleResult = $Staff2_cards8_titleQuery
-      } else {
-        $Staff2_cards8_titleResult = if ($Locale_set -eq "romaji") {
-          Get-MALTitle -MALId $Staff2_cards8_malId
-        } elseif ($Locale_set -eq "english") {
-          Get-MALTitle -MALId $Staff2_cards8_malId -English
-        }
-        Write-Host $i18n.Selected_Card_Title,$Staff2_cards8_titleResult -ForegroundColor Green
-      }
-    }
-  }
-
-  if (9 -le $Staff2_totalCards) {
-    # Card 9
-    Write-Host ""
-    $Staff2_cards9_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url,"(9)"
-
-    if (-not ($Staff2_cards9_imageUri)) {
-      $St2_cd9_rand = Get-RandomCard
-      $Staff2_cards9_imageUri = "https://etgps1.thenewbieclub.my.id/Resources/Cards/$($St2_cd9_rand)"
-      $Staff2_cards9_malId = "0"
-      $Staff2_cards9_customUrl = "https://github.com/theNewbieClub-MAL/editionThreadGenerator-ps1"
-      $Staff2_cards9_titleResult = "Placeholder"
-    } elseif (($Edition_isSingle -eq "n") -and ("" -ne $Staff2_cards9_imageUri)) {
-      # Search title on MAL
-      $Staff2_cards9_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
-
-      Find-MAL -SearchQuery $Staff2_cards9_titleQuery
-
-      # Get MAL ID
-      $Staff2_cards9_malId = Read-Host -Prompt $i18n.Prompt_MALId_Insert
-      if (-not ($Staff2_cards9_malId)) { $Staff2_cards9_malId = "0" }
-
-      # Manually assign url if MAL ID is 0
-      if ($Staff2_cards9_malId -eq "0") {
-        Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
-        $Staff2_cards9_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
-        $Staff2_cards9_titleResult = $Staff2_cards9_titleQuery
-      } else {
-        $Staff2_cards9_titleResult = if ($Locale_set -eq "romaji") {
-          Get-MALTitle -MALId $Staff2_cards9_malId
-        } elseif ($Locale_set -eq "english") {
-          Get-MALTitle -MALId $Staff2_cards9_malId -English
-        }
-        Write-Host $i18n.Selected_Card_Title,$Staff2_cards9_titleResult -ForegroundColor Green
-      }
-    }
-  }
-}
-
-# Staff 3
-# -------
-
-if (3 -le $Edition_staffCount) {
-  Write-Host ""
-  Write-Host $i18n.Header_Staff_3 -ForegroundColor Blue
-  Write-Host "-------------"
-
-  $Staff3_username = Read-Host -Prompt $i18n.Staff_Username
-  $Staff3_nickname = Read-Host -Prompt $i18n.Staff_Nickname
-  $Staff3_limitType = Read-Host -Prompt $i18n.Staff_Limit_Type
-
-  if (-not ($cardSlip.$Staff3_username)) {
-    Write-Host $i18n.Invalid_Slip -ForegroundColor Red
-  } else {
-    $Staff3_isAllowSlip = Read-Host -Prompt $i18n.Staff_Allows_Slip_Card
-    if (-not ($Staff3_isAllowSlip)) { $Staff3_isAllowSlip = "y" }
-  }
-
-  if (-not ($Staff3_limitType)) { $Staff3_limitType = "role" }
-
-  if ($Staff3_limitType -eq "role") {
-    $Staff3_limitStaff = Read-Host -Prompt $i18n.Staff_Limit_Staff
-    $Staff3_limitMember = Read-Host -Prompt $i18n.Staff_Limit_Member
-  } else {
-    $Staff3_limitAny = Read-Host -Prompt $i18n.Staff_Limit_Any
-  }
-
-  $Staff3_totalCards = Read-Host -Prompt $i18n.Staff_Limit_Total
-  if ($Staff3_totalCards -gt 9) {
-    Write-Host $i18n.Invalid_Card_amount -ForegroundColor Red
-    $Staff3_totalCards = 9
-  }
-
-  # Card 1
-  Write-Host ""
-  $Staff3_cards1_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url,"(1)"
-
-  if (-not ($Staff3_cards1_imageUri)) {
-    $St3_cd1_rand = Get-RandomCard
-    $Staff3_cards1_imageUri = "https://etgps1.thenewbieclub.my.id/Resources/Cards/$($St3_cd1_rand)"
-    $Staff3_cards1_malId = "0"
-    $Staff3_cards1_customUrl = "https://github.com/theNewbieClub-MAL/editionThreadGenerator-ps1"
-    $Staff3_cards1_titleResult = "Placeholder"
-  } elseif (($Edition_isSingle -eq "n") -and ("" -ne $Staff3_cards1_imageUri)) {
-    # Search title on MAL
-    $Staff3_cards1_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
-
-    Find-MAL -SearchQuery $Staff3_cards1_titleQuery
-
-    # Get MAL ID
-    $Staff3_cards1_malId = Read-Host -Prompt $i18n.Prompt_MALId_Insert
-    if (-not ($Staff3_cards1_malId)) { $Staff3_cards1_malId = "0" }
-
-    # Manually assign url if MAL ID is 0
-    if ($Staff3_cards1_malId -eq "0") {
-      Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
-      $Staff3_cards1_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
-      $Staff3_cards1_titleResult = $Staff3_cards1_titleQuery
-    } else {
-      $Staff3_cards1_titleResult = if ($Locale_set -eq "romaji") {
-        Get-MALTitle -MALId $Staff3_cards1_malId
-      } elseif ($Locale_set -eq "english") {
-        Get-MALTitle -MALId $Staff3_cards1_malId -English
-      }
-      Write-Host $i18n.Selected_Card_Title,$Staff3_cards1_titleResult -ForegroundColor Green
-    }
-  }
-
-  if (2 -le $Staff3_totalCards) {
-    # Card 2
-    Write-Host ""
-    $Staff3_cards2_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url,"(2)"
-
-    if (-not ($Staff3_cards2_imageUri)) {
-      $St3_cd2_rand = Get-RandomCard
-      $Staff3_cards2_imageUri = "https://etgps1.thenewbieclub.my.id/Resources/Cards/$($St3_cd2_rand)"
-      $Staff3_cards2_malId = "0"
-      $Staff3_cards2_customUrl = "https://github.com/theNewbieClub-MAL/editionThreadGenerator-ps1"
-      $Staff3_cards2_titleResult = "Placeholder"
-    } elseif (($Edition_isSingle -eq "n") -and ("" -ne $Staff3_cards2_imageUri)) {
-      # Search title on MAL
-      $Staff3_cards2_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
-
-      Find-MAL -SearchQuery $Staff3_cards2_titleQuery
-
-      # Get MAL ID
-      $Staff3_cards2_malId = Read-Host -Prompt $i18n.Prompt_MALId_Insert
-      if (-not ($Staff3_cards2_malId)) { $Staff3_cards2_malId = "0" }
-
-      # Manually assign url if MAL ID is 0
-      if ($Staff3_cards2_malId -eq "0") {
-        Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
-        $Staff3_cards2_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
-        $Staff3_cards2_titleResult = $Staff3_cards2_titleQuery
-      } else {
-        $Staff3_cards2_titleResult = if ($Locale_set -eq "romaji") {
-          Get-MALTitle -MALId $Staff3_cards2_malId
-        } elseif ($Locale_set -eq "english") {
-          Get-MALTitle -MALId $Staff3_cards2_malId -English
-        }
-        Write-Host $i18n.Selected_Card_Title,$Staff3_cards2_titleResult -ForegroundColor Green
-      }
-    }
-  }
-
-  if (3 -le $Staff3_totalCards) {
-    # Card 3
-    Write-Host ""
-    $Staff3_cards3_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url,"(3)"
-
-    if (-not ($Staff3_cards3_imageUri)) {
-      $St3_cd3_rand = Get-RandomCard
-      $Staff3_cards3_imageUri = "https://etgps1.thenewbieclub.my.id/Resources/Cards/$($St3_cd3_rand)"
-      $Staff3_cards3_malId = "0"
-      $Staff3_cards3_customUrl = "https://github.com/theNewbieClub-MAL/editionThreadGenerator-ps1"
-      $Staff3_cards3_titleResult = "Placeholder"
-    } elseif (($Edition_isSingle -eq "n") -and ("" -ne $Staff3_cards3_imageUri)) {
-      # Search title on MAL
-      $Staff3_cards3_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
-
-      Find-MAL -SearchQuery $Staff3_cards3_titleQuery
-
-      # Get MAL ID
-      $Staff3_cards3_malId = Read-Host -Prompt $i18n.Prompt_MALId_Insert
-      if (-not ($Staff3_cards3_malId)) { $Staff3_cards3_malId = "0" }
-
-      # Manually assign url if MAL ID is 0
-      if ($Staff3_cards3_malId -eq "0") {
-        Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
-        $Staff3_cards3_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
-        $Staff3_cards3_titleResult = $Staff3_cards3_titleQuery
-      } else {
-        $Staff3_cards3_titleResult = if ($Locale_set -eq "romaji") {
-          Get-MALTitle -MALId $Staff3_cards3_malId
-        } elseif ($Locale_set -eq "english") {
-          Get-MALTitle -MALId $Staff3_cards3_malId -English
-        }
-        Write-Host $i18n.Selected_Card_Title,$Staff3_cards3_titleResult -ForegroundColor Green
-      }
-    }
-  }
-
-  if (4 -le $Staff3_totalCards) {
-    # Card 4
-    Write-Host ""
-    $Staff3_cards4_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url,"(4)"
-
-    if (-not ($Staff3_cards4_imageUri)) {
-      $St3_cd4_rand = Get-RandomCard
-      $Staff3_cards4_imageUri = "https://etgps1.thenewbieclub.my.id/Resources/Cards/$($St3_cd4_rand)"
-      $Staff3_cards4_malId = "0"
-      $Staff3_cards4_customUrl = "https://github.com/theNewbieClub-MAL/editionThreadGenerator-ps1"
-      $Staff3_cards4_titleResult = "Placeholder"
-    } elseif (($Edition_isSingle -eq "n") -and ("" -ne $Staff3_cards4_imageUri)) {
-      # Search title on MAL
-      $Staff3_cards4_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
-
-      Find-MAL -SearchQuery $Staff3_cards4_titleQuery
-
-      # Get MAL ID
-      $Staff3_cards4_malId = Read-Host -Prompt $i18n.Prompt_MALId_Insert
-      if (-not ($Staff3_cards4_malId)) { $Staff3_cards4_malId = "0" }
-
-      # Manually assign url if MAL ID is 0
-      if ($Staff3_cards4_malId -eq "0") {
-        Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
-        $Staff3_cards4_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
-        $Staff3_cards4_titleResult = $Staff3_cards4_titleQuery
-      } else {
-        $Staff3_cards4_titleResult = if ($Locale_set -eq "romaji") {
-          Get-MALTitle -MALId $Staff3_cards4_malId
-        } elseif ($Locale_set -eq "english") {
-          Get-MALTitle -MALId $Staff3_cards4_malId -English
-        }
-        Write-Host $i18n.Selected_Card_Title,$Staff3_cards4_titleResult -ForegroundColor Green
-      }
-    }
-  }
-
-  if (5 -le $Staff3_totalCards) {
-    # Card 5
-    Write-Host ""
-    $Staff3_cards5_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url,"(5)"
-
-    if (-not ($Staff3_cards5_imageUri)) {
-      $St3_cd5_rand = Get-RandomCard
-      $Staff3_cards5_imageUri = "https://etgps1.thenewbieclub.my.id/Resources/Cards/$($St3_cd5_rand)"
-      $Staff3_cards5_malId = "0"
-      $Staff3_cards5_customUrl = "https://github.com/theNewbieClub-MAL/editionThreadGenerator-ps1"
-      $Staff3_cards5_titleResult = "Placeholder"
-    } elseif (($Edition_isSingle -eq "n") -and ("" -ne $Staff3_cards5_imageUri)) {
-      # Search title on MAL
-      $Staff3_cards5_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
-
-      Find-MAL -SearchQuery $Staff3_cards5_titleQuery
-
-      # Get MAL ID
-      $Staff3_cards5_malId = Read-Host -Prompt $i18n.Prompt_MALId_Insert
-      if (-not ($Staff3_cards5_malId)) { $Staff3_cards5_malId = "0" }
-
-      # Manually assign url if MAL ID is 0
-      if ($Staff3_cards5_malId -eq "0") {
-        Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
-        $Staff3_cards5_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
-        $Staff3_cards5_titleResult = $Staff3_cards5_titleQuery
-      } else {
-        $Staff3_cards5_titleResult = if ($Locale_set -eq "romaji") {
-          Get-MALTitle -MALId $Staff3_cards5_malId
-        } elseif ($Locale_set -eq "english") {
-          Get-MALTitle -MALId $Staff3_cards5_malId -English
-        }
-        Write-Host $i18n.Selected_Card_Title,$Staff3_cards5_titleResult -ForegroundColor Green
-      }
-    }
-  }
-
-  if (6 -le $Staff3_totalCards) {
-    # Card 6
-    Write-Host ""
-    $Staff3_cards6_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url,"(6)"
-
-    if (-not ($Staff3_cards6_imageUri)) {
-      $St3_cd6_rand = Get-RandomCard
-      $Staff3_cards6_imageUri = "https://etgps1.thenewbieclub.my.id/Resources/Cards/$($St3_cd6_rand)"
-      $Staff3_cards6_malId = "0"
-      $Staff3_cards6_customUrl = "https://github.com/theNewbieClub-MAL/editionThreadGenerator-ps1"
-      $Staff3_cards6_titleResult = "Placeholder"
-    } elseif (($Edition_isSingle -eq "n") -and ("" -ne $Staff3_cards6_imageUri)) {
-      # Search title on MAL
-      $Staff3_cards6_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
-
-      Find-MAL -SearchQuery $Staff3_cards6_titleQuery
-
-      # Get MAL ID
-      $Staff3_cards6_malId = Read-Host -Prompt $i18n.Prompt_MALId_Insert
-      if (-not ($Staff3_cards6_malId)) { $Staff3_cards6_malId = "0" }
-
-      # Manually assign url if MAL ID is 0
-      if ($Staff3_cards6_malId -eq "0") {
-        Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
-        $Staff3_cards6_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
-        $Staff3_cards6_titleResult = $Staff3_cards6_titleQuery
-      } else {
-        $Staff3_cards6_titleResult = if ($Locale_set -eq "romaji") {
-          Get-MALTitle -MALId $Staff3_cards6_malId
-        } elseif ($Locale_set -eq "english") {
-          Get-MALTitle -MALId $Staff3_cards6_malId -English
-        }
-        Write-Host $i18n.Selected_Card_Title,$Staff3_cards6_titleResult -ForegroundColor Green
-      }
-    }
-  }
-
-  if (7 -le $Staff3_totalCards) {
-    # Card 7
-    Write-Host ""
-    $Staff3_cards7_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url,"(7)"
-
-    if (-not ($Staff3_cards7_imageUri)) {
-      $St3_cd7_rand = Get-RandomCard
-      $Staff3_cards7_imageUri = "https://etgps1.thenewbieclub.my.id/Resources/Cards/$($St3_cd7_rand)"
-      $Staff3_cards7_malId = "0"
-      $Staff3_cards7_customUrl = "https://github.com/theNewbieClub-MAL/editionThreadGenerator-ps1"
-      $Staff3_cards7_titleResult = "Placeholder"
-    } elseif (($Edition_isSingle -eq "n") -and ("" -ne $Staff3_cards7_imageUri)) {
-      # Search title on MAL
-      $Staff3_cards7_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
-
-      Find-MAL -SearchQuery $Staff3_cards7_titleQuery
-
-      # Get MAL ID
-      $Staff3_cards7_malId = Read-Host -Prompt $i18n.Prompt_MALId_Insert
-      if (-not ($Staff3_cards7_malId)) { $Staff3_cards7_malId = "0" }
-
-      # Manually assign url if MAL ID is 0
-      if ($Staff3_cards7_malId -eq "0") {
-        Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
-        $Staff3_cards7_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
-        $Staff3_cards7_titleResult = $Staff3_cards7_titleQuery
-      } else {
-        $Staff3_cards7_titleResult = if ($Locale_set -eq "romaji") {
-          Get-MALTitle -MALId $Staff3_cards7_malId
-        } elseif ($Locale_set -eq "english") {
-          Get-MALTitle -MALId $Staff3_cards7_malId -English
-        }
-        Write-Host $i18n.Selected_Card_Title,$Staff3_cards7_titleResult -ForegroundColor Green
-      }
-    }
-  }
-
-  if (8 -le $Staff3_totalCards) {
-    # Card 8
-    Write-Host ""
-    $Staff3_cards8_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url,"(8)"
-
-    if (-not ($Staff3_cards8_imageUri)) {
-      $St3_cd8_rand = Get-RandomCard
-      $Staff3_cards8_imageUri = "https://etgps1.thenewbieclub.my.id/Resources/Cards/$($St3_cd8_rand)"
-      $Staff3_cards8_malId = "0"
-      $Staff3_cards8_customUrl = "https://github.com/theNewbieClub-MAL/editionThreadGenerator-ps1"
-      $Staff3_cards8_titleResult = "Placeholder"
-    } elseif (($Edition_isSingle -eq "n") -and ("" -ne $Staff3_cards8_imageUri)) {
-      # Search title on MAL
-      $Staff3_cards8_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
-
-      Find-MAL -SearchQuery $Staff3_cards8_titleQuery
-
-      # Get MAL ID
-      $Staff3_cards8_malId = Read-Host -Prompt $i18n.Prompt_MALId_Insert
-      if (-not ($Staff3_cards8_malId)) { $Staff3_cards8_malId = "0" }
-
-      # Manually assign url if MAL ID is 0
-      if ($Staff3_cards8_malId -eq "0") {
-        Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
-        $Staff3_cards8_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
-        $Staff3_cards8_titleResult = $Staff3_cards8_titleQuery
-      } else {
-        $Staff3_cards8_titleResult = if ($Locale_set -eq "romaji") {
-          Get-MALTitle -MALId $Staff3_cards8_malId
-        } elseif ($Locale_set -eq "english") {
-          Get-MALTitle -MALId $Staff3_cards8_malId -English
-        }
-        Write-Host $i18n.Selected_Card_Title,$Staff3_cards8_titleResult -ForegroundColor Green
-      }
-    }
-  }
-
-  if (9 -le $Staff3_totalCards) {
-    # Card 9
-    Write-Host ""
-    $Staff3_cards9_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url,"(9)"
-
-    if (-not ($Staff3_cards9_imageUri)) {
-      $St3_cd9_rand = Get-RandomCard
-      $Staff3_cards9_imageUri = "https://etgps1.thenewbieclub.my.id/Resources/Cards/$($St3_cd9_rand)"
-      $Staff3_cards9_malId = "0"
-      $Staff3_cards9_customUrl = "https://github.com/theNewbieClub-MAL/editionThreadGenerator-ps1"
-      $Staff3_cards9_titleResult = "Placeholder"
-    } elseif (($Edition_isSingle -eq "n") -and ("" -ne $Staff3_cards9_imageUri)) {
-      # Search title on MAL
-      $Staff3_cards9_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
-
-      Find-MAL -SearchQuery $Staff3_cards9_titleQuery
-
-      # Get MAL ID
-      $Staff3_cards9_malId = Read-Host -Prompt $i18n.Prompt_MALId_Insert
-      if (-not ($Staff3_cards9_malId)) { $Staff3_cards9_malId = "0" }
-
-      # Manually assign url if MAL ID is 0
-      if ($Staff3_cards9_malId -eq "0") {
-        Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
-        $Staff3_cards9_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
-        $Staff3_cards9_titleResult = $Staff3_cards9_titleQuery
-      } else {
-        $Staff3_cards9_titleResult = if ($Locale_set -eq "romaji") {
-          Get-MALTitle -MALId $Staff3_cards9_malId
-        } elseif ($Locale_set -eq "english") {
-          Get-MALTitle -MALId $Staff3_cards9_malId -English
-        }
-        Write-Host $i18n.Selected_Card_Title,$Staff3_cards9_titleResult -ForegroundColor Green
-      }
-    }
-  }
-}
-
-# Staff 4
-# -------
-
-if (4 -le $Edition_staffCount) {
-  Write-Host ""
-  Write-Host $i18n.Header_Staff_4 -ForegroundColor Blue
-  Write-Host "-------------"
-
-  $Staff4_username = Read-Host -Prompt $i18n.Staff_Username
-  $Staff4_nickname = Read-Host -Prompt $i18n.Staff_Nickname
-  $Staff4_limitType = Read-Host -Prompt $i18n.Staff_Limit_Type
-
-  if (-not ($cardSlip.$Staff4_username)) {
-    Write-Host $i18n.Invalid_Slip -ForegroundColor Red
-  } else {
-    $Staff4_isAllowSlip = Read-Host -Prompt $i18n.Staff_Allows_Slip_Card
-    if (-not ($Staff4_isAllowSlip)) { $Staff4_isAllowSlip = "y" }
-  }
-
-  if (-not ($Staff4_limitType)) { $Staff4_limitType = "role" }
-
-  if ($Staff4_limitType -eq "role") {
-    $Staff4_limitStaff = Read-Host -Prompt $i18n.Staff_Limit_Staff
-    $Staff4_limitMember = Read-Host -Prompt $i18n.Staff_Limit_Member
-  } else {
-    $Staff4_limitAny = Read-Host -Prompt $i18n.Staff_Limit_Any
-  }
-
-  $Staff4_totalCards = Read-Host -Prompt $i18n.Staff_Limit_Total
-  if ($Staff4_totalCards -gt 9) {
-    Write-Host $i18n.Invalid_Card_amount -ForegroundColor Red
-    $Staff4_totalCards = 9
-  }
-
-  # Card 1
-  Write-Host ""
-  $Staff4_cards1_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url,"(1)"
-
-  if (-not ($Staff4_cards1_imageUri)) {
-    $St4_cd1_rand = Get-RandomCard
-    $Staff4_cards1_imageUri = "https://etgps1.thenewbieclub.my.id/Resources/Cards/$($St4_cd1_rand)"
-    $Staff4_cards1_malId = "0"
-    $Staff4_cards1_customUrl = "https://github.com/theNewbieClub-MAL/editionThreadGenerator-ps1"
-    $Staff4_cards1_titleResult = "Placeholder"
-  } elseif (($Edition_isSingle -eq "n") -and ("" -ne $Staff4_cards1_imageUri)) {
-    # Search title on MAL
-    $Staff4_cards1_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
-
-    Find-MAL -SearchQuery $Staff4_cards1_titleQuery
-
-    # Get MAL ID
-    $Staff4_cards1_malId = Read-Host -Prompt $i18n.Prompt_MALId_Insert
-    if (-not ($Staff4_cards1_malId)) { $Staff4_cards1_malId = "0" }
-
-    # Manually assign url if MAL ID is 0
-    if ($Staff4_cards1_malId -eq "0") {
-      Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
-      $Staff4_cards1_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
-      $Staff4_cards1_titleResult = $Staff4_cards1_titleQuery
-    } else {
-      $Staff4_cards1_titleResult = if ($Locale_set -eq "romaji") {
-        Get-MALTitle -MALId $Staff4_cards1_malId
-      } elseif ($Locale_set -eq "english") {
-        Get-MALTitle -MALId $Staff4_cards1_malId -English
-      }
-      Write-Host $i18n.Selected_Card_Title,$Staff4_cards1_titleResult -ForegroundColor Green
-    }
-  }
-
-  if (2 -le $Staff4_totalCards) {
-    # Card 2
-    Write-Host ""
-    $Staff4_cards2_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url,"(2)"
-
-    if (-not ($Staff4_cards2_imageUri)) {
-      $St4_cd2_rand = Get-RandomCard
-      $Staff4_cards2_imageUri = "https://etgps1.thenewbieclub.my.id/Resources/Cards/$($St4_cd2_rand)"
-      $Staff4_cards2_malId = "0"
-      $Staff4_cards2_customUrl = "https://github.com/theNewbieClub-MAL/editionThreadGenerator-ps1"
-      $Staff4_cards2_titleResult = "Placeholder"
-    } elseif (($Edition_isSingle -eq "n") -and ("" -ne $Staff4_cards2_imageUri)) {
-      # Search title on MAL
-      $Staff4_cards2_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
-
-      Find-MAL -SearchQuery $Staff4_cards2_titleQuery
-
-      # Get MAL ID
-      $Staff4_cards2_malId = Read-Host -Prompt $i18n.Prompt_MALId_Insert
-      if (-not ($Staff4_cards2_malId)) { $Staff4_cards2_malId = "0" }
-
-      # Manually assign url if MAL ID is 0
-      if ($Staff4_cards2_malId -eq "0") {
-        Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
-        $Staff4_cards2_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
-        $Staff4_cards2_titleResult = $Staff4_cards2_titleQuery
-      } else {
-        $Staff4_cards2_titleResult = if ($Locale_set -eq "romaji") {
-          Get-MALTitle -MALId $Staff4_cards2_malId
-        } elseif ($Locale_set -eq "english") {
-          Get-MALTitle -MALId $Staff4_cards2_malId -English
-        }
-        Write-Host $i18n.Selected_Card_Title,$Staff4_cards2_titleResult -ForegroundColor Green
-      }
-    }
-  }
-
-  if (3 -le $Staff4_totalCards) {
-    # Card 3
-    Write-Host ""
-    $Staff4_cards3_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url,"(3)"
-
-    if (-not ($Staff4_cards3_imageUri)) {
-      $St4_cd3_rand = Get-RandomCard
-      $Staff4_cards3_imageUri = "https://etgps1.thenewbieclub.my.id/Resources/Cards/$($St4_cd3_rand)"
-      $Staff4_cards3_malId = "0"
-      $Staff4_cards3_customUrl = "https://github.com/theNewbieClub-MAL/editionThreadGenerator-ps1"
-      $Staff4_cards3_titleResult = "Placeholder"
-    } elseif (($Edition_isSingle -eq "n") -and ("" -ne $Staff4_cards3_imageUri)) {
-      # Search title on MAL
-      $Staff4_cards3_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
-
-      Find-MAL -SearchQuery $Staff4_cards3_titleQuery
-
-      # Get MAL ID
-      $Staff4_cards3_malId = Read-Host -Prompt $i18n.Prompt_MALId_Insert
-      if (-not ($Staff4_cards3_malId)) { $Staff4_cards3_malId = "0" }
-
-      # Manually assign url if MAL ID is 0
-      if ($Staff4_cards3_malId -eq "0") {
-        Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
-        $Staff4_cards3_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
-        $Staff4_cards3_titleResult = $Staff4_cards3_titleQuery
-      } else {
-        $Staff4_cards3_titleResult = if ($Locale_set -eq "romaji") {
-          Get-MALTitle -MALId $Staff4_cards3_malId
-        } elseif ($Locale_set -eq "english") {
-          Get-MALTitle -MALId $Staff4_cards3_malId -English
-        }
-        Write-Host $i18n.Selected_Card_Title,$Staff4_cards3_titleResult -ForegroundColor Green
-      }
-    }
-  }
-
-  if (4 -le $Staff4_totalCards) {
-    # Card 4
-    Write-Host ""
-    $Staff4_cards4_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url,"(4)"
-
-    if (-not ($Staff4_cards4_imageUri)) {
-      $St4_cd4_rand = Get-RandomCard
-      $Staff4_cards4_imageUri = "https://etgps1.thenewbieclub.my.id/Resources/Cards/$($St4_cd4_rand)"
-      $Staff4_cards4_malId = "0"
-      $Staff4_cards4_customUrl = "https://github.com/theNewbieClub-MAL/editionThreadGenerator-ps1"
-      $Staff4_cards4_titleResult = "Placeholder"
-    } elseif (($Edition_isSingle -eq "n") -and ("" -ne $Staff4_cards4_imageUri)) {
-      # Search title on MAL
-      $Staff4_cards4_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
-
-      Find-MAL -SearchQuery $Staff4_cards4_titleQuery
-
-      # Get MAL ID
-      $Staff4_cards4_malId = Read-Host -Prompt $i18n.Prompt_MALId_Insert
-      if (-not ($Staff4_cards4_malId)) { $Staff4_cards4_malId = "0" }
-
-      # Manually assign url if MAL ID is 0
-      if ($Staff4_cards4_malId -eq "0") {
-        Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
-        $Staff4_cards4_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
-        $Staff4_cards4_titleResult = $Staff4_cards4_titleQuery
-      } else {
-        $Staff4_cards4_titleResult = if ($Locale_set -eq "romaji") {
-          Get-MALTitle -MALId $Staff4_cards4_malId
-        } elseif ($Locale_set -eq "english") {
-          Get-MALTitle -MALId $Staff4_cards4_malId -English
-        }
-        Write-Host $i18n.Selected_Card_Title,$Staff4_cards4_titleResult -ForegroundColor Green
-      }
-    }
-  }
-
-  if (5 -le $Staff4_totalCards) {
-    # Card 5
-    Write-Host ""
-    $Staff4_cards5_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url,"(5)"
-
-    if (-not ($Staff4_cards5_imageUri)) {
-      $St4_cd5_rand = Get-RandomCard
-      $Staff4_cards5_imageUri = "https://etgps1.thenewbieclub.my.id/Resources/Cards/$($St4_cd5_rand)"
-      $Staff4_cards5_malId = "0"
-      $Staff4_cards5_customUrl = "https://github.com/theNewbieClub-MAL/editionThreadGenerator-ps1"
-      $Staff4_cards5_titleResult = "Placeholder"
-    } elseif (($Edition_isSingle -eq "n") -and ("" -ne $Staff4_cards5_imageUri)) {
-      # Search title on MAL
-      $Staff4_cards5_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
-
-      Find-MAL -SearchQuery $Staff4_cards5_titleQuery
-
-      # Get MAL ID
-      $Staff4_cards5_malId = Read-Host -Prompt $i18n.Prompt_MALId_Insert
-      if (-not ($Staff4_cards5_malId)) { $Staff4_cards5_malId = "0" }
-
-      # Manually assign url if MAL ID is 0
-      if ($Staff4_cards5_malId -eq "0") {
-        Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
-        $Staff4_cards5_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
-        $Staff4_cards5_titleResult = $Staff4_cards5_titleQuery
-      } else {
-        $Staff4_cards5_titleResult = if ($Locale_set -eq "romaji") {
-          Get-MALTitle -MALId $Staff4_cards5_malId
-        } elseif ($Locale_set -eq "english") {
-          Get-MALTitle -MALId $Staff4_cards5_malId -English
-        }
-        Write-Host $i18n.Selected_Card_Title,$Staff4_cards5_titleResult -ForegroundColor Green
-      }
-    }
-  }
-
-  if (6 -le $Staff4_totalCards) {
-    # Card 6
-    Write-Host ""
-    $Staff4_cards6_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url,"(6)"
-
-    if (-not ($Staff4_cards6_imageUri)) {
-      $St4_cd6_rand = Get-RandomCard
-      $Staff4_cards6_imageUri = "https://etgps1.thenewbieclub.my.id/Resources/Cards/$($St4_cd6_rand)"
-      $Staff4_cards6_malId = "0"
-      $Staff4_cards6_customUrl = "https://github.com/theNewbieClub-MAL/editionThreadGenerator-ps1"
-      $Staff4_cards6_titleResult = "Placeholder"
-    } elseif (($Edition_isSingle -eq "n") -and ("" -ne $Staff4_cards6_imageUri)) {
-      # Search title on MAL
-      $Staff4_cards6_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
-
-      Find-MAL -SearchQuery $Staff4_cards6_titleQuery
-
-      # Get MAL ID
-      $Staff4_cards6_malId = Read-Host -Prompt $i18n.Prompt_MALId_Insert
-      if (-not ($Staff4_cards6_malId)) { $Staff4_cards6_malId = "0" }
-
-      # Manually assign url if MAL ID is 0
-      if ($Staff4_cards6_malId -eq "0") {
-        Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
-        $Staff4_cards6_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
-        $Staff4_cards6_titleResult = $Staff4_cards6_titleQuery
-      } else {
-        $Staff4_cards6_titleResult = if ($Locale_set -eq "romaji") {
-          Get-MALTitle -MALId $Staff4_cards6_malId
-        } elseif ($Locale_set -eq "english") {
-          Get-MALTitle -MALId $Staff4_cards6_malId -English
-        }
-        Write-Host $i18n.Selected_Card_Title,$Staff4_cards6_titleResult -ForegroundColor Green
-      }
-    }
-  }
-
-  if (7 -le $Staff4_totalCards) {
-    # Card 7
-    Write-Host ""
-    $Staff4_cards7_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url,"(7)"
-
-    if (-not ($Staff4_cards7_imageUri)) {
-      $St4_cd7_rand = Get-RandomCard
-      $Staff4_cards7_imageUri = "https://etgps1.thenewbieclub.my.id/Resources/Cards/$($St4_cd7_rand)"
-      $Staff4_cards7_malId = "0"
-      $Staff4_cards7_customUrl = "https://github.com/theNewbieClub-MAL/editionThreadGenerator-ps1"
-      $Staff4_cards7_titleResult = "Placeholder"
-    } elseif (($Edition_isSingle -eq "n") -and ("" -ne $Staff4_cards7_imageUri)) {
-      # Search title on MAL
-      $Staff4_cards7_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
-
-      Find-MAL -SearchQuery $Staff4_cards7_titleQuery
-
-      # Get MAL ID
-      $Staff4_cards7_malId = Read-Host -Prompt $i18n.Prompt_MALId_Insert
-      if (-not ($Staff4_cards7_malId)) { $Staff4_cards7_malId = "0" }
-
-      # Manually assign url if MAL ID is 0
-      if ($Staff4_cards7_malId -eq "0") {
-        Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
-        $Staff4_cards7_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
-        $Staff4_cards7_titleResult = $Staff4_cards7_titleQuery
-      } else {
-        $Staff4_cards7_titleResult = if ($Locale_set -eq "romaji") {
-          Get-MALTitle -MALId $Staff4_cards7_malId
-        } elseif ($Locale_set -eq "english") {
-          Get-MALTitle -MALId $Staff4_cards7_malId -English
-        }
-        Write-Host $i18n.Selected_Card_Title,$Staff4_cards7_titleResult -ForegroundColor Green
-      }
-    }
-  }
-
-  if (8 -le $Staff4_totalCards) {
-    # Card 8
-    Write-Host ""
-    $Staff4_cards8_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url,"(8)"
-
-    if (-not ($Staff4_cards8_imageUri)) {
-      $St4_cd8_rand = Get-RandomCard
-      $Staff4_cards8_imageUri = "https://etgps1.thenewbieclub.my.id/Resources/Cards/$($St4_cd8_rand)"
-      $Staff4_cards8_malId = "0"
-      $Staff4_cards8_customUrl = "https://github.com/theNewbieClub-MAL/editionThreadGenerator-ps1"
-      $Staff4_cards8_titleResult = "Placeholder"
-    } elseif (($Edition_isSingle -eq "n") -and ("" -ne $Staff4_cards8_imageUri)) {
-      # Search title on MAL
-      $Staff4_cards8_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
-
-      Find-MAL -SearchQuery $Staff4_cards8_titleQuery
-
-      # Get MAL ID
-      $Staff4_cards8_malId = Read-Host -Prompt $i18n.Prompt_MALId_Insert
-      if (-not ($Staff4_cards8_malId)) { $Staff4_cards8_malId = "0" }
-
-      # Manually assign url if MAL ID is 0
-      if ($Staff4_cards8_malId -eq "0") {
-        Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
-        $Staff4_cards8_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
-        $Staff4_cards8_titleResult = $Staff4_cards8_titleQuery
-      } else {
-        $Staff4_cards8_titleResult = if ($Locale_set -eq "romaji") {
-          Get-MALTitle -MALId $Staff4_cards8_malId
-        } elseif ($Locale_set -eq "english") {
-          Get-MALTitle -MALId $Staff4_cards8_malId -English
-        }
-        Write-Host $i18n.Selected_Card_Title,$Staff4_cards8_titleResult -ForegroundColor Green
-      }
-    }
-  }
-
-  if (9 -le $Staff4_totalCards) {
-    # Card 9
-    Write-Host ""
-    $Staff4_cards9_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url,"(9)"
-
-    if (-not ($Staff4_cards9_imageUri)) {
-      $St4_cd9_rand = Get-RandomCard
-      $Staff4_cards9_imageUri = "https://etgps1.thenewbieclub.my.id/Resources/Cards/$($St4_cd9_rand)"
-      $Staff4_cards9_malId = "0"
-      $Staff4_cards9_customUrl = "https://github.com/theNewbieClub-MAL/editionThreadGenerator-ps1"
-      $Staff4_cards9_titleResult = "Placeholder"
-    } elseif (($Edition_isSingle -eq "n") -and ("" -ne $Staff4_cards9_imageUri)) {
-      # Search title on MAL
-      $Staff4_cards9_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
-
-      Find-MAL -SearchQuery $Staff4_cards9_titleQuery
-
-      # Get MAL ID
-      $Staff4_cards9_malId = Read-Host -Prompt $i18n.Prompt_MALId_Insert
-      if (-not ($Staff4_cards9_malId)) { $Staff4_cards9_malId = "0" }
-
-      # Manually assign url if MAL ID is 0
-      if ($Staff4_cards9_malId -eq "0") {
-        Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
-        $Staff4_cards9_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
-        $Staff4_cards9_titleResult = $Staff4_cards9_titleQuery
-      } else {
-        $Staff4_cards9_titleResult = if ($Locale_set -eq "romaji") {
-          Get-MALTitle -MALId $Staff4_cards9_malId
-        } elseif ($Locale_set -eq "english") {
-          Get-MALTitle -MALId $Staff4_cards9_malId -English
-        }
-        Write-Host $i18n.Selected_Card_Title,$Staff4_cards9_titleResult -ForegroundColor Green
-      }
-    }
-  }
-}
-
-# Staff 5
-# -------
-
-if (5 -le $Edition_staffCount) {
-  Write-Host ""
-  Write-Host $i18n.Header_Staff_5 -ForegroundColor Blue
-  Write-Host "-------------"
-
-  $Staff5_username = Read-Host -Prompt $i18n.Staff_Username
-  $Staff5_nickname = Read-Host -Prompt $i18n.Staff_Nickname
-  $Staff5_limitType = Read-Host -Prompt $i18n.Staff_Limit_Type
-
-  if (-not ($cardSlip.$Staff5_username)) {
-    Write-Host $i18n.Invalid_Slip -ForegroundColor Red
-  } else {
-    $Staff5_isAllowSlip = Read-Host -Prompt $i18n.Staff_Allows_Slip_Card
-    if (-not ($Staff5_isAllowSlip)) { $Staff5_isAllowSlip = "y" }
-  }
-
-  if (-not ($Staff5_limitType)) { $Staff5_limitType = "role" }
-
-  if ($Staff5_limitType -eq "role") {
-    $Staff5_limitStaff = Read-Host -Prompt $i18n.Staff_Limit_Staff
-    $Staff5_limitMember = Read-Host -Prompt $i18n.Staff_Limit_Member
-  } else {
-    $Staff5_limitAny = Read-Host -Prompt $i18n.Staff_Limit_Any
-  }
-
-  $Staff5_totalCards = Read-Host -Prompt $i18n.Staff_Limit_Total
-  if ($Staff5_totalCards -gt 9) {
-    Write-Host $i18n.Invalid_Card_amount -ForegroundColor Red
-    $Staff5_totalCards = 9
-  }
-
-  # Card 1
-  Write-Host ""
-  $Staff5_cards1_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url,"(1)"
-
-  if (-not ($Staff5_cards1_imageUri)) {
-    $St5_cd1_rand = Get-RandomCard
-    $Staff5_cards1_imageUri = "https://etgps1.thenewbieclub.my.id/Resources/Cards/$($St5_cd1_rand)"
-    $Staff5_cards1_malId = "0"
-    $Staff5_cards1_customUrl = "https://github.com/theNewbieClub-MAL/editionThreadGenerator-ps1"
-    $Staff5_cards1_titleResult = "Placeholder"
-  } elseif (($Edition_isSingle -eq "n") -and ("" -ne $Staff5_cards1_imageUri)) {
-    # Search title on MAL
-    $Staff5_cards1_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
-
-    Find-MAL -SearchQuery $Staff5_cards1_titleQuery
-
-    # Get MAL ID
-    $Staff5_cards1_malId = Read-Host -Prompt $i18n.Prompt_MALId_Insert
-    if (-not ($Staff5_cards1_malId)) { $Staff5_cards1_malId = "0" }
-
-    # Manually assign url if MAL ID is 0
-    if ($Staff5_cards1_malId -eq "0") {
-      Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
-      $Staff5_cards1_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
-      $Staff5_cards1_titleResult = $Staff5_cards1_titleQuery
-    } else {
-      $Staff5_cards1_titleResult = if ($Locale_set -eq "romaji") {
-        Get-MALTitle -MALId $Staff5_cards1_malId
-      } elseif ($Locale_set -eq "english") {
-        Get-MALTitle -MALId $Staff5_cards1_malId -English
-      }
-      Write-Host $i18n.Selected_Card_Title,$Staff5_cards1_titleResult -ForegroundColor Green
-    }
-  }
-
-  if (2 -le $Staff5_totalCards) {
-    # Card 2
-    Write-Host ""
-    $Staff5_cards2_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url,"(2)"
-
-    if (-not ($Staff5_cards2_imageUri)) {
-      $St5_cd2_rand = Get-RandomCard
-      $Staff5_cards2_imageUri = "https://etgps1.thenewbieclub.my.id/Resources/Cards/$($St5_cd2_rand)"
-      $Staff5_cards2_malId = "0"
-      $Staff5_cards2_customUrl = "https://github.com/theNewbieClub-MAL/editionThreadGenerator-ps1"
-      $Staff5_cards2_titleResult = "Placeholder"
-    } elseif (($Edition_isSingle -eq "n") -and ("" -ne $Staff5_cards2_imageUri)) {
-      # Search title on MAL
-      $Staff5_cards2_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
-
-      Find-MAL -SearchQuery $Staff5_cards2_titleQuery
-
-      # Get MAL ID
-      $Staff5_cards2_malId = Read-Host -Prompt $i18n.Prompt_MALId_Insert
-      if (-not ($Staff5_cards2_malId)) { $Staff5_cards2_malId = "0" }
-
-      # Manually assign url if MAL ID is 0
-      if ($Staff5_cards2_malId -eq "0") {
-        Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
-        $Staff5_cards2_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
-        $Staff5_cards2_titleResult = $Staff5_cards2_titleQuery
-      } else {
-        $Staff5_cards2_titleResult = if ($Locale_set -eq "romaji") {
-          Get-MALTitle -MALId $Staff5_cards2_malId
-        } elseif ($Locale_set -eq "english") {
-          Get-MALTitle -MALId $Staff5_cards2_malId -English
-        }
-        Write-Host $i18n.Selected_Card_Title,$Staff5_cards2_titleResult -ForegroundColor Green
-      }
-    }
-  }
-
-  if (3 -le $Staff5_totalCards) {
-    # Card 3
-    Write-Host ""
-    $Staff5_cards3_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url,"(3)"
-
-    if (-not ($Staff5_cards3_imageUri)) {
-      $St5_cd3_rand = Get-RandomCard
-      $Staff5_cards3_imageUri = "https://etgps1.thenewbieclub.my.id/Resources/Cards/$($St5_cd3_rand)"
-      $Staff5_cards3_malId = "0"
-      $Staff5_cards3_customUrl = "https://github.com/theNewbieClub-MAL/editionThreadGenerator-ps1"
-      $Staff5_cards3_titleResult = "Placeholder"
-    } elseif (($Edition_isSingle -eq "n") -and ("" -ne $Staff5_cards3_imageUri)) {
-      # Search title on MAL
-      $Staff5_cards3_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
-
-      Find-MAL -SearchQuery $Staff5_cards3_titleQuery
-
-      # Get MAL ID
-      $Staff5_cards3_malId = Read-Host -Prompt $i18n.Prompt_MALId_Insert
-      if (-not ($Staff5_cards3_malId)) { $Staff5_cards3_malId = "0" }
-
-      # Manually assign url if MAL ID is 0
-      if ($Staff5_cards3_malId -eq "0") {
-        Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
-        $Staff5_cards3_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
-        $Staff5_cards3_titleResult = $Staff5_cards3_titleQuery
-      } else {
-        $Staff5_cards3_titleResult = if ($Locale_set -eq "romaji") {
-          Get-MALTitle -MALId $Staff5_cards3_malId
-        } elseif ($Locale_set -eq "english") {
-          Get-MALTitle -MALId $Staff5_cards3_malId -English
-        }
-        Write-Host $i18n.Selected_Card_Title,$Staff5_cards3_titleResult -ForegroundColor Green
-      }
-    }
-  }
-
-  if (4 -le $Staff5_totalCards) {
-    # Card 4
-    Write-Host ""
-    $Staff5_cards4_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url,"(4)"
-
-    if (-not ($Staff5_cards4_imageUri)) {
-      $St5_cd4_rand = Get-RandomCard
-      $Staff5_cards4_imageUri = "https://etgps1.thenewbieclub.my.id/Resources/Cards/$($St5_cd4_rand)"
-      $Staff5_cards4_malId = "0"
-      $Staff5_cards4_customUrl = "https://github.com/theNewbieClub-MAL/editionThreadGenerator-ps1"
-      $Staff5_cards4_titleResult = "Placeholder"
-    } elseif (($Edition_isSingle -eq "n") -and ("" -ne $Staff5_cards4_imageUri)) {
-      # Search title on MAL
-      $Staff5_cards4_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
-
-      Find-MAL -SearchQuery $Staff5_cards4_titleQuery
-
-      # Get MAL ID
-      $Staff5_cards4_malId = Read-Host -Prompt $i18n.Prompt_MALId_Insert
-      if (-not ($Staff5_cards4_malId)) { $Staff5_cards4_malId = "0" }
-
-      # Manually assign url if MAL ID is 0
-      if ($Staff5_cards4_malId -eq "0") {
-        Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
-        $Staff5_cards4_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
-        $Staff5_cards4_titleResult = $Staff5_cards4_titleQuery
-      } else {
-        $Staff5_cards4_titleResult = if ($Locale_set -eq "romaji") {
-          Get-MALTitle -MALId $Staff5_cards4_malId
-        } elseif ($Locale_set -eq "english") {
-          Get-MALTitle -MALId $Staff5_cards4_malId -English
-        }
-        Write-Host $i18n.Selected_Card_Title,$Staff5_cards4_titleResult -ForegroundColor Green
-      }
-    }
-  }
-
-  if (5 -le $Staff5_totalCards) {
-    # Card 5
-    Write-Host ""
-    $Staff5_cards5_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url,"(5)"
-
-    if (-not ($Staff5_cards5_imageUri)) {
-      $St5_cd5_rand = Get-RandomCard
-      $Staff5_cards5_imageUri = "https://etgps1.thenewbieclub.my.id/Resources/Cards/$($St5_cd5_rand)"
-      $Staff5_cards5_malId = "0"
-      $Staff5_cards5_customUrl = "https://github.com/theNewbieClub-MAL/editionThreadGenerator-ps1"
-      $Staff5_cards5_titleResult = "Placeholder"
-    } elseif (($Edition_isSingle -eq "n") -and ("" -ne $Staff5_cards5_imageUri)) {
-      # Search title on MAL
-      $Staff5_cards5_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
-
-      Find-MAL -SearchQuery $Staff5_cards5_titleQuery
-
-      # Get MAL ID
-      $Staff5_cards5_malId = Read-Host -Prompt $i18n.Prompt_MALId_Insert
-      if (-not ($Staff5_cards5_malId)) { $Staff5_cards5_malId = "0" }
-
-      # Manually assign url if MAL ID is 0
-      if ($Staff5_cards5_malId -eq "0") {
-        Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
-        $Staff5_cards5_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
-        $Staff5_cards5_titleResult = $Staff5_cards5_titleQuery
-      } else {
-        $Staff5_cards5_titleResult = if ($Locale_set -eq "romaji") {
-          Get-MALTitle -MALId $Staff5_cards5_malId
-        } elseif ($Locale_set -eq "english") {
-          Get-MALTitle -MALId $Staff5_cards5_malId -English
-        }
-        Write-Host $i18n.Selected_Card_Title,$Staff5_cards5_titleResult -ForegroundColor Green
-      }
-    }
-  }
-
-  if (6 -le $Staff5_totalCards) {
-    # Card 6
-    Write-Host ""
-    $Staff5_cards6_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url,"(6)"
-
-    if (-not ($Staff5_cards6_imageUri)) {
-      $St5_cd6_rand = Get-RandomCard
-      $Staff5_cards6_imageUri = "https://etgps1.thenewbieclub.my.id/Resources/Cards/$($St5_cd6_rand)"
-      $Staff5_cards6_malId = "0"
-      $Staff5_cards6_customUrl = "https://github.com/theNewbieClub-MAL/editionThreadGenerator-ps1"
-      $Staff5_cards6_titleResult = "Placeholder"
-    } elseif (($Edition_isSingle -eq "n") -and ("" -ne $Staff5_cards6_imageUri)) {
-      # Search title on MAL
-      $Staff5_cards6_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
-
-      Find-MAL -SearchQuery $Staff5_cards6_titleQuery
-
-      # Get MAL ID
-      $Staff5_cards6_malId = Read-Host -Prompt $i18n.Prompt_MALId_Insert
-      if (-not ($Staff5_cards6_malId)) { $Staff5_cards6_malId = "0" }
-
-      # Manually assign url if MAL ID is 0
-      if ($Staff5_cards6_malId -eq "0") {
-        Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
-        $Staff5_cards6_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
-        $Staff5_cards6_titleResult = $Staff5_cards6_titleQuery
-      } else {
-        $Staff5_cards6_titleResult = if ($Locale_set -eq "romaji") {
-          Get-MALTitle -MALId $Staff5_cards6_malId
-        } elseif ($Locale_set -eq "english") {
-          Get-MALTitle -MALId $Staff5_cards6_malId -English
-        }
-        Write-Host $i18n.Selected_Card_Title,$Staff5_cards6_titleResult -ForegroundColor Green
-      }
-    }
-  }
-
-  if (7 -le $Staff5_totalCards) {
-    # Card 7
-    Write-Host ""
-    $Staff5_cards7_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url,"(7)"
-
-    if (-not ($Staff5_cards7_imageUri)) {
-      $St5_cd7_rand = Get-RandomCard
-      $Staff5_cards7_imageUri = "https://etgps1.thenewbieclub.my.id/Resources/Cards/$($St5_cd7_rand)"
-      $Staff5_cards7_malId = "0"
-      $Staff5_cards7_customUrl = "https://github.com/theNewbieClub-MAL/editionThreadGenerator-ps1"
-      $Staff5_cards7_titleResult = "Placeholder"
-    } elseif (($Edition_isSingle -eq "n") -and ("" -ne $Staff5_cards7_imageUri)) {
-      # Search title on MAL
-      $Staff5_cards7_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
-
-      Find-MAL -SearchQuery $Staff5_cards7_titleQuery
-
-      # Get MAL ID
-      $Staff5_cards7_malId = Read-Host -Prompt $i18n.Prompt_MALId_Insert
-      if (-not ($Staff5_cards7_malId)) { $Staff5_cards7_malId = "0" }
-
-      # Manually assign url if MAL ID is 0
-      if ($Staff5_cards7_malId -eq "0") {
-        Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
-        $Staff5_cards7_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
-        $Staff5_cards7_titleResult = $Staff5_cards7_titleQuery
-      } else {
-        $Staff5_cards7_titleResult = if ($Locale_set -eq "romaji") {
-          Get-MALTitle -MALId $Staff5_cards7_malId
-        } elseif ($Locale_set -eq "english") {
-          Get-MALTitle -MALId $Staff5_cards7_malId -English
-        }
-        Write-Host $i18n.Selected_Card_Title,$Staff5_cards7_titleResult -ForegroundColor Green
-      }
-    }
-  }
-
-  if (8 -le $Staff5_totalCards) {
-    # Card 8
-    Write-Host ""
-    $Staff5_cards8_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url,"(8)"
-
-    if (-not ($Staff5_cards8_imageUri)) {
-      $St5_cd8_rand = Get-RandomCard
-      $Staff5_cards8_imageUri = "https://etgps1.thenewbieclub.my.id/Resources/Cards/$($St5_cd8_rand)"
-      $Staff5_cards8_malId = "0"
-      $Staff5_cards8_customUrl = "https://github.com/theNewbieClub-MAL/editionThreadGenerator-ps1"
-      $Staff5_cards8_titleResult = "Placeholder"
-    } elseif (($Edition_isSingle -eq "n") -and ("" -ne $Staff5_cards8_imageUri)) {
-      # Search title on MAL
-      $Staff5_cards8_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
-
-      Find-MAL -SearchQuery $Staff5_cards8_titleQuery
-
-      # Get MAL ID
-      $Staff5_cards8_malId = Read-Host -Prompt $i18n.Prompt_MALId_Insert
-      if (-not ($Staff5_cards8_malId)) { $Staff5_cards8_malId = "0" }
-
-      # Manually assign url if MAL ID is 0
-      if ($Staff5_cards8_malId -eq "0") {
-        Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
-        $Staff5_cards8_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
-        $Staff5_cards8_titleResult = $Staff5_cards8_titleQuery
-      } else {
-        $Staff5_cards8_titleResult = if ($Locale_set -eq "romaji") {
-          Get-MALTitle -MALId $Staff5_cards8_malId
-        } elseif ($Locale_set -eq "english") {
-          Get-MALTitle -MALId $Staff5_cards8_malId -English
-        }
-        Write-Host $i18n.Selected_Card_Title,$Staff5_cards8_titleResult -ForegroundColor Green
-      }
-    }
-  }
-
-  if (9 -le $Staff5_totalCards) {
-    # Card 9
-    Write-Host ""
-    $Staff5_cards9_imageUri = Read-Host -Prompt $i18n.Staff_Cards_Url,"(9)"
-
-    if (-not ($Staff5_cards9_imageUri)) {
-      $St5_cd9_rand = Get-RandomCard
-      $Staff5_cards9_imageUri = "https://etgps1.thenewbieclub.my.id/Resources/Cards/$($St5_cd9_rand)"
-      $Staff5_cards9_malId = "0"
-      $Staff5_cards9_customUrl = "https://github.com/theNewbieClub-MAL/editionThreadGenerator-ps1"
-      $Staff5_cards9_titleResult = "Placeholder"
-    } elseif (($Edition_isSingle -eq "n") -and ("" -ne $Staff5_cards9_imageUri)) {
-      # Search title on MAL
-      $Staff5_cards9_titleQuery = Read-Host -Prompt $i18n.Staff_Cards_Title
-
-      Find-MAL -SearchQuery $Staff5_cards9_titleQuery
-
-      # Get MAL ID
-      $Staff5_cards9_malId = Read-Host -Prompt $i18n.Prompt_MALId_Insert
-      if (-not ($Staff5_cards9_malId)) { $Staff5_cards9_malId = "0" }
-
-      # Manually assign url if MAL ID is 0
-      if ($Staff5_cards9_malId -eq "0") {
-        Write-Host $i18n.Echo_ID_Custom -ForegroundColor Yellow
-        $Staff5_cards9_customUrl = Read-Host -Prompt $i18n.Question_ID_Custom
-        $Staff5_cards9_titleResult = $Staff5_cards9_titleQuery
-      } else {
-        $Staff5_cards9_titleResult = if ($Locale_set -eq "romaji") {
-          Get-MALTitle -MALId $Staff5_cards9_malId
-        } elseif ($Locale_set -eq "english") {
-          Get-MALTitle -MALId $Staff5_cards9_malId -English
-        }
-        Write-Host $i18n.Selected_Card_Title,$Staff5_cards9_titleResult -ForegroundColor Green
-      }
-    }
-  }
-}
-
-# ===============
-# Generate Result
-# ===============
+# Check if savedata.yaml is available
 
 Clear-Host
+
+If (Test-Path -Path './savedata.yaml') {
+  $readYaml = Read-Host -Prompt $i18n.Question_Load_YAML_Sessiom
+  If (!($readYaml)) { $readYaml = "n" }
+}
+
+If ($readYaml -eq "n") {
+  Invoke-Card
+  $yaml = "" # Clear YAML, and load as file instead to streamlined process
+}
+
+$loadYaml = Get-Content -Path './savedata.yaml' -Raw
+$yaml = ConvertFrom-Yaml $loadYaml
+
+Clear-Host
+
+# List Backward compactible variable
+# ----------------------------------
+
+# Divide objects
+# ----------------------------------- #
+$yamlDocument = $yaml.document        #
+$yamlData     = $yaml.metadata        #
+$yamlConfig   = $yaml.customizations  #
+$yamlStaff    = $yaml.staff           #
+# ----------------------------------- #
+
+$Banner_creator = $yamlConfig.banner.creator
+$Banner_customUrl = $yamlConfig.banner.customUrl
+$Banner_imageUrl = $yamlConfig.banner.imageUrl
+$Banner_malId = $yamlConfig.banner.malId
+$Banner_titleQuery = $yamlConfig.banner.title
+$Banner_titleResult = $Banner_titleQuery
+$DarkMode_Warn = If ($True -eq $yamlConfig.darkModeWarn) {"y"} Else {"n"}
+$Edition_count = $yamlData.allowedReply
+$Edition_emoji = $yamlData.emoji
+$Edition_end = Get-Date $yamlData.date.end -Format "MMMM d, yyyy"
+$Edition_isSingle = If ($True -eq $yamlData.isSingle) {"y"} Else {"n"}
+$Edition_staffCount = $yamlData.staffCount
+$Edition_start = Get-Date $yamlData.date.start -Format "MMMM d, yyyy"
+$Edition_title = $yamlData.title
+$gfxAdmin = $yamlDocument.gfxStaff.admin
+$gfxDeputy = $yamlDocument.gfxStaff.deputy
+$Intro_gif = $yamlConfig.intro.gifUrl
+$intro_textFormat = $yamlConfig.intro.text
+$Thread_color = $yamlConfig.threadColor
+
+# ===============
+# Generate BBCODE
+# ===============
 
 # Post Title
 # ----------
-
 Write-Host $i18n.Generate_Title_Success -ForegroundColor Green
-Write-Host $i18n.Prompt_ToCopy -ForegroundColor Yellow
-Write-Host "=============" -ForegroundColor Yellow
+Write-Header -Message $i18n.Prompt_ToCopy -ForegroundColor Yellow
 Write-Host ""
 
-Write-Host "`[CARDS`]`[OPEN`] $($Edition_emoji) $($Edition_title)"
+Write-Host "[CARDS][OPEN] $($Edition_emoji) $($Edition_title)"
 
 Write-Host ""
 Write-Host "=============" -ForegroundColor Yellow
@@ -2038,24 +502,23 @@ Read-Host -Prompt $i18n.Prompt_Move_Section
 Clear-Host
 
 Write-Host $i18n.Generate_BBCode_Success -ForegroundColor Green
-Write-Host $i18n.Prompt_ToCopy -ForegroundColor Yellow
-Write-Host "=============" -ForegroundColor Yellow
+Write-Header -Message $i18n.Prompt_ToCopy -ForegroundColor Yellow
 
 $result = @"
 [color=$($Thread_color)][center][img]$($Banner_imageUrl)[/img]
-[size=80][i][b]$(if($Edition_isSingle -eq "y") { "Banner by @$($Banner_creator)" } else { "[url=$(if($Banner_malId -eq 0) {"$($Banner_customUrl)]$($Banner_titleQuery)[/url]"} else {"https://myanimelist.net/anime/$($Banner_malId)]$($Banner_titleResult)[/url]"}) banner by @$($Banner_creator)" })　　　　　　　　　　　　　　　　　[url=https://nttds.my.id/tnc-cardfaq]What is a card?[img]https://nttds.my.id/extLink.svg[/img][/url]　　　　　　　　　　　　　　　　　　　　　　　　　　　　　Spaces Remaining: [color=black]$($Edition_count)[/color][/b][/i][/size]
-$(if ($DarkMode_warn -eq "n") {"`n`n"} else {@"
+[size=80][i][b]$(if($Edition_isSingle -eq "y") { "Banner by @$($Banner_creator)" } Else { "[url=$(if($Banner_malId -eq 0) {"$($Banner_customUrl)]$($Banner_titleResult)[/url]"} Else {"https://myanimelist.net/anime/$($Banner_malId)]$($Banner_titleResult)[/url]"}) banner by @$($Banner_creator)" })　　　　　　　　　　　　　　　　　[url=https://nttds.my.id/tnc-cardfaq]What is a card?[img]https://nttds.my.id/extLink.svg[/img][/url]　　　　　　　　　　　　　　　　　Spaces Remaining: [color=black]$($Edition_count)[/color][/b][/i][/size]
+$(If ($DarkMode_warn -eq "n") {"`n`n"} Else {@"
 [color=white][size=105][b]If you can read this message, please consider to temporarily disable dark mode. Thanks!
 Ignore if you're using 3rd party app with auto recolor text support.[/b][/size][/color]
 "@})
 [quote][b]Edition starts[/b]: [color=black]$($Edition_start)[/color] | [b]Edition ends[/b]: [color=black]$($Edition_end)[/color][/quote][/center][size=120]
 　[size=230]💬 [b]Introduction[/b][/size]
-[quote][list][color=black][center][img]$($Intro_gif)[/img]$(if (-not ($Intro_textFormat)) {} else {@"
+[quote][list][color=black][center][img]$($Intro_gif)[/img]$(If (-Not ($Intro_textFormat)) {} Else {@"
 
 [i]$($Intro_textFormat)[/i]
 "@})[/center][/color][/list][/quote]
 　[size=230]🏛️ [b]Rules[/b][/size]
-`[quote`]
+[quote]
 [center][size=90]⚠️ [b]Make sure to follow all rules stated below before continue![/b] ⚠️[/size][/center][list=1][*][color=black]Request your cards by [u]commenting on this forum thread[/u] and using a list number instead of naming the card.[/color]
 [*][color=black]Do not request cards if you have no intention of saving them AND/OR request for someone else.[/color]
 [*][color=black]Please [b]follow the format and respect the limits given by each card maker[/b], or the request will be deleted.[/color]
@@ -2077,12 +540,18 @@ Remember: Nickname will be prioritized than username for card naming if filled[/
 [b]Role: [/b]Member
 [b]Deliver to: [/b]Profile Comment/Private Message/Blog Post
 [b][i]—Cards by—[/i][/b]
-$($Staff1_nickname): $( if ($Edition_staffCount -ge 2) { "`n$($Staff2_nickname): " } else {""} ) $( if ($Edition_staffCount -ge 3) { "`n$($Staff3_nickname): " } else {""} )$( if ($Edition_staffCount -ge 4) { "`n$($Staff4_nickname): " } else {""} )$( if ($Edition_staffCount -ge 5) { "`n$($Staff5_nickname): " } else {""} )
-——
+"@
+
+$result += ForEach ($staff in $yamlStaff) {
+  "`n$($staff.nickname):"
+}
+
+$result += @"
+ `n——
 [b]Comments: [/b]
 [b]Edition Suggestion: [/b]
-`[/size`]
-`[/code`]
+[/size]
+[/code]
 [/color][/size][/quote]
 　[size=230]🔍 [b]Example/Result[/b][/size]
 [quote][color=black][size=75]
@@ -2093,172 +562,98 @@ $($Staff1_nickname): $( if ($Edition_staffCount -ge 2) { "`n$($Staff2_nickname):
 [b]Role: [/b]Member
 [b]Deliver to: [/b]Profile Comment
 [b][i]—Cards by—[/i][/b]
-$($Staff1_nickname): $( $Staff1_limits = if ($Staff1_limitMember) {$Staff1_limitMember} else {$Staff1_limitAny} ; if ($Staff1_limits -eq $Staff1_totalCards) {"ALL"} else { (Get-Random -Count $Staff1_limits -InputObject (1..$Staff1_totalCards) -Join ", " ) }) $( if ("y" -eq $Staff1_isAllowSlip) {"`[spoiler=slip`]`[img`]$($cardSlip.$Staff1_username)`[/img`]`[/spoiler`]"} )$( if ($Edition_staffCount -ge 2) { "`n$($Staff2_nickname): $( $Staff2_limits = if ($Staff2_limitMember) {$Staff2_limitMember} else {$Staff2_limitAny} ; if ($Staff2_limits -eq $Staff2_totalCards) {"ALL"} else { (Get-Random -Count $Staff2_limits -InputObject (1..$Staff2_totalCards) -Join ", " ) }) $( if ("y" -eq $Staff2_isAllowSlip) {"`[spoiler=slip`]`[img`]$($cardSlip.$Staff2_username)`[/img`]`[/spoiler`]"} )" } else {""} ) $( if ($Edition_staffCount -ge 3) { "`n$($Staff3_nickname): $( $Staff3_limits = if ($Staff3_limitMember) {$Staff3_limitMember} else {$Staff3_limitAny} ; if ($Staff3_limits -eq $Staff3_totalCards) {"ALL"} else { (Get-Random -Count $Staff3_limits -InputObject (1..$Staff3_totalCards) -Join ", " ) }) $( if ("y" -eq $Staff3_isAllowSlip) {"`[spoiler=slip`]`[img`]$($cardSlip.$Staff3_username)`[/img`]`[/spoiler`]"} )" } else {""} )$( if ($Edition_staffCount -ge 4) { "`n$($Staff4_nickname): $( $Staff4_limits = if ($Staff4_limitMember) {$Staff4_limitMember} else {$Staff4_limitAny} ; if ($Staff4_limits -eq $Staff4_totalCards) {"ALL"} else { (Get-Random -Count $Staff4_limits -InputObject (1..$Staff4_totalCards) -Join ", " ) }) $( if ("y" -eq $Staff4_isAllowSlip) {"`[spoiler=slip`]`[img`]$($cardSlip.$Staff4_username)`[/img`]`[/spoiler`]"} )" } else {""} )$( if ($Edition_staffCount -ge 5) { "`n$($Staff5_nickname): $( $Staff5_limits = if ($Staff5_limitMember) {$Staff5_limitMember} else {$Staff5_limitAny} ; if ($Staff5_limits -eq $Staff5_totalCards) {"ALL"} else { (Get-Random -Count $Staff5_limits -InputObject (1..$Staff5_totalCards) -Join ", " ) }) $( if ("y" -eq $Staff5_isAllowSlip) {"`[spoiler=slip`]`[img`]$($cardSlip.$Staff5_username)`[/img`]`[/spoiler`]"} )" } else {""} )
-——
+"@
+
+$result += ForEach ($staff in $yamlStaff) {
+  $slipCard = If ($True -eq $staff.isSlipAllowed) {
+    $username = $staff.username
+    " [spoiler=slip][img]$($cardSlip.$username)[/img][/spoiler]"
+  }
+  "`n$($staff.nickname): $((1..$staff.limits.member | ForEach-Object {Get-Random -Minimum 1 -Maximum $staff.totalCards} | Sort-Object -Unique) -Join ', ')$($slipCard)"
+}
+
+$result += @"
+`n——
 [b]Comments: [/b]
-[b]Edition Suggestion: [/b]$( if ( $Edition_staffCount -eq 5) { "`n" } else {""} ) $( if ( $Edition_staffCount -eq 4) { "`n`n" } else {""} ) $( if ( $Edition_staffCount -eq 3) { "`n`n`n" } else {""} ) $( if ( $Edition_staffCount -eq 2) { "`n`n`n`n" } else {""} ) $( if ( $Edition_staffCount -eq 1) { "`n`n`n`n`n" } else {""} )
+[b]Edition Suggestion: [/b]$( If ( $Edition_staffCount -eq 5) { "`n" } Else {""} ) $( If ( $Edition_staffCount -eq 4) { "`n`n" } Else {""} ) $( If ( $Edition_staffCount -eq 3) { "`n`n`n" } Else {""} ) $( If ( $Edition_staffCount -eq 2) { "`n`n`n`n" } Else {""} ) $( If ( $Edition_staffCount -eq 1) { "`n`n`n`n`n" } Else {""} )
 [/size][size=80][right][color=#1d439b]Report[/color] - [color=#1d439b]Quote[/color][/right][/size]
 [/color][/quote]
 　[size=230]💳 [b]Cards[/b][/size]
-[color=black][center][quote]
-[size=150][b]$($Staff1_nickname)[/b][/size]
-$( if ($Staff1_limitType -eq "role") {@"
-[b]Member:[/b] $($Staff1_limitMember)/$($Staff1_totalCards)
-[b]Staff:[/b] $($Staff1_limitStaff)/$($Staff1_totalCards) $(if ($Staff1_limitStaff -eq $Staff1_totalCards) {"(ALL)"})
-"@} else {"[b]Member & Staff[/b]: $($Staff1_limitAny)/$($Staff1_totalCards) $(if ($Staff1_limitAny -eq $Staff1_totalCards) {"(ALL)"})"} )$(if ("n" -eq $Staff1_isAllowSlip) {@"
+[color=black][center]
+"@
 
-`[color=red`]Slip card can not be used on this edition`[/color`]
-"@} {})
-
-`[spoiler=cards`]
-|| 1 $( if ($Edition_isSingle -eq "n") {"| [url=$(if($Staff1_cards1_malId -eq 0) {$Staff1_cards1_customUrl} else {"https://myanimelist.net/anime/$($Staff1_cards1_malId)"})]$($Staff1_cards1_titleResult)[/url]"})$(if($Staff1_cards2_imageUri) {" || ~~~~~~ || 2 $( if ($Edition_isSingle -eq "n") {"| [url=$(if($Staff1_cards2_malId -eq 0) {$Staff1_cards2_customUrl} else {"https://myanimelist.net/anime/$($Staff1_cards2_malId)"})]$($Staff1_cards2_titleResult)[/url] ||"})"} else {" ||"} )
-[img]$($Staff1_cards1_imageUri)[/img]$(if($Staff1_cards2_imageUri) {" [img]$($Staff1_cards2_imageUri)[/img]"})$(if($Staff1_cards3_imageUri) {@"
-
-|| 3 $( if ($Edition_isSingle -eq "n") {"| [url=$(if($Staff1_cards3_malId -eq 0) {$Staff1_cards3_customUrl} else {"https://myanimelist.net/anime/$($Staff1_cards3_malId)"})]$($Staff1_cards3_titleResult)[/url]"})$(if($Staff1_cards4_imageUri) {" || ~~~~~~ || 4 $( if ($Edition_isSingle -eq "n") {"| [url=$(if($Staff1_cards4_malId -eq 0) {$Staff1_cards4_customUrl} else {"https://myanimelist.net/anime/$($Staff1_cards4_malId)"})]$($Staff1_cards4_titleResult)[/url] ||"})"} else {" ||"} )
-[img]$($Staff1_cards3_imageUri)[/img]$(if($Staff1_cards4_imageUri) {" [img]$($Staff1_cards4_imageUri)[/img]"})
-"@})$(if($Staff1_cards5_imageUri) {@"
-
-|| 5 $( if ($Edition_isSingle -eq "n") {"| [url=$(if($Staff1_cards5_malId -eq 0) {$Staff1_cards5_customUrl} else {"https://myanimelist.net/anime/$($Staff1_cards5_malId)"})]$($Staff1_cards5_titleResult)[/url]"})$(if($Staff1_cards6_imageUri) {" || ~~~~~~ || 6 $( if ($Edition_isSingle -eq "n") {"| [url=$(if($Staff1_cards6_malId -eq 0) {$Staff1_cards6_customUrl} else {"https://myanimelist.net/anime/$($Staff1_cards6_malId)"})]$($Staff1_cards6_titleResult)[/url] ||"})"} else {" ||"} )
-[img]$($Staff1_cards5_imageUri)[/img]$(if($Staff1_cards6_imageUri) {" [img]$($Staff1_cards6_imageUri)[/img]"})
-"@})$(if($Staff1_cards7_imageUri) {@"
-
-|| 7 $( if ($Edition_isSingle -eq "n") {"| [url=$(if($Staff1_cards7_malId -eq 0) {$Staff1_cards7_customUrl} else {"https://myanimelist.net/anime/$($Staff1_cards7_malId)"})]$($Staff1_cards7_titleResult)[/url]"})$(if($Staff1_cards8_imageUri) {" || ~~~~~~ || 8 $( if ($Edition_isSingle -eq "n") {"| [url=$(if($Staff1_cards8_malId -eq 0) {$Staff1_cards8_customUrl} else {"https://myanimelist.net/anime/$($Staff1_cards8_malId)"})]$($Staff1_cards8_titleResult)[/url] ||"})"} else {" ||"} )
-[img]$($Staff1_cards7_imageUri)[/img]$(if($Staff1_cards8_imageUri) {" [img]$($Staff1_cards8_imageUri)[/img]"})
-"@})$(if($Staff1_cards9_imageUri) {@"
-
-|| 9 $( if ($Edition_isSingle -eq "n") {"| [url=$(if($Staff1_cards9_malId -eq 0) {$Staff1_cards9_customUrl} else {"https://myanimelist.net/anime/$($Staff1_cards9_malId)"})]$($Staff1_cards9_titleResult)[/url] ||"} else {" ||"} )
-[img]$($Staff1_cards9_imageUri)[/img]
-"@})
-`[/spoiler`]
-[/quote]$(if($Staff2_username) {@"
+$result += ForEach ($staff in $yamlStaff) {@"
 [quote]
-[size=150][b]$($Staff2_nickname)[/b][/size]
-$( if ($Staff2_limitType -eq "role") {@"
-[b]Member:[/b] $($Staff2_limitMember)/$($Staff2_totalCards)
-[b]Staff:[/b] $($Staff2_limitStaff)/$($Staff2_totalCards) $(if ($Staff2_limitStaff -eq $Staff2_totalCards) {"(ALL)"})
-"@} else {"[b]Member & Staff[/b]: $($Staff2_limitAny)/$($Staff2_totalCards) $(if ($Staff2_limitAny -eq $Staff2_totalCards) {"(ALL)"})"} )$(if ("n" -eq $Staff2_isAllowSlip) {@"
+[size=150][b]$($staff.nickname)[/b][/size]
+$(If ($staff.limitType -eq "role") {@"
+[b]Member:[/b] $($staff.limits.member)/$($staff.totalCards)
+[b]Staff:[/b] $($staff.limits.staff)/$($staff.totalCards) $(If ($staff.limits.staff -eq $staff.totalCards) {"(ALL)"})
+"@} Else {"[b]Member & Staff[/b]: $($staff.limits.any)/$($staff.totalCards) $(If ($staff.limits.any -eq $staff.totalCards) {"(ALL)"})"} )$(If ("n" -eq $staff.isAllowSlip) {@"
 
-`[color=red`]Slip card can not be used on this edition`[/color`]
-"@} {})
-
-`[spoiler=cards`]
-|| 1 $( if ($Edition_isSingle -eq "n") {"| [url=$(if($Staff2_cards1_malId -eq 0) {$Staff2_cards1_customUrl} else {"https://myanimelist.net/anime/$($Staff2_cards1_malId)"})]$($Staff2_cards1_titleResult)[/url]"})$(if($Staff2_cards2_imageUri) {" || ~~~~~~ || 2 $( if ($Edition_isSingle -eq "n") {"| [url=$(if($Staff2_cards2_malId -eq 0) {$Staff2_cards2_customUrl} else {"https://myanimelist.net/anime/$($Staff2_cards2_malId)"})]$($Staff2_cards2_titleResult)[/url] ||"})"})
-[img]$($Staff2_cards1_imageUri)[/img]$(if($Staff2_cards2_imageUri) {" [img]$($Staff2_cards2_imageUri)[/img]"})$(if($Staff2_cards3_imageUri) {@"
-
-|| 3 $( if ($Edition_isSingle -eq "n") {"| [url=$(if($Staff2_cards3_malId -eq 0) {$Staff2_cards3_customUrl} else {"https://myanimelist.net/anime/$($Staff2_cards3_malId)"})]$($Staff2_cards3_titleResult)[/url]"})$(if($Staff2_cards4_imageUri) {" || ~~~~~~ || 4 $( if ($Edition_isSingle -eq "n") {"| [url=$(if($Staff2_cards4_malId -eq 0) {$Staff2_cards4_customUrl} else {"https://myanimelist.net/anime/$($Staff2_cards4_malId)"})]$($Staff2_cards4_titleResult)[/url] ||"})"})
-[img]$($Staff2_cards3_imageUri)[/img]$(if($Staff2_cards4_imageUri) {" [img]$($Staff2_cards4_imageUri)[/img]"})
-"@})$(if($Staff2_cards5_imageUri) {@"
-
-|| 5 $( if ($Edition_isSingle -eq "n") {"| [url=$(if($Staff2_cards5_malId -eq 0) {$Staff2_cards5_customUrl} else {"https://myanimelist.net/anime/$($Staff2_cards5_malId)"})]$($Staff2_cards5_titleResult)[/url]"})$(if($Staff2_cards6_imageUri) {" || ~~~~~~ || 6 $( if ($Edition_isSingle -eq "n") {"| [url=$(if($Staff2_cards6_malId -eq 0) {$Staff2_cards6_customUrl} else {"https://myanimelist.net/anime/$($Staff2_cards6_malId)"})]$($Staff2_cards6_titleResult)[/url] ||"})"})
-[img]$($Staff2_cards5_imageUri)[/img]$(if($Staff2_cards6_imageUri) {" [img]$($Staff2_cards6_imageUri)[/img]"})
-"@})$(if($Staff2_cards7_imageUri) {@"
-
-|| 7 $( if ($Edition_isSingle -eq "n") {"| [url=$(if($Staff2_cards7_malId -eq 0) {$Staff2_cards7_customUrl} else {"https://myanimelist.net/anime/$($Staff2_cards7_malId)"})]$($Staff2_cards7_titleResult)[/url]"})$(if($Staff2_cards8_imageUri) {" || ~~~~~~ || 8 $( if ($Edition_isSingle -eq "n") {"| [url=$(if($Staff2_cards8_malId -eq 0) {$Staff2_cards8_customUrl} else {"https://myanimelist.net/anime/$($Staff2_cards8_malId)"})]$($Staff2_cards8_titleResult)[/url] ||"})"})
-[img]$($Staff2_cards7_imageUri)[/img]$(if($Staff2_cards8_imageUri) {" [img]$($Staff2_cards8_imageUri)[/img]"})
-"@})$(if($Staff2_cards9_imageUri) {@"
-
-|| 9 $( if ($Edition_isSingle -eq "n") {"| [url=$(if($Staff2_cards9_malId -eq 0) {$Staff2_cards9_customUrl} else {"https://myanimelist.net/anime/$($Staff2_cards9_malId)"})]$($Staff2_cards9_titleResult)[/url] ||"})
-[img]$($Staff2_cards9_imageUri)[/img]
+[color=red]Slip card can not be used on this edition[/color]
 "@})
-`[/spoiler`]
-[/quote]$(if($Staff3_username) {@"
-[quote]
-[size=150][b]$($Staff3_nickname)[/b][/size]
-$( if ($Staff3_limitType -eq "role") {@"
-[b]Member:[/b] $($Staff3_limitMember)/$($Staff3_totalCards)
-[b]Staff:[/b] $($Staff3_limitStaff)/$($Staff3_totalCards) $(if ($Staff3_limitStaff -eq $Staff3_totalCards) {"(ALL)"})
-"@} else {"[b]Member & Staff[/b]: $($Staff3_limitAny)/$($Staff3_totalCards) $(if ($Staff3_limitAny -eq $Staff3_totalCards) {"(ALL)"})"} )$(if ("n" -eq $Staff3_isAllowSlip) {@"
+[spoiler]
+|| 1$( If ($Edition_isSingle -eq "n") {" | [url=$(if(($Null -eq $staff.cards[0].malId) -Or ($staff.cards[0].malId -eq 0)) {$staff.cards[0].customUrl} Else {"https://myanimelist.net/anime/$($staff.cards[0].malId)"})]$($staff.cards[0].title)[/url]"}) || $(If (!($Null -eq $staff.cards[1])) { " ~~~~~~ || 2$( If ($Edition_isSingle -eq "n") { " | [url=$( If (($Null -eq $staff.cards[1].malId) -Or ($staff.cards[1].malId -eq 0)){ $staff.cards[1].customUrl } Else { "https://myanimelist.net/anime/$($staff.cards[1].malId)" } )]$($staff.cards[1].title)[/url] ||" } Else { " ||" } )" } )
+[img]$($staff.cards[0].imageUri)[/img]$(If (!($Null -eq $staff.cards[1])) {" [img]$($staff.cards[1].imageUri)[/img]"})$(If (!($Null -eq $staff.cards[2])) {@"
 
-`[color=red`]Slip card can not be used on this edition`[/color`]
-"@} {})
+|| 3$( If ($Edition_isSingle -eq "n") {" | [url=$(if(($Null -eq $staff.cards[2].malId) -Or ($staff.cards[2].malId -eq 0)) {$staff.cards[2].customUrl} Else {"https://myanimelist.net/anime/$($staff.cards[2].malId)"})]$($staff.cards[2].title)[/url]"}) || $(If (!($Null -eq $staff.cards[3])) { " ~~~~~~ || 4$( If ($Edition_isSingle -eq "n") { " | [url=$( If (($Null -eq $staff.cards[3].malId) -Or ($staff.cards[3].malId -eq 0)){ $staff.cards[3].customUrl } Else { "https://myanimelist.net/anime/$($staff.cards[3].malId)" } )]$($staff.cards[3].title)[/url] ||" } Else { " ||" } )" })
+[img]$($staff.cards[2].imageUri)[/img]$(If (!($Null -eq $staff.cards[3])) {" [img]$($staff.cards[3].imageUri)[/img]"})
+"@})$(If (!($Null -eq $staff.cards[4])) {@"
 
-`[spoiler=cards`]
-|| 1 $( if ($Edition_isSingle -eq "n") {"| [url=$(if($Staff3_cards1_malId -eq 0) {$Staff3_cards1_customUrl} else {"https://myanimelist.net/anime/$($Staff3_cards1_malId)"})]$($Staff3_cards1_titleResult)[/url]"})$(if($Staff3_cards2_imageUri) {" || ~~~~~~ || 2 $( if ($Edition_isSingle -eq "n") {"| [url=$(if($Staff3_cards2_malId -eq 0) {$Staff3_cards2_customUrl} else {"https://myanimelist.net/anime/$($Staff3_cards2_malId)"})]$($Staff3_cards2_titleResult)[/url] ||"})"} else {" ||"} )
-[img]$($Staff3_cards1_imageUri)[/img]$(if($Staff3_cards2_imageUri) {" [img]$($Staff3_cards2_imageUri)[/img]"})$(if($Staff3_cards3_imageUri) {@"
+|| 5$( If ($Edition_isSingle -eq "n") {" | [url=$(if(($Null -eq $staff.cards[4].malId) -Or ($staff.cards[4].malId -eq 0)) {$staff.cards[4].customUrl} Else {"https://myanimelist.net/anime/$($staff.cards[4].malId)"})]$($staff.cards[4].title)[/url]"}) || $(If (!($Null -eq $staff.cards[5])) { " ~~~~~~ || 6$( If ($Edition_isSingle -eq "n") { " | [url=$( If (($Null -eq $staff.cards[5].malId) -Or ($staff.cards[5].malId -eq 0)){ $staff.cards[5].customUrl } Else { "https://myanimelist.net/anime/$($staff.cards[5].malId)" } )]$($staff.cards[5].title)[/url] ||" } Else { " ||" } )" })
+[img]$($staff.cards[4].imageUri)[/img]$(If (!($Null -eq $staff.cards[5])) {" [img]$($staff.cards[5].imageUri)[/img]"})
+"@})$(If (!($Null -eq $staff.cards[6])) {@"
 
-|| 3 $( if ($Edition_isSingle -eq "n") {"| [url=$(if($Staff3_cards3_malId -eq 0) {$Staff3_cards3_customUrl} else {"https://myanimelist.net/anime/$($Staff3_cards3_malId)"})]$($Staff3_cards3_titleResult)[/url]"})$(if($Staff3_cards4_imageUri) {" || ~~~~~~ || 4 $( if ($Edition_isSingle -eq "n") {"| [url=$(if($Staff3_cards4_malId -eq 0) {$Staff3_cards4_customUrl} else {"https://myanimelist.net/anime/$($Staff3_cards4_malId)"})]$($Staff3_cards4_titleResult)[/url] ||"})"} else {" ||"} )
-[img]$($Staff3_cards3_imageUri)[/img]$(if($Staff3_cards4_imageUri) {" [img]$($Staff3_cards4_imageUri)[/img]"})
-"@})$(if($Staff3_cards5_imageUri) {@"
+|| 7$( If ($Edition_isSingle -eq "n") {" | [url=$(if(($Null -eq $staff.cards[6].malId) -Or ($staff.cards[6].malId -eq 0)) {$staff.cards[6].customUrl} Else {"https://myanimelist.net/anime/$($staff.cards[6].malId)"})]$($staff.cards[6].title)[/url]"}) || $(If (!($Null -eq $staff.cards[7])) { " ~~~~~~ || 8$( If ($Edition_isSingle -eq "n") { " | [url=$( If (($Null -eq $staff.cards[7].malId) -Or ($staff.cards[7].malId -eq 0)){ $staff.cards[7].customUrl } Else { "https://myanimelist.net/anime/$($staff.cards[7].malId)" } )]$($staff.cards[7].title)[/url] ||" } Else { " ||" } )" })
+[img]$($staff.cards[6].imageUri)[/img]$(If (!($Null -eq $staff.cards[7])) {" [img]$($staff.cards[7].imageUri)[/img]"})
+"@})$(If (!($Null -eq $staff.cards[8])) {@"
 
-|| 5 $( if ($Edition_isSingle -eq "n") {"| [url=$(if($Staff3_cards5_malId -eq 0) {$Staff3_cards5_customUrl} else {"https://myanimelist.net/anime/$($Staff3_cards5_malId)"})]$($Staff3_cards5_titleResult)[/url]"})$(if($Staff3_cards6_imageUri) {" || ~~~~~~ || 6 $( if ($Edition_isSingle -eq "n") {"| [url=$(if($Staff3_cards6_malId -eq 0) {$Staff3_cards6_customUrl} else {"https://myanimelist.net/anime/$($Staff3_cards6_malId)"})]$($Staff3_cards6_titleResult)[/url] ||"})"} else {" ||"} )
-[img]$($Staff3_cards5_imageUri)[/img]$(if($Staff3_cards6_imageUri) {" [img]$($Staff3_cards6_imageUri)[/img]"})
-"@})$(if($Staff3_cards7_imageUri) {@"
-
-|| 7 $( if ($Edition_isSingle -eq "n") {"| [url=$(if($Staff3_cards7_malId -eq 0) {$Staff3_cards7_customUrl} else {"https://myanimelist.net/anime/$($Staff3_cards7_malId)"})]$($Staff3_cards7_titleResult)[/url]"})$(if($Staff3_cards8_imageUri) {" || ~~~~~~ || 8 $( if ($Edition_isSingle -eq "n") {"| [url=$(if($Staff3_cards8_malId -eq 0) {$Staff3_cards8_customUrl} else {"https://myanimelist.net/anime/$($Staff3_cards8_malId)"})]$($Staff3_cards8_titleResult)[/url] ||"})"} else {" ||"} )
-[img]$($Staff3_cards7_imageUri)[/img]$(if($Staff3_cards8_imageUri) {" [img]$($Staff3_cards8_imageUri)[/img]"})
-"@})$(if($Staff3_cards9_imageUri) {@"
-
-|| 9 $( if ($Edition_isSingle -eq "n") {"| [url=$(if($Staff3_cards9_malId -eq 0) {$Staff3_cards9_customUrl} else {"https://myanimelist.net/anime/$($Staff3_cards9_malId)"})]$($Staff3_cards9_titleResult)[/url] ||"} else {" ||"} )
-[img]$($Staff3_cards9_imageUri)[/img]
+||9 $( If ($Edition_isSingle -eq "n") {" | [url=$(if(($Null -eq $staff.cards[8].malId) -Or ($staff.cards[8].malId -eq 0)) {$staff.cards[8].customUrl} Else {"https://myanimelist.net/anime/$($staff.cards[8].malId)"})]$($staff.cards[8].title)[/url] ||"} Else {" ||"} )
+[img]$($staff.cards[8].imageUri)[/img]
 "@})
-`[/spoiler`]
-[/quote]$(if($Staff4_username) {@"
-[quote]
-[size=150][b]$($Staff4_nickname)[/b][/size]
-$( if ($Staff4_limitType -eq "role") {@"
-[b]Member:[/b] $($Staff4_limitMember)/$($Staff4_totalCards)
-[b]Staff:[/b] $($Staff4_limitStaff)/$($Staff4_totalCards) $(if ($Staff4_limitStaff -eq $Staff4_totalCards) {"(ALL)"})
-"@} else {"[b]Member & Staff[/b]: $($Staff4_limitAny)/$($Staff4_totalCards) $(if ($Staff4_limitAny -eq $Staff4_totalCards) {"(ALL)"})"} )$(if ("n" -eq $Staff4_isAllowSlip) {@"
+[/spoiler]
+[/quote]
+"@}
 
-`[color=red`]Slip card can not be used on this edition`[/color`]
-"@} {})
+# Generate Metadata
+# -----------------
 
-`[spoiler=cards`]
-|| 1 $( if ($Edition_isSingle -eq "n") {"| [url=$(if($Staff4_cards1_malId -eq 0) {$Staff4_cards1_customUrl} else {"https://myanimelist.net/anime/$($Staff4_cards1_malId)"})]$($Staff4_cards1_titleResult)[/url]"})$(if($Staff4_cards2_imageUri) {" || ~~~~~~ || 2 $( if ($Edition_isSingle -eq "n") {"| [url=$(if($Staff4_cards2_malId -eq 0) {$Staff4_cards2_customUrl} else {"https://myanimelist.net/anime/$($Staff4_cards2_malId)"})]$($Staff4_cards2_titleResult)[/url] ||"})"})
-[img]$($Staff4_cards1_imageUri)[/img]$(if($Staff4_cards2_imageUri) {" [img]$($Staff4_cards2_imageUri)[/img]"})$(if($Staff4_cards3_imageUri) {@"
+$Attr_staff = @()
 
-|| 3 $( if ($Edition_isSingle -eq "n") {"| [url=$(if($Staff4_cards3_malId -eq 0) {$Staff4_cards3_customUrl} else {"https://myanimelist.net/anime/$($Staff4_cards3_malId)"})]$($Staff4_cards3_titleResult)[/url]"})$(if($Staff4_cards4_imageUri) {" || ~~~~~~ || 4 $( if ($Edition_isSingle -eq "n") {"| [url=$(if($Staff4_cards4_malId -eq 0) {$Staff4_cards4_customUrl} else {"https://myanimelist.net/anime/$($Staff4_cards4_malId)"})]$($Staff4_cards4_titleResult)[/url] ||"})"})
-[img]$($Staff4_cards3_imageUri)[/img]$(if($Staff4_cards4_imageUri) {" [img]$($Staff4_cards4_imageUri)[/img]"})
-"@})$(if($Staff4_cards5_imageUri) {@"
+For ($staff=0;$staff -lt 5; $staff++) {
+  If ($Null -eq $yamlStaff[$staff]){
+    $Attr_staff += "0"
+  } Else {
+    $Attr_staff += $yamlStaff[$staff].nickname
+  }
+}
 
-|| 5 $( if ($Edition_isSingle -eq "n") {"| [url=$(if($Staff4_cards5_malId -eq 0) {$Staff4_cards5_customUrl} else {"https://myanimelist.net/anime/$($Staff4_cards5_malId)"})]$($Staff4_cards5_titleResult)[/url]"})$(if($Staff4_cards6_imageUri) {" || ~~~~~~ || 6 $( if ($Edition_isSingle -eq "n") {"| [url=$(if($Staff4_cards6_malId -eq 0) {$Staff4_cards6_customUrl} else {"https://myanimelist.net/anime/$($Staff4_cards6_malId)"})]$($Staff4_cards6_titleResult)[/url] ||"})"})
-[img]$($Staff4_cards5_imageUri)[/img]$(if($Staff4_cards6_imageUri) {" [img]$($Staff4_cards6_imageUri)[/img]"})
-"@})$(if($Staff4_cards7_imageUri) {@"
+$Attr_limit = @()
 
-|| 7 $( if ($Edition_isSingle -eq "n") {"| [url=$(if($Staff4_cards7_malId -eq 0) {$Staff4_cards7_customUrl} else {"https://myanimelist.net/anime/$($Staff4_cards7_malId)"})]$($Staff4_cards7_titleResult)[/url]"})$(if($Staff4_cards8_imageUri) {" || ~~~~~~ || 8 $( if ($Edition_isSingle -eq "n") {"| [url=$(if($Staff4_cards8_malId -eq 0) {$Staff4_cards8_customUrl} else {"https://myanimelist.net/anime/$($Staff4_cards8_malId)"})]$($Staff4_cards8_titleResult)[/url] ||"})"})
-[img]$($Staff4_cards7_imageUri)[/img]$(if($Staff4_cards8_imageUri) {" [img]$($Staff4_cards8_imageUri)[/img]"})
-"@})$(if($Staff4_cards9_imageUri) {@"
+For ($limit=0;$limit -lt 5; $limit++) {
+  If ($Null -eq $yamlStaff[$limit]){
+    $Attr_limit += "0"
+  } Else {
+    If ($yamlStaff[$limit].limitType -eq 'role') {
+      $Attr_limit += "$($yamlStaff[$limit].limits.member)|$($yamlStaff[$limit].limits.staff)"
+    } Else {
+      $Attr_limit += "$($yamlStaff[$limit].limits.any)"
+    }
+  }
+}
 
-|| 9 $( if ($Edition_isSingle -eq "n") {"| [url=$(if($Staff4_cards9_malId -eq 0) {$Staff4_cards9_customUrl} else {"https://myanimelist.net/anime/$($Staff4_cards9_malId)"})]$($Staff4_cards9_titleResult)[/url] ||"})
-[img]$($Staff4_cards9_imageUri)[/img]
-"@})
-`[/spoiler`]
-[/quote]$(if($Staff5_username) {@"
-[quote]
-[size=150][b]$($Staff5_nickname)[/b][/size]
-$( if ($Staff5_limitType -eq "role") {@"
-[b]Member:[/b] $($Staff5_limitMember)/$($Staff5_totalCards)
-[b]Staff:[/b] $($Staff5_limitStaff)/$($Staff5_totalCards) $(if ($Staff5_limitStaff -eq $Staff5_totalCards) {"(ALL)"})
-"@} else {"[b]Member & Staff[/b]: $($Staff5_limitAny)/$($Staff5_totalCards) $(if ($Staff5_limitAny -eq $Staff5_totalCards) {"(ALL)"})"} )$(if ("n" -eq $Staff5_isAllowSlip) {@"
+$Attr_total = @()
 
-`[color=red`]Slip card can not be used on this edition`[/color`]
-"@} {})
+For ($ava=0; $ava -lt 5; $ava++) {
+  If ($Null -eq $yamlStaff[$ava]) {
+    $Attr_total += "0"
+  } Else {
+    $Attr_total += $yamlStaff[$ava].totalCards
+  }
+}
 
-`[spoiler=cards`]
-|| 1 $( if ($Edition_isSingle -eq "n") {"| [url=$(if($Staff5_cards1_malId -eq 0) {$Staff5_cards1_customUrl} else {"https://myanimelist.net/anime/$($Staff5_cards1_malId)"})]$($Staff5_cards1_titleResult)[/url]"})$(if($Staff5_cards2_imageUri) {" || ~~~~~~ || 2 $( if ($Edition_isSingle -eq "n") {"| [url=$(if($Staff5_cards2_malId -eq 0) {$Staff5_cards2_customUrl} else {"https://myanimelist.net/anime/$($Staff5_cards2_malId)"})]$($Staff5_cards2_titleResult)[/url] ||"})"} else {" ||"} )
-[img]$($Staff5_cards1_imageUri)[/img]$(if($Staff5_cards2_imageUri) {" [img]$($Staff5_cards2_imageUri)[/img]"})$(if($Staff5_cards3_imageUri) {@"
-
-|| 3 $( if ($Edition_isSingle -eq "n") {"| [url=$(if($Staff5_cards3_malId -eq 0) {$Staff5_cards3_customUrl} else {"https://myanimelist.net/anime/$($Staff5_cards3_malId)"})]$($Staff5_cards3_titleResult)[/url]"})$(if($Staff5_cards4_imageUri) {" || ~~~~~~ || 4 $( if ($Edition_isSingle -eq "n") {"| [url=$(if($Staff5_cards4_malId -eq 0) {$Staff5_cards4_customUrl} else {"https://myanimelist.net/anime/$($Staff5_cards4_malId)"})]$($Staff5_cards4_titleResult)[/url] ||"})"} else {" ||"} )
-[img]$($Staff5_cards3_imageUri)[/img]$(if($Staff5_cards4_imageUri) {" [img]$($Staff5_cards4_imageUri)[/img]"})
-"@})$(if($Staff5_cards5_imageUri) {@"
-
-|| 5 $( if ($Edition_isSingle -eq "n") {"| [url=$(if($Staff5_cards5_malId -eq 0) {$Staff5_cards5_customUrl} else {"https://myanimelist.net/anime/$($Staff5_cards5_malId)"})]$($Staff5_cards5_titleResult)[/url]"})$(if($Staff5_cards6_imageUri) {" || ~~~~~~ || 6 $( if ($Edition_isSingle -eq "n") {"| [url=$(if($Staff5_cards6_malId -eq 0) {$Staff5_cards6_customUrl} else {"https://myanimelist.net/anime/$($Staff5_cards6_malId)"})]$($Staff5_cards6_titleResult)[/url] ||"})"} else {" ||"} )
-[img]$($Staff5_cards5_imageUri)[/img]$(if($Staff5_cards6_imageUri) {" [img]$($Staff5_cards6_imageUri)[/img]"})
-"@})$(if($Staff5_cards7_imageUri) {@"
-
-|| 7 $( if ($Edition_isSingle -eq "n") {"| [url=$(if($Staff5_cards7_malId -eq 0) {$Staff5_cards7_customUrl} else {"https://myanimelist.net/anime/$($Staff5_cards7_malId)"})]$($Staff5_cards7_titleResult)[/url]"})$(if($Staff5_cards8_imageUri) {" || ~~~~~~ || 8 $( if ($Edition_isSingle -eq "n") {"| [url=$(if($Staff5_cards8_malId -eq 0) {$Staff5_cards8_customUrl} else {"https://myanimelist.net/anime/$($Staff5_cards8_malId)"})]$($Staff5_cards8_titleResult)[/url] ||"})"} else {" ||"} )
-[img]$($Staff5_cards7_imageUri)[/img]$(if($Staff5_cards8_imageUri) {" [img]$($Staff5_cards8_imageUri)[/img]"})
-"@})$(if($Staff5_cards9_imageUri) {@"
-
-|| 9 $( if ($Edition_isSingle -eq "n") {"| [url=$(if($Staff5_cards9_malId -eq 0) {$Staff5_cards9_customUrl} else {"https://myanimelist.net/anime/$($Staff5_cards9_malId)"})]$($Staff5_cards9_titleResult)[/url] ||"} else {" ||"} )
-[img]$($Staff5_cards9_imageUri)[/img]
-"@})
-`[/spoiler`]
-[/quote][/center][/color]
-"@})
-"@} else {"[/center][/color]"})
-"@} else {"[/center][/color]"})
-"@} else {"[/center][/color]"})
+$result += @"
+[/center][/color]
 　[size=180]🎉 [b]Happy Requesting![/b][/size][quote][list][color=black][b]From yours truly, the Graphic Design team[/b][/color]
 [/list][/quote]
 [center][size=80][quote][color=black]
@@ -2267,31 +662,30 @@ $( if ($Staff5_limitType -eq "role") {@"
 DM @$($gfxAdmin) or @$($gfxDeputy) for any questions[/size]
 
 [/color][/quote]
-[color=black]Cards made by @$($Staff1_username)$(if($Staff2_username) {", @$($Staff2_username)$(if($Staff3_username) {", @$($Staff3_username)$(if($Staff4_username) {", @$($Staff4_username)$(if($Staff5_username) {", @$($Staff5_username)"} else {"."})"} else {"."})"} else {"."})"} else {"."})[/color][/size]
-`[/center`]
+[color=black]Cards made by @$($yamlStaff.username -Join ", @").[/color][/size]
+[/center]
 [/size][/color]
 
-
 For internal use only:
-`###SCRAPEDATA>>$($Edition_title)>>>$($Staff1_nickname);$(if ($Staff2_username) {$Staff2_nickname} else {"0"});$(if ($Staff3_username) {$Staff3_nickname} else {"0"});$(if ($Staff4_username) {$Staff4_nickname} else {"0"});$(if ($Staff5_username) {$Staff5_nickname} else {"0"})
+###SCRAPEDATA>>$($Edition_title)>>>$($Attr_staff -Join ';')
 >>>MAX>>$($Edition_count)
->>>LIM>>$( if ($Staff1_limitType -eq "role") {"$($Staff1_limitMember)|$($Staff1_limitStaff)"} else {$($Staff1_limitAny)});$( if ($Staff2_username) {if ($Staff2_limitType -eq "role") {"$($Staff2_limitMember)|$($Staff2_limitStaff)"} else {$($Staff2_limitAny)}} else {"0"});$( if ($Staff3_username) {if ($Staff3_limitType -eq "role") {"$($Staff3_limitMember)|$($Staff3_limitStaff)"} else {$($Staff3_limitAny)}} else {"0"});$( if ($Staff4_username) {if ($Staff4_limitType -eq "role") {"$($Staff4_limitMember)|$($Staff4_limitStaff)"} else {$($Staff4_limitAny)}} else {"0"});$( if ($Staff5_username) {if ($Staff5_limitType -eq "role") {"$($Staff5_limitMember)|$($Staff5_limitStaff)"} else {$($Staff5_limitAny)}} else {"0"})
->>>AVA>>$($Staff1_totalCards);$( if ($Staff2_username) {$Staff2_totalCards} else {"0"});$( if ($Staff3_username) {$Staff3_totalCards} else {"0"});$( if ($Staff4_username) {$Staff4_totalCards} else {"0"});$( if ($Staff5_username) {$Staff5_totalCards} else {"0"})###
+>>>LIM>>$($Attr_limit -Join ';')
+>>>AVA>>$($Attr_total -Join ';')
 @#Generated with [url=https://github.com/theNewbieClub-MAL/editionThreadGenerator-ps1]GitHub:theNewbieClub-MAL/editionThreadGenerator-ps1[/url]@[i][/i]v$($version) in Powershell on [url=https://www.timeanddate.com/worldclock/converter.html?iso=$(Get-Date ([DateTime]::UtcNow.ToString('')) -Format "yyyyMMddThhmmss")&p1=1440]$([DateTime]::UtcNow.ToString('u').Replace(' ','T'))[/url]#@
 
 [i][url=https://pas.thenewbieclub.my.id/tncpas-0001]TNCPAS-0001[/url] Standardized Format[/i]
 `###METADATA
 >>>THM>>$($Edition_title)
 >>>TEM>>$($Edition_emoji)>>>CLR>>$($Thread_color)
->>>STF>>$($Staff1_nickname);$(if ($Staff2_username) {$Staff2_nickname} else {"0"});$(if ($Staff3_username) {$Staff3_nickname} else {"0"});$(if ($Staff4_username) {$Staff4_nickname} else {"0"});$(if ($Staff5_username) {$Staff5_nickname} else {"0"})
+>>>STF>>$($Attr_staff -Join ';')
 >>>MAX>>$($Edition_count)
->>>LIM>>$( if ($Staff1_limitType -eq "role") {"$($Staff1_limitMember)|$($Staff1_limitStaff)"} else {$($Staff1_limitAny)});$( if ($Staff2_username) {if ($Staff2_limitType -eq "role") {"$($Staff2_limitMember)|$($Staff2_limitStaff)"} else {$($Staff2_limitAny)}} else {"0"});$( if ($Staff3_username) {if ($Staff3_limitType -eq "role") {"$($Staff3_limitMember)|$($Staff3_limitStaff)"} else {$($Staff3_limitAny)}} else {"0"});$( if ($Staff4_username) {if ($Staff4_limitType -eq "role") {"$($Staff4_limitMember)|$($Staff4_limitStaff)"} else {$($Staff4_limitAny)}} else {"0"});$( if ($Staff5_username) {if ($Staff5_limitType -eq "role") {"$($Staff5_limitMember)|$($Staff5_limitStaff)"} else {$($Staff5_limitAny)}} else {"0"})
->>>AVA>>$($Staff1_totalCards);$( if ($Staff2_username) {$Staff2_totalCards} else {"0"});$( if ($Staff3_username) {$Staff3_totalCards} else {"0"});$( if ($Staff4_username) {$Staff4_totalCards} else {"0"});$( if ($Staff5_username) {$Staff5_totalCards} else {"0"})###
+>>>LIM>>$($Attr_limit -Join ';')
+>>>AVA>>$($Attr_total -Join ';')
 {- Generated with [url=https://github.com/theNewbieClub-MAL/editionThreadGenerator-ps1]GitHub:theNewbieClub-MAL/editionThreadGenerator-ps1[/url]@[i][/i]v$($version) in Powershell on [url=https://www.timeanddate.com/worldclock/converter.html?iso=$(Get-Date ([DateTime]::UtcNow.ToString('')) -Format "yyyyMMddThhmmss")&p1=1440]$([DateTime]::UtcNow.ToString('u').Replace(' ','T'))[/url] -}
 "@
 
 Write-Host $result
-$result > ./Generated.bbcode
+$result | Out-File -Path "Generated.bbcode" -Encoding utf8
 
 Write-Host "=============" -ForegroundColor Yellow
 Write-Host $i18n.Attention_File_Created_1,"`"$((Get-Location).Path)/Generated.bbcode`"",$i18n.Attention_File_Created_2 -ForegroundColor Blue -Separator " "
@@ -2302,21 +696,21 @@ Read-Host -Prompt $i18n.Prompt_Move_Section
 Clear-Host
 
 Write-Host $i18n.Generate_GFXRequest_Success -ForegroundColor Green
-Write-Host $i18n.Prompt_ToCopy -ForegroundColor Yellow
-Write-Host "=============" -ForegroundColor Yellow
+Write-Header -Message $i18n.Prompt_ToCopy -ForegroundColor Yellow
 
 Write-Host @"
 [size=120]　[size=230][color=$($Thread_color)]💬 [b]GFX and Deliverer Staff Request[/b][/color][/size][/size][quote][center]
 [size=120][color=$($Thread_color)][i]For GFX staff who hasn't send the format yet, please DM me.[/i][/color][/size]
 
-`[spoiler=requests`]
-`[spoiler=template`]
+[spoiler=requests]
+[spoiler=template]
 [b]If send via MyAnimeList DM:[/b]
 [i]Note: Remove [[i][/i]i][[i][/i]/i] from the message if you want to send it as [[i][/i]code] tag[/i]
 [code][[i][/i]quote][[i][/i]b]Staff Nickname: [[i][/i]/b]
 [[i][/i]b]Delivery: [[i][/i]/b]
-[[i][/i]i]—Cards by—[[i][/i]/i]
-$($Staff1_nickname): $( if ($Edition_staffCount -ge 2) { "`n$($Staff2_nickname): " } else {""} ) $( if ($Edition_staffCount -ge 3) { "`n$($Staff3_nickname): " } else {""} )$( if ($Edition_staffCount -ge 4) { "`n$($Staff4_nickname): " } else {""} )$( if ($Edition_staffCount -ge 5) { "`n$($Staff5_nickname): " } else {""} )
+[[i][/i]i]—Cards by—[[i][/i]/i]$(ForEach ($staff in $yamlStaff) {
+  "`n$($staff.nickname):"
+})
 --
 [[i][/i]b]Comments: [[i][/i]/b]
 [[i][/i]b]Edition Suggestion: [[i][/i]/b]
@@ -2326,15 +720,16 @@ $($Staff1_nickname): $( if ($Edition_staffCount -ge 2) { "`n$($Staff2_nickname):
 [code]``````accesslog
 [quote][b]Staff Nickname: [/b]
 [b]Delivery: [/b]
-[i]—Cards by—[/i]
-$($Staff1_nickname): $( if ($Edition_staffCount -ge 2) { "`n$($Staff2_nickname): " } else {""} ) $( if ($Edition_staffCount -ge 3) { "`n$($Staff3_nickname): " } else {""} )$( if ($Edition_staffCount -ge 4) { "`n$($Staff4_nickname): " } else {""} )$( if ($Edition_staffCount -ge 5) { "`n$($Staff5_nickname): " } else {""} )
+[i]—Cards by—[/i]$(ForEach ($staff in $yamlStaff) {
+  "`n$($staff.nickname):"
+})
 --
 [b]Comments: [/b]
 [b]Edition Suggestion: [/b]
 [/quote]``````[/code]
 [/spoiler]
 
-`[/spoiler`]
+[/spoiler]
 [/center][/quote]
 "@
 

@@ -16,11 +16,14 @@ ConvertFrom-StringData @'
   Header_Customizations       = Kustomisasi
   Header_Intro                = Pengantar
   Header_Cards                = Kartu
+  Header_Card                 = Kartu
   Header_Staff_1              = Staf Pertama
   Header_Staff_2              = Staf Kedua
   Header_Staff_3              = Staf Ketiga
   Header_Staff_4              = Staf Keempat
   Header_Staff_5              = Staf Kelima
+
+  Question_Load_YAML_Session  = ❓ Kami menemukan sesi terakhir yang tersimpan di direktori. Apakah kamu ingin memuat data sesi terakhir (y), atau mulai dari awal (n)? Default, n (y/n)
 
   Question_Edition_Title      = 🔤 Judul edisi
   Question_Edition_Emoji      = 😄 Simbol/emoji edisi, Enter untuk melewati
@@ -65,7 +68,7 @@ ConvertFrom-StringData @'
   Echo_ID_Custom              = Kamu memilih 0 untuk penggunaan tautan kustom. Kami menerima: 1) MAL - anime, manga; 2) AniList - manga; 3) VNDB - Visual Novels; 4) IGDB - Game; 5) Wikipedia - Umum
 
   Staff_Username              = 👤 Nama pengguna MAL, tanpa simbol @
-  Staff_Nickname              = 📛 Nama panggilan
+  Staff_Nickname              = 📛 Nama panggilan, Default,
   Staff_Limit_Type            = ⚠️  Jenis limit, Default, role (role/any)
   Staff_Limit_Any             = 🔢 Limit kartu untuk seluruh (any) peran
   Staff_Limit_Staff           = 🔢 Limit kartu untuk para staf

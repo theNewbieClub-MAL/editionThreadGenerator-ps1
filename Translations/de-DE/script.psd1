@@ -16,11 +16,14 @@ ConvertFrom-StringData @'
   Header_Customizations       = Anpassungen
   Header_Intro                = Einführung
   Header_Cards                = Karten
+  Header_Card                 = Karte
   Header_Staff_1              = Erster Mitarbeiter
   Header_Staff_2              = Zweiter Mitarbeiter
   Header_Staff_3              = Dritter Mitarbeiter
   Header_Staff_4              = Vierter Mitarbeiter
   Header_Staff_5              = Fünfter Personal
+
+  Question_Load_YAML_Session  = ❓ Wir haben die letzte gespeicherte Sitzung im Verzeichnis gefunden. Möchten Sie die gespeicherte Datei laden (y) oder eine neue erstellen (n)? Standard, n (y/n)
 
   Question_Edition_Title      = 🔤 Titel der Ausgabe
   Question_Edition_Emoji      = 😄 Emoji ausgeben, Enter zum Überspringen
@@ -65,7 +68,7 @@ ConvertFrom-StringData @'
   Echo_ID_Custom              = Sie haben sich für 0 für die benutzerdefinierte ID-Eingabe entschieden. Wir akzeptieren: 1) MAL - Anime, Manga; 2) AniList - Manga; 3) VNDB - Visual Novels; 4) IGDB - Game; 5) Wikipedia - General
 
   Staff_Username              = 👤 MAL-Benutzername, ohne @-Zeichen
-  Staff_Nickname              = 📛 Spitzname
+  Staff_Nickname              = 📛 Spitzname, Standard,
   Staff_Limit_Type            = ⚠️  Grenzwerttyp, Standard, role (role/any)
   Staff_Limit_Any             = 🔢 Kartenlimit für beliebige Rollen
   Staff_Limit_Staff           = 🔢 Kartenlimit für Mitarbeiterrolle

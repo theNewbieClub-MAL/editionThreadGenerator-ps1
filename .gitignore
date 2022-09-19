@@ -4,6 +4,7 @@
 
 Generated.bbcode
 lint**.txt
+savedata.yaml
 
 # ==============
 # Initialization
@@ -16,6 +17,7 @@ buildInit_success
 # =======
 
 *.bkup
+**.old.ps1
 
 # ===============
 # Temporary files
@@ -23,6 +25,9 @@ buildInit_success
 
 # PowerShell-Beautify
 *.pspp
+
+# Code testing
+playground.ps1
 
 # ======
 # Editor

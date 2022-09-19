@@ -16,11 +16,14 @@ ConvertFrom-StringData @'
   Header_Customizations       = Customizations
   Header_Intro                = Introduction
   Header_Cards                = Cards
+  Header_Card                 = Card
   Header_Staff_1              = First Staff
   Header_Staff_2              = Second Staff
   Header_Staff_3              = Third Staff
   Header_Staff_4              = Fourth Staff
   Header_Staff_5              = Fifth Staff
+
+  Question_Load_YAML_Sessiom  = ❓ We found last saved session on the directory. Do you want to load save file (y), or create new one (n)? Default, n (y/n)
 
   Question_Edition_Title      = 🔤 Edition title
   Question_Edition_Emoji      = 😄 Edition emoji, enter to skip
@@ -65,7 +68,7 @@ ConvertFrom-StringData @'
   Echo_ID_Custom              = You opted 0 for custom ID input. We accept: 1) MAL - anime, manga; 2) AniList - manga; 3) VNDB - Visual Novels; 4) IGDB - Game; 5) Wikipedia - General
 
   Staff_Username              = 👤 MAL Username, without @ sign
-  Staff_Nickname              = 📛 Nickname
+  Staff_Nickname              = 📛 Nickname, Default,
   Staff_Limit_Type            = ⚠️  Limit type, Default, role (role/any)
   Staff_Limit_Any             = 🔢 Card limit for any roles
   Staff_Limit_Staff           = 🔢 Card limit for staff role

@@ -16,11 +16,14 @@ ConvertFrom-StringData @'
   Header_Customizations       = Penyesuaian
   Header_Intro                = Pengenalan
   Header_Cards                = Kad
+  Header_Card                 = Kad
   Header_Staff_1              = Kakitangan Pertama
   Header_Staff_2              = Kakitangan Kedua
   Header_Staff_3              = Kakitangan Ketiga
   Header_Staff_4              = Kakitangan Keempat
   Header_Staff_5              = Kakitangan Kelima
+
+  Question_Load_YAML_Session  = ❓ Kami menemui sesi terakhir disimpan pada direktori. Adakah anda mahu memuatkan fail simpan (y) atau buat fail baharu (n)? Lalai, n (y/n)
 
   Question_Edition_Title      = 🔤 Tajuk edisi
   Question_Edition_Emoji      = 😄 Simbol/emoji edisi, Enter untuk melangkau
@@ -65,7 +68,7 @@ ConvertFrom-StringData @'
   Echo_ID_Custom              = Anda memilih 0 untuk penggunaan pautan tersuai. Kami terima: 1) MAL - anime, manga; 2) AniList - manga; 3) VNDB - Visual Novels; 4) IGDB - Permainan; 5) Wikipedia - Umum
 
   Staff_Username              = 👤 Nama pengguna MAL, tanpa simbol @
-  Staff_Nickname              = 📛 Nama samaran
+  Staff_Nickname              = 📛 Nama samaran, Lalai,
   Staff_Limit_Type            = ⚠️  Jenis had, Lalai, role (role/any)
   Staff_Limit_Any             = 🔢 Had kad untuk semua (any) peranan
   Staff_Limit_Staff           = 🔢 Had kad untuk kakitangan
