@@ -8,7 +8,7 @@ Param()
 # Script Metadata
 # ===============
 
-$version   = "1.0.0"         # Script Version
+$version   = "1.1.0"         # Script Version
 
 $gfxAdmin  = "nattadasu"     # GFX Administator
 $gfxDeputy = "Annie_Law"     # GFX Deputy
@@ -299,17 +299,17 @@ staff:
     Do {
       $staffUsername = Read-Host -Prompt $i18n.Staff_Username
     } Until ($staffUsername.Length -le 13) # Follows MyAnimeList specs
-    Write-Verbose -Mesage "Staff #$($staff) username set to $($staffUsername)"
+    Write-Verbose -Message "Staff #$($staff) username set to $($staffUsername)"
 
     $staffNickname = Read-Host -Prompt "$($i18n.Staff_Nickname) $($staffUsername)"
     If (!($staffNickname)) {$staffNickname = $staffUsername}
-    Write-Verbose -Mesage "Staff #$($staff) nickname set to $($staffNickname)"
+    Write-Verbose -Message "Staff #$($staff) nickname set to $($staffNickname)"
 
     Do {
       $limitType = Read-Host -Prompt $i18n.Staff_Limit_Type
       If (!($limitType)) { $limitType = "role" }
     } While (!($limitType -Match '^(role|any)$'))
-    Write-Verbose -Mesage "Staff #$($staff) limit type set to $($limitType)"
+    Write-Verbose -Message "Staff #$($staff) limit type set to $($limitType)"
 
     # Check slip card status
     If (!($cardSlip.$staffUsername)) {
@@ -333,26 +333,26 @@ staff:
       $totalCards = Read-Host -Prompt $i18n.Staff_Limit_Total
       $totalCards = [Int]$totalCards
     } Until (($totalCards -ge 1) -And ($totalCards -le 9))
-    Write-Verbose -Mesage "Staff #$($staff) total card limit set to $($totalCards)"
+    Write-Verbose -Message "Staff #$($staff) total card limit set to $($totalCards)"
 
     If ($limitType -eq "role") {
       Do {
         $memberLimit = Read-Host -Prompt $i18n.Staff_Limit_Member
       } Until (($memberLimit -ge 1) -And ($memberLimit -le $totalCards))
-      Write-Verbose -Mesage "Staff #$($staff) member card limit set to $($memberLimit)"
+      Write-Verbose -Message "Staff #$($staff) member card limit set to $($memberLimit)"
 
       Do {
         $staffLimit = Read-Host -Prompt $i18n.Staff_Limit_Staff
       } Until (($staffLimit -ge 1) -And ($staffLimit -le $totalCards))
       $anyLimit = "null"
-      Write-Verbose -Mesage "Staff #$($staff) staff card limit set to $($staffLimit)"
+      Write-Verbose -Message "Staff #$($staff) staff card limit set to $($staffLimit)"
     } Else {
       Do {
         $anyLimit = Read-Host -Prompt $i18n.Staff_Limit_Any
       } Until (($anyLimit -ge 1) -And ($anyLimit -le $totalCards))
       $staffLimit = "null"
       $memberLimit = "null"
-      Write-Verbose -Mesage "Staff #$($staff) any card limit set to $($anyLimit)"
+      Write-Verbose -Message "Staff #$($staff) any card limit set to $($anyLimit)"
     }
 
     $yaml += @"
@@ -438,11 +438,12 @@ Clear-Host
 If (Test-Path -Path './savedata.yaml') {
   $readYaml = Read-Host -Prompt $i18n.Question_Load_YAML_Sessiom
   If (!($readYaml)) { $readYaml = "n" }
+} Else {
+  $readYaml = "n"
 }
 
 If ($readYaml -eq "n") {
   Invoke-Card
-  $yaml = "" # Clear YAML, and load as file instead to streamlined process
 }
 
 $loadYaml = Get-Content -Path './savedata.yaml' -Raw
