@@ -8,7 +8,7 @@ Param()
 # Script Metadata
 # ===============
 
-$version   = "1.1.0"         # Script Version
+$version   = "1.1.1"         # Script Version
 
 $gfxAdmin  = "nattadasu"     # GFX Administator
 $gfxDeputy = "Annie_Law"     # GFX Deputy
@@ -161,7 +161,7 @@ Function Invoke-Card {
 `nmetadata:
   title: $($Edition_title)
   emoji: $($Edition_emoji)
-  isSingle: $(If ($Edition_isSingle = "y") {"true"} Else {"false"})
+  isSingle: $(If ($Edition_isSingle -eq "y") {"true"} Else {"false"})
   allowedReply: $($Edition_count)
   date:
     start: $($Edition_startInput)
