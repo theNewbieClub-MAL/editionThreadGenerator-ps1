@@ -8,7 +8,7 @@ Param()
 # Script Metadata
 # ===============
 
-$version   = "1.1.1"         # Script Version
+$version   = "1.1.2"         # Script Version
 
 $gfxAdmin  = "nattadasu"     # GFX Administator
 $gfxDeputy = "Annie_Law"     # GFX Deputy
@@ -667,14 +667,7 @@ DM @$($gfxAdmin) or @$($gfxDeputy) for any questions[/size]
 [/center]
 [/size][/color]
 
-For internal use only:
-###SCRAPEDATA>>$($Edition_title)>>>$($Attr_staff -Join ';')
->>>MAX>>$($Edition_count)
->>>LIM>>$($Attr_limit -Join ';')
->>>AVA>>$($Attr_total -Join ';')
-@#Generated with [url=https://github.com/theNewbieClub-MAL/editionThreadGenerator-ps1]GitHub:theNewbieClub-MAL/editionThreadGenerator-ps1[/url]@[i][/i]v$($version) in Powershell on [url=https://www.timeanddate.com/worldclock/converter.html?iso=$(Get-Date ([DateTime]::UtcNow.ToString('')) -Format "yyyyMMddThhmmss")&p1=1440]$([DateTime]::UtcNow.ToString('u').Replace(' ','T'))[/url]#@
-
-[i][url=https://pas.thenewbieclub.my.id/tncpas-0001]TNCPAS-0001[/url] Standardized Format[/i]
+For internal use only, [i][url=https://pas.thenewbieclub.my.id/tncpas-0001]TNCPAS-0001[/url] Standardized Format[/i]:
 `###METADATA
 >>>THM>>$($Edition_title)
 >>>TEM>>$($Edition_emoji)>>>CLR>>$($Thread_color)
