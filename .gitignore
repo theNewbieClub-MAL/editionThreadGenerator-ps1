@@ -5,6 +5,8 @@
 Generated.bbcode
 lint**.txt
 savedata.yaml
+savedata.json
+IntroText.temp*.bbcode
 
 # ==============
 # Initialization
