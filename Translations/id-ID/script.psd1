@@ -23,7 +23,7 @@ ConvertFrom-StringData @'
   Header_Staff_4              = Staf Keempat
   Header_Staff_5              = Staf Kelima
 
-  Question_Load_YAML_Session  = ❓ Kami menemukan sesi terakhir yang tersimpan di direktori. Apakah kamu ingin memuat data sesi terakhir (y), atau mulai dari awal (n)? Default, n (y/n)
+  Question_Load_JSON_Session  = ❓ Kami menemukan sesi terakhir yang tersimpan di direktori. Apakah kamu ingin memuat data sesi terakhir (y), atau mulai dari awal (n)? Default, n (y/n)
 
   Question_Edition_Title      = 🔤 Judul edisi
   Question_Edition_Emoji      = 😄 Simbol/emoji edisi, Enter untuk melewati
@@ -47,7 +47,10 @@ ConvertFrom-StringData @'
   Question_ID_Custom          = 🔗 Masukkan tautan kustom kamu
 
   Question_Intro_GifUrl       = 🖼️  Tautan gambar GIF untuk teks pengantar
-  Question_Intro_Text         = ✏️  Tuliskan teks pengantar. Gunakan {{ dan }} pada awal dan akhir teks yang kamu ingin warnai, beserta ^@ untuk membuat baris baru
+  Question_Intro_Text         = ✏️  Tuliskan teks pengantar menggunakan aplikasi editor yang kami luncurkan. Simpan berkas, keluar dari aplikasi, lalu tekan enter/return untuk melanjutkan ke langkah selanjutnya
+  Question_Intro_Text_Header  = # Untuk menghighlight teks, impitkan {{ dan }} pada teks yang ingin kamu highlight.
+  Question_Intro_Text_Error   = ❌ Kamu tidak menulis teks apapun. Kamu bisa saja memperbaiki teks nantinya di berkas savefile yang kami buat, namum, kamu perlu memiliki pengetahuan dasar JSON.
+  Question_Intro_Text_NoProg  = ❌ Kami tidak menemukan teks editor apapun yang terpasang di sistem kamu, mohon install salah satu dan coba lagi.
 
   Prompt_ToCopy               = 📋 Silakan pilih dan salin hasil:
   Prompt_MALId_Insert         = 🔢 Ketik nomor ID MAL karya, ketik 0 untuk memasukkan secara manual

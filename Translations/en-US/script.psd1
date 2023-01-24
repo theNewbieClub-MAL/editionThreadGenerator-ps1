@@ -23,7 +23,7 @@ ConvertFrom-StringData @'
   Header_Staff_4              = Fourth Staff
   Header_Staff_5              = Fifth Staff
 
-  Question_Load_YAML_Sessiom  = ❓ We found last saved session on the directory. Do you want to load save file (y), or create new one (n)? Default, n (y/n)
+  Question_Load_JSON_Sessiom  = ❓ We found last saved session on the directory. Do you want to load save file (y), or create new one (n)? Default, n (y/n)
 
   Question_Edition_Title      = 🔤 Edition title
   Question_Edition_Emoji      = 😄 Edition emoji, enter to skip
@@ -47,7 +47,10 @@ ConvertFrom-StringData @'
   Question_ID_Custom          = 🔗 Insert your custom url
 
   Question_Intro_GifUrl       = 🖼️  GIF URL for intro text
-  Question_Intro_Text         = ✏️  Write the intro text. Use {{ and }} among text you want to color, and ^@ to new line
+  Question_Intro_Text         = ✏️  Write the intro text using app we launched. Save the file, exit the app, then press enter/return key to continue to other steps
+  Question_Intro_Text_Header  = # To highlight the text using thread color, wrap {{ and }} around the text you want to highlight.
+  Question_Intro_Text_Error   = ❌ You did not write any text. You can modify the text later on the savefile we created, however, proper JSON knowledge is required.
+  Question_Intro_Text_NoProg  = ❌ We cannot find any text editor program on your system, please install one and try again
 
   Prompt_ToCopy               = 📋 Please select and copy the result:
   Prompt_MALId_Insert         = 🔢 Type MAL ID of the title, type 0 for custom input

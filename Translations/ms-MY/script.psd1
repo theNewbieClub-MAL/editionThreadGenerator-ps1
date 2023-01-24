@@ -23,7 +23,7 @@ ConvertFrom-StringData @'
   Header_Staff_4              = Kakitangan Keempat
   Header_Staff_5              = Kakitangan Kelima
 
-  Question_Load_YAML_Session  = ❓ Kami menemui sesi terakhir disimpan pada direktori. Adakah anda mahu memuatkan fail simpan (y) atau buat fail baharu (n)? Lalai, n (y/n)
+  Question_Load_JSON_Session  = ❓ Kami menemui sesi terakhir disimpan pada direktori. Adakah anda mahu memuatkan fail simpan (y) atau buat fail baharu (n)? Lalai, n (y/n)
 
   Question_Edition_Title      = 🔤 Tajuk edisi
   Question_Edition_Emoji      = 😄 Simbol/emoji edisi, Enter untuk melangkau
@@ -47,7 +47,10 @@ ConvertFrom-StringData @'
   Question_ID_Custom          = 🔗 Masukkan pautan tersuai anda
 
   Question_Intro_GifUrl       = 🖼️  Pautan imej gif untuk teks pengenalan
-  Question_Intro_Text         = ✏️  Tulis teks pengenalan. Gunakan {{ dan }} pada permulaan dan akhir teks yang anda mahukan, bersama dengan ^@ untuk membuat baris baru
+  Question_Intro_Text         = ✏️  Tulis teks pengenalan menggunakan aplikasi editor yang kami lancarkan. Simpan fail, keluar dari aplikasi, kemudian tekan enter/return untuk meneruskan ke langkah seterusnya
+  Question_Intro_Text_Header  = # Untuk menyerlahkan teks, sertakan {{ dan }} dalam teks yang ingin anda serlahkan.
+  Question_Intro_Text_Error   = ❌ Anda tidak menulis sebarang teks. Anda boleh membetulkan teks kemudian dalam fail savefile yang kami buat, namun, anda perlu mempunyai pengetahuan asas tentang JSON.
+  Question_Intro_Text_NoProg  = ❌ Kami tidak menemui sebarang editor teks yang dipasang pada sistem anda, sila pasang satu dan cuba lagi.
 
   Prompt_ToCopy               = 📋 Sila pilih dan salin hasilnya:
   Prompt_MALId_Insert         = 🔢 Taipkan nombor ID Karya MAL, ketik 0 untuk memasukkan secara tersuai

@@ -2,10 +2,12 @@
 
 # The Newbie Club's Edition Thread Generator: PowerShell version
 
+![Compatible With PowerShell Core](https://img.shields.io/badge/Compatible%20with-PowerShell%20Core-blue?style=for-the-badge&logo=powershell) ![Compatible With Windows PowerShell](https://img.shields.io/badge/Compatible%20with-Windows%20PowerShell-blue?style=for-the-badge&logo=powershell)
+
 Tested on:
 
 * :penguin: Zorin OS 12.1 (based on Ubuntu 20.04 LTS): PowerShell Core 7.2.4, Visual Studio Code Host 2022.5.1
-* :computer: Windows 10 21H2: Windows PowerShell 5.1.19041
+* :computer: Windows 10 21H2: Windows PowerShell 5.1.19041; Windows 11 22H2: PowerShell 7.3.1
 
 ## Preface
 
