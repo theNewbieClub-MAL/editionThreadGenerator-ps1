@@ -12,7 +12,7 @@ If ($PSVersionTable.Major -lt 6) {
 # Script Metadata
 # ===============
 
-$version = "2.0.0"         # Script Version
+$version = "2.0.1"         # Script Version
 
 $gfxAdmin = "nattadasu"     # GFX Administator
 $gfxDeputy = "Annie_Law"     # GFX Deputy
@@ -688,7 +688,7 @@ $(If ($staff.limitType -eq "role") {@"
 
 [color=red]Slip card can not be used on this edition[/color]
 "@})
-[spoiler]
+[spoiler="cards"]
 [table]$($table -replace "`n", "")[/table]
 [/spoiler]
 [/quote]
