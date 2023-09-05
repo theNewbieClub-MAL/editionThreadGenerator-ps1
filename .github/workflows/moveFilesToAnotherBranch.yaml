@@ -15,7 +15,7 @@ jobs:
   moveFilesToAnotherBranch:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Move files to another branch
         run: |
           # Add metadata about committer
